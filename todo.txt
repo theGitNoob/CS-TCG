@@ -1,0 +1,24 @@
+Caracteristicas
+
+* Varios jugadores
+* Permitir la creacion de decks personalizados
+* Anadir cartas aleatorias
+* Cementerio
+* Hacer un arcade
+* Hacer un store donde se puedan comprar cartas y mejorar las cartas
+
+Tematica: DotaYugi
+
+Clases
+
+Manuel
+*Campo
+*Deck
+  *Cartas
+
+Eisler
+*Tienda
+*Jugadores artificiales
+*Perfil
+
+
