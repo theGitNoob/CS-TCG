@@ -22,3 +22,24 @@ Eisler
 *Perfil
 
 
+Cards:
+	Identificador unico para las cartas
+	info:
+		decripcion de la cartas
+	info de las habilidades:
+		
+	atack
+	tipo:
+		heroe,item
+	efectos: 
+		habilidades
+	atributos:
+		agilidad,fuerza,inteligencia
+
+Campo:
+	Lista de cartas colocadas,cartas de heroes, cartas de items, cartas en el cementerio, zona del deck
+	asignar un id a cada posicion donde se coloquen cartas
+
+Deck:
+	Lista de cartas, variable, se debe tener la capacidad de cambiar el metodo de reparticion, ej:
+	cartas a robar por turno
