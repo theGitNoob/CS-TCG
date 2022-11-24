@@ -29,11 +29,11 @@ namespace Compiler
                     case BoundUnaryOperatorKind.Identity:
                         return (int)operand;
                     case BoundUnaryOperatorKind.Negation:
-                        return (int)-operand;
+                        return -(int)operand;
                     case BoundUnaryOperatorKind.LogicalNegation:
                         return !(bool)operand;
                     default:
-                        throw new Exception($"Unexpected unary operator {u.OperatorKind}");
+                        throw new Exception($"Unexpected unary operator {u.Op}");
                 }         
             }
             if (node is BoundBinaryExpression b)
@@ -59,7 +59,7 @@ namespace Compiler
                     case BoundBinaryOperatorKind.NotEquals:
                         return !Equals(left,right);
                     default:
-                        throw new Exception($"Unexpected binary operator {b.OperatorKind}");
+                        throw new Exception($"Unexpected binary operator {b.Op}");
                 }                
             }
 
