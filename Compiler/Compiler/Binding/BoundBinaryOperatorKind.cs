@@ -5,6 +5,10 @@ namespace Compiler.Binding
         Addition,
         Subtraction,
         Multiplication,
-        Division
+        Division,
+        LogicalAnd,
+        LogicalOr,
+        Equals,
+        NotEquals
     }
 }

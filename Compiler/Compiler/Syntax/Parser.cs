@@ -83,17 +83,30 @@ namespace Compiler.Syntax
         }
         private ExpressionSyntax ParsePrimaryExpression()
         {
-            if (Current.Kind == SyntaxKind.OpenParenthesisToken)
+            switch (Current.Kind)
             {
-                var left = NextToken();
-                var expression = ParseExpression();
-                var right = Match(SyntaxKind.CloseParenthesisToken);
+                case SyntaxKind.OpenParenthesisToken:
+                {
+                    var left = NextToken();
+                    var expression = ParseExpression();
+                    var right = Match(SyntaxKind.CloseParenthesisToken);
 
-                return new ParenthesisExpressionSyntax(left, expression, right);
+                    return new ParenthesisExpressionSyntax(left, expression, right);
+                }
+
+                case SyntaxKind.FalseKeyword:
+                case SyntaxKind.TrueKeyword:
+                {
+                    var keywordToken = NextToken();
+                    var value = keywordToken.Kind == SyntaxKind.TrueKeyword;
+                    return new LiteralExpression(keywordToken, value);
+                }
+               default:
+               {
+                    var numberToken = Match(SyntaxKind.NumberToken);
+                    return new LiteralExpression(numberToken);
+               }
             }
-
-            var numberToken = Match(SyntaxKind.NumberToken);
-            return new LiteralExpression(numberToken);
         }
     }
 }

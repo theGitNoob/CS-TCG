@@ -2,6 +2,14 @@ namespace Compiler.Syntax
 {
     public enum SyntaxKind
     {
+        BangEqualsToken,
+        EqualsEqualsToken,
+        PipePipeToken,
+        AmpersandAmpersandToken,
+        BangToken,
+        IndentifierToken,
+        FalseKeyword,
+        TrueKeyword,
         NumberToken,
         WhiteSpaceToken,
         PlusToken,
