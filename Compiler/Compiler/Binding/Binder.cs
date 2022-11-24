@@ -30,7 +30,7 @@ namespace Compiler.Binding
         }
         private BoundExpression BindUnaryExpression(UnaryExpression syntax)
         {
-            var boundOperand = BindExpression(syntax.Kind);
+            var boundOperand = BindExpression(syntax.Operand);
             var boundOperatorKind = BoundUnaryOperator.Bind(syntax.OperatorToken.Kind, boundOperand.Type);
             if(boundOperatorKind == null)
             {

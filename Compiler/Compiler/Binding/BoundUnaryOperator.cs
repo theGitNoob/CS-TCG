@@ -5,12 +5,12 @@ namespace Compiler.Binding
 {
     internal sealed class BoundUnaryOperator
     {
-        private BoundBinaryExpression(SyntaxKind syntaxKind,BoundUnaryOperatorKind kind, Type operandType)
-            : this(sintaxKind,kind,operandType,operandType)
+        private BoundUnaryOperator(SyntaxKind syntaxKind,BoundUnaryOperatorKind kind, Type operandType)
+            : this(syntaxKind,kind,operandType,operandType)
         {
             
         }
-        private BoundBinaryExpression(SyntaxKind syntaxKind,BoundUnaryOperatorKind kind, Type operandType, Type resultType)
+        private BoundUnaryOperator(SyntaxKind syntaxKind,BoundUnaryOperatorKind kind, Type operandType, Type resultType)
         {
             SyntaxKind = syntaxKind;
             Kind = kind;
