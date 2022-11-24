@@ -23,7 +23,7 @@ namespace Compiler.Binding
         public Type OperandType { get; }
         public Type ResultType { get; }
 
-        public BoundUnaryOperator[] _operators =
+        public static BoundUnaryOperator[] _operators =
         {
             new BoundUnaryOperator(SyntaxKind.BangToken,BoundUnaryOperatorKind.LogicalNegation,typeof(bool)),
             new BoundUnaryOperator(SyntaxKind.PlusToken,BoundUnaryOperatorKind.Identity,typeof(int)),
