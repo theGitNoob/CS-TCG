@@ -1,6 +1,6 @@
 namespace Compiler.Syntax
 {
-    internal sealed class SyntaxFacts
+    internal static class SyntaxFacts
     {
         public static int GetUnaryOperatorPrecedence(this SyntaxKind kind)
         {

@@ -1,6 +1,6 @@
 namespace Compiler.Syntax
 {
-    enum SyntaxKind
+    public enum SyntaxKind
     {
         NumberToken,
         WhiteSpaceToken,

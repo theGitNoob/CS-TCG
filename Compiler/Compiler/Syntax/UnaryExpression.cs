@@ -4,7 +4,6 @@ namespace Compiler.Syntax
     {
         public UnaryExpression(SyntaxToken operatorToken, ExpressionSyntax operand)
         {
-            Left = left;
             OperatorToken = operatorToken;
             Operand = operand;
         }

@@ -49,7 +49,7 @@ namespace Compiler.Syntax
         private SyntaxToken Current => Peek(0);
         public SyntaxTree Parse()
         {
-            var expression = ParseTerm();
+            var expression = ParseExpression();
             var endOfFileToken = Match(SyntaxKind.EndOfFileToken);
 
             return new SyntaxTree(_diagnostics, expression, endOfFileToken);
@@ -62,7 +62,7 @@ namespace Compiler.Syntax
             if (unaryOperatorPrecedence != 0 && unaryOperatorPrecedence >= parentPrecedence)
             {
                 var operatorToken = NextToken();
-                var operand = ParsePrimaryExpression();
+                var operand = ParseExpression(unaryOperatorPrecedence);
                 left = new UnaryExpression(operatorToken,operand);
             }else
             {
