@@ -7,9 +7,9 @@ namespace Compiler
     internal sealed class Evaluator
     {
         private readonly BoundExpression _root;
-        private readonly Dictionary<VariableSymbol, string> _variables;
+        private readonly Dictionary<VariableSymbol, object> _variables;
 
-        public Evaluator(BoundExpression root, Dictionary<VariableSymbol,string> variables)
+        public Evaluator(BoundExpression root, Dictionary<VariableSymbol,object> variables)
         {
             this._root = root;
             _variables = variables;
