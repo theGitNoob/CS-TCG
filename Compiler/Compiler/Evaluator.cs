@@ -20,7 +20,7 @@ namespace Compiler
         {
             return EvaluateExpression(_root);
         }
-        private async object EvaluateExpression(BoundExpression node)
+        private object EvaluateExpression(BoundExpression node)
         {
             if (node is BoundLiteralExpression n)
                 return n.Value;
