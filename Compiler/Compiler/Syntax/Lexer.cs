@@ -20,7 +20,7 @@ namespace Compiler.Syntax
             if (index >= _text.Length)
                 return '\0';
 
-            return _text[_position];
+            return _text[index];
         }
 
         private void Next()
@@ -102,7 +102,11 @@ namespace Compiler.Syntax
                         _position += 2;
                         return new SyntaxToken(SyntaxKind.EqualsEqualsToken, start, "==", null);
                     }
-                    break;    
+                    else
+                    {
+                        _position++;
+                        return new SyntaxToken(SyntaxKind.EqualsToken, start, "=", null);
+                    }   
                 case '!':
                     if(LoookaHead == '=')
                     {
@@ -111,6 +115,7 @@ namespace Compiler.Syntax
                     }
                     else
                     {
+                        _position ++;
                         return new SyntaxToken(SyntaxKind.BangToken, start, "!", null);    
                     }
             }

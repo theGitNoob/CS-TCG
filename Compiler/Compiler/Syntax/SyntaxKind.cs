@@ -23,6 +23,9 @@ namespace Compiler.Syntax
         LiteralExpression,
         BinaryExpression,
         ParenthesisExpression,
-        UnaryExpression
+        UnaryExpression,
+        NameExpression,
+        AssignmentExpression,
+        EqualsToken
     }
 }

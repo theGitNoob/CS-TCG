@@ -1,6 +1,9 @@
+using System;
+using System.Collections.Generic;
+
 namespace Compiler.Syntax
 {
-    public sealed class BinaryExpression : ExpressionSyntax
+    public sealed partial class BinaryExpression : ExpressionSyntax
     {
         public BinaryExpression(ExpressionSyntax left, SyntaxToken operatorToken, ExpressionSyntax right)
         {

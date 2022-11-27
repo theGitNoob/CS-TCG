@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Compiler.Syntax;
 using Compiler.Binding;
 namespace Compiler
@@ -6,19 +7,32 @@ namespace Compiler
     internal sealed class Evaluator
     {
         private readonly BoundExpression _root;
+        private readonly Dictionary<VariableSymbol, string> _variables;
 
-        public Evaluator(BoundExpression root)
+        public Evaluator(BoundExpression root, Dictionary<VariableSymbol,string> variables)
         {
             this._root = root;
+            _variables = variables;
         }
+
+
         public object Evaluate()
         {
             return EvaluateExpression(_root);
         }
-        private object EvaluateExpression(BoundExpression node)
+        private async object EvaluateExpression(BoundExpression node)
         {
             if (node is BoundLiteralExpression n)
                 return n.Value;
+            if  (node is BoundVariableExpression v)
+                return _variables[v.Variable];
+
+            if  (node is BoundAssignment a)
+            {
+                var value = EvaluateExpression(a.Expression);
+                _variables[a.Variable] = value;
+                return value;
+            }    
             
             if (node is BoundUnaryExpression u)
             {

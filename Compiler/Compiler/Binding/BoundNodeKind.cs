@@ -3,7 +3,9 @@ namespace Compiler.Binding
     internal enum BoundNodeKind
     {
         UnaryExpression,
-        LiteralExpression
+        LiteralExpression,
+        VariableExpression,
+        AssignmentExpression
 
     }
 }
