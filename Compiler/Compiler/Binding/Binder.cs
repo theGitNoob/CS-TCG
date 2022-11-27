@@ -7,15 +7,13 @@ namespace Compiler.Binding
     internal sealed class Binder
     {
         public Dictionary<VariableSymbol, object> _variables { get; }
-        public Binder(VariableSymbol variable)
+        public Binder(Dictionary<VariableSymbol, object> variables)
         {
-            Variable = variable;
+            _variables = variables;
         }
         private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
 
         public DiagnosticBag Diagnostics => _diagnostics;
-
-        public VariableSymbol Variable { get; }
 
         public BoundExpression BindExpression(ExpressionSyntax syntax)
         {
