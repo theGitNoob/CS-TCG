@@ -82,6 +82,10 @@ namespace Compiler.Syntax
                     return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
                 case ')':
                     return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
+                case '{':
+                    return new SyntaxToken(SyntaxKind.OpenBraceToken, _position++, "{", null);
+                case '}':
+                    return new SyntaxToken(SyntaxKind.CloseBraceToken, _position++, "}", null);
                 case '&':
                     if(LoookaHead == '&')
                     {

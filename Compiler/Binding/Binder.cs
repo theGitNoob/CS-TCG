@@ -14,6 +14,35 @@ namespace Compiler.Binding
         private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
 
         public DiagnosticBag Diagnostics => _diagnostics;
+         public BoundStatement BindStatement(StatementSyntax syntax)
+        {
+            switch (syntax.Kind)
+            {
+                case SyntaxKind.BlockStatement:
+                    return BindBlockStatement((BlockStatementSyntax)syntax);
+                case SyntaxKind.ExpressionStatement:
+                    return BindExpressionStatement((ExpressionStatementSyntax)syntax);
+                default:
+                    throw new Exception($"Unexpected syntax {syntax.Kind}");
+            }
+        }
+
+        private BoundStatement BindBlockStatement(BlockStatementSyntax syntax)
+        {
+            var statements = new List<BoundStatement>();
+            foreach (var statementSyntax in syntax.Statements)
+            {
+                var statement = BindStatement(statementSyntax);
+                statements.Add(statement);
+            }
+            return new BoundBlockStatement(statements);
+        }
+
+        private BoundStatement BindExpressionStatement(ExpressionStatementSyntax syntax)
+        {
+            var expression = BindExpression(syntax.Expression);
+            return new BoundExpressionStatement(expression);
+        }
 
         public BoundExpression BindExpression(ExpressionSyntax syntax)
         {

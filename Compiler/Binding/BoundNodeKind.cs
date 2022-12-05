@@ -5,7 +5,8 @@ namespace Compiler.Binding
         UnaryExpression,
         LiteralExpression,
         VariableExpression,
-        AssignmentExpression
-
+        AssignmentExpression,
+        BlockStatement,
+        ExpressionStatement
     }
 }

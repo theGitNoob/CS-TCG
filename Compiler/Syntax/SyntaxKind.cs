@@ -26,6 +26,10 @@ namespace Compiler.Syntax
         UnaryExpression,
         NameExpression,
         AssignmentExpression,
-        EqualsToken
+        EqualsToken,
+        OpenBraceToken,
+        CloseBraceToken,
+        BlockStatement,
+        ExpressionStatement
     }
 }

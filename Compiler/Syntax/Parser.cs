@@ -49,11 +49,39 @@ namespace Compiler.Syntax
         private SyntaxToken Current => Peek(0);
         public SyntaxTree Parse()
         {
-            var expression = ParseExpression();
+            var statement = ParseStatement();
             var endOfFileToken = Match(SyntaxKind.EndOfFileToken);
 
-            return new SyntaxTree(_diagnostics, expression, endOfFileToken);
+            return new SyntaxTree(_diagnostics, statement, endOfFileToken);
         }
+        private StatementSyntax ParseStatement()
+        {
+            if(Current.Kind == SyntaxKind.OpenBraceToken)
+                return ParseBlockStatements();
+
+            return ParseExpressionStatement();
+        }
+
+        private StatementSyntax ParseExpressionStatement()
+        {
+            var expression = ParseExpression();
+            return new ExpressionStatementSyntax(expression);
+        }
+
+        private StatementSyntax ParseBlockStatements()
+        {
+            var openBraceToken = Match(SyntaxKind.OpenBraceToken);
+            var statements = new List<StatementSyntax>();
+            while (Current.Kind != SyntaxKind.EndOfFileToken &&
+                   Current.Kind != SyntaxKind.CloseBraceToken )
+            {
+                var statement = ParseStatement();
+                statements.Add(statement);
+            }
+            var closeBraceToken = Match(SyntaxKind.CloseBraceToken);
+            return new BlockStatementSyntax(openBraceToken,statements,closeBraceToken);
+        }
+
         private ExpressionSyntax ParseExpression()
         {
             return ParseAssignmentExpression();
