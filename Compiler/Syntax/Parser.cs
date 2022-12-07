@@ -131,6 +131,14 @@ namespace Compiler.Syntax
         {
             switch (Current.Kind)
             {
+                case SyntaxKind.QuotesToken:
+                {
+                    var left = NextToken();
+                    var stringToken = new SyntaxToken(SyntaxKind.StringToken,0,CreateString(),CreateString());
+                    var right = Match(SyntaxKind.QuotesToken);
+
+                    return new StringExpressionSyntax(left,stringToken,right);
+                }
                 case SyntaxKind.OpenParenthesisToken:
                 {
                     var left = NextToken();
@@ -158,6 +166,18 @@ namespace Compiler.Syntax
                     return new LiteralExpression(numberToken);
                }
             }
+        }
+
+        private string CreateString()
+        {
+            string stringToken = "";
+            while (Current.Kind != SyntaxKind.QuotesToken &&
+                    Current.Kind != SyntaxKind.EndOfFileToken)
+            {
+                stringToken += $"{_tokens[_position].Text} ";
+                _position++;
+            }
+            return stringToken;
         }
     }
 }

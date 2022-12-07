@@ -88,6 +88,8 @@ namespace Compiler.Binding
         {
             switch (syntax.Kind)
             {
+                case SyntaxKind.StringExpression:
+                    return BindStringExpression((StringExpressionSyntax) syntax);
                 case SyntaxKind.LiteralExpression:
                     return BindLiteralExpression((LiteralExpression)syntax);
                 case SyntaxKind.UnaryExpression:
@@ -104,6 +106,13 @@ namespace Compiler.Binding
                     throw new Exception($"Unexpected syntax {syntax.Kind}");
             }
         }
+
+        private BoundExpression BindStringExpression(StringExpressionSyntax syntax)
+        {
+            var value = syntax.StringToken.Text ?? "";
+            return new BoundLiteralExpression(value);
+        }
+
         private BoundExpression BindParenthesisExpression(ParenthesisExpressionSyntax syntax)
         {
             return BindExpression(syntax.Expression);
@@ -128,7 +137,7 @@ namespace Compiler.Binding
                 _scope.TryDeclare(variable);
             }
             if(boundExpression.Type != variable.Type)
-                _diagnostics.ReportCannotConvert(syntax.IdentifierToken.Span, boundExpression.Type, variable.Type);
+                _diagnostics.ReportCannotConvert(syntax.IdentifierToken.Span, variable.Type, boundExpression.Type);
             return new BoundAssignment(variable,boundExpression);     
         }
         private BoundExpression BindLiteralExpression(LiteralExpression syntax)

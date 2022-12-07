@@ -70,6 +70,8 @@ namespace Compiler.Syntax
             }
             switch (Current)
             {
+                case '"':
+                    return new SyntaxToken(SyntaxKind.QuotesToken, _position++,"\"",null);
                 case '+':
                     return new SyntaxToken(SyntaxKind.PlusToken, _position++, "+", null);
                 case '-':

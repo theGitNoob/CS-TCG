@@ -31,6 +31,9 @@ namespace Compiler.Syntax
         CloseBraceToken,
         BlockStatement,
         ExpressionStatement,
-        CompilerUnit
+        CompilerUnit,
+        StringExpression,
+        QuotesToken,
+        StringToken
     }
 }
