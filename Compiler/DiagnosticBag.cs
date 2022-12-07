@@ -50,5 +50,11 @@ namespace Compiler
             var message = $"The name {name} does not exist.";
             Report(span,message);
         }
+
+        internal void ReportCannotConvert(TextSpan span, Type fromType, Type toType)
+        {
+            var message = $"Cannot convert from {fromType} to {toType}.";
+            Report(span,message);
+        }
     }
 }

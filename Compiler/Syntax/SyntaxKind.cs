@@ -30,6 +30,7 @@ namespace Compiler.Syntax
         OpenBraceToken,
         CloseBraceToken,
         BlockStatement,
-        ExpressionStatement
+        ExpressionStatement,
+        CompilerUnit
     }
 }

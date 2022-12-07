@@ -47,12 +47,12 @@ namespace Compiler.Syntax
             return new SyntaxToken(kind, Current.Position, null, null);
         }
         private SyntaxToken Current => Peek(0);
-        public SyntaxTree Parse()
+        public CompilerUnitSyntax ParseCompilationUnit()
         {
             var statement = ParseStatement();
             var endOfFileToken = Match(SyntaxKind.EndOfFileToken);
 
-            return new SyntaxTree(_diagnostics, statement, endOfFileToken);
+            return new CompilerUnitSyntax(statement, endOfFileToken);
         }
         private StatementSyntax ParseStatement()
         {
