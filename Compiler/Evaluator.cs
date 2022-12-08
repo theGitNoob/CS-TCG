@@ -85,7 +85,11 @@ namespace Compiler
                 switch (b.Op.Kind)
                 {
                     case BoundBinaryOperatorKind.Addition:
-                        return (int)left + (int)right;
+                        {
+                            if(left.GetType() == typeof(string) && right.GetType() == typeof(string))
+                                return (string)left + (string)right;
+                            return (int)left + (int)right;    
+                        }
                     case BoundBinaryOperatorKind.Subtraction:
                         return (int)left - (int)right;
                     case BoundBinaryOperatorKind.Multiplication:
