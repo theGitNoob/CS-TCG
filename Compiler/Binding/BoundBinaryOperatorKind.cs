@@ -9,6 +9,10 @@ namespace Compiler.Binding
         LogicalAnd,
         LogicalOr,
         Equals,
-        NotEquals
+        NotEquals,
+        LessOrEquals,
+        Less,
+        Great,
+        GreaterOrEquals
     }
 }

@@ -104,6 +104,14 @@ namespace Compiler
                         return Equals(left,right);
                     case BoundBinaryOperatorKind.NotEquals:
                         return !Equals(left,right);
+                    case BoundBinaryOperatorKind.Less:
+                        return (int)left < (int)right;
+                    case BoundBinaryOperatorKind.LessOrEquals:
+                        return (int)left <= (int)right;
+                    case BoundBinaryOperatorKind.Great:
+                        return (int)left > (int)right;
+                    case BoundBinaryOperatorKind.GreaterOrEquals:
+                        return (int)left >= (int)right;
                     default:
                         throw new Exception($"Unexpected binary operator {b.Op}");
                 }                

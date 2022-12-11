@@ -112,7 +112,29 @@ namespace Compiler.Syntax
                     {
                         _position++;
                         return new SyntaxToken(SyntaxKind.EqualsToken, start, "=", null);
-                    }   
+                    } 
+                case '<':
+                    if(LoookaHead == '=')
+                    {
+                        _position += 2;
+                        return new SyntaxToken(SyntaxKind.LessOrEqualsToken, start, "<=", null);
+                    }
+                    else
+                    {
+                        _position++;
+                        return new SyntaxToken(SyntaxKind.LessToken, start, "<", null);
+                    }  
+                case '>':
+                    if(LoookaHead == '=')
+                    {
+                        _position += 2;
+                        return new SyntaxToken(SyntaxKind.GreaterOrEqualsToken, start, ">=", null);
+                    }
+                    else
+                    {
+                        _position++;
+                        return new SyntaxToken(SyntaxKind.GreatToken, start, ">", null);
+                    }  
                 case '!':
                     if(LoookaHead == '=')
                     {

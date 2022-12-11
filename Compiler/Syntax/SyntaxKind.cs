@@ -34,6 +34,10 @@ namespace Compiler.Syntax
         CompilerUnit,
         StringExpression,
         QuotesToken,
-        StringToken
+        StringToken,
+        GreatToken,
+        GreaterOrEqualsToken,
+        LessToken,
+        LessOrEqualsToken
     }
 }
