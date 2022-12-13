@@ -44,6 +44,10 @@ namespace Compiler.Syntax
         {
             switch (text)
             {
+                case "if":
+                    return SyntaxKind.IfKeyword;
+                case "else":
+                    return SyntaxKind.ElseKeyword;
                 case "true":
                     return SyntaxKind.TrueKeyword;
                 case "false":

@@ -71,7 +71,10 @@
     public void DiagnosticProccess(Diagnostic diagnostic)
     {
         prefix = Text.Substring(0,diagnostic.Span.Start);
-        error = Text.Substring(diagnostic.Span.Start, diagnostic.Span.Length);
-        subfix = Text.Substring(diagnostic.Span.End);
+        if(diagnostic.Span.Start !=null)
+        {
+            error = Text.Substring(diagnostic.Span.Start, diagnostic.Span.Length);
+            subfix = Text.Substring(diagnostic.Span.End);
+        }
     }
 }

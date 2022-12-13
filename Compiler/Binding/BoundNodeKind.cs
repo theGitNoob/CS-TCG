@@ -7,6 +7,7 @@ namespace Compiler.Binding
         VariableExpression,
         AssignmentExpression,
         BlockStatement,
-        ExpressionStatement
+        ExpressionStatement,
+        IfStatement
     }
 }

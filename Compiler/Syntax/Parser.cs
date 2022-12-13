@@ -56,10 +56,32 @@ namespace Compiler.Syntax
         }
         private StatementSyntax ParseStatement()
         {
-            if(Current.Kind == SyntaxKind.OpenBraceToken)
-                return ParseBlockStatements();
-
+            switch (Current.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                    return ParseBlockStatements();
+                case SyntaxKind.IfKeyword:
+                    return ParseIfStatement();
+            }
             return ParseExpressionStatement();
+        }
+
+         private StatementSyntax ParseIfStatement()
+        {
+            var keyword = Match(SyntaxKind.IfKeyword);
+            var condition = (ParenthesisExpressionSyntax)ParsePrimaryExpression();
+            var block = (BlockStatementSyntax)ParseBlockStatements();
+            var elseClause = ParseElseClause();
+            return new IfStatementSyntax(keyword,condition,block,elseClause);
+        }
+        private ElseClauseSyntax ParseElseClause()
+        {
+            if(Current.Kind != SyntaxKind.ElseKeyword)
+                return null;
+            
+            var keyword = Match(SyntaxKind.ElseKeyword);
+            var block = (BlockStatementSyntax)ParseBlockStatements();
+            return new ElseClauseSyntax(keyword, block);
         }
 
         private StatementSyntax ParseExpressionStatement()

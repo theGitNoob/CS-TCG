@@ -5,7 +5,7 @@ using Compiler.Syntax;
 
 namespace Compiler.Binding
 {
-    internal sealed class Binder
+    internal sealed partial class Binder
     {
         public DiagnosticBag Diagnostics => _diagnostics;
 
@@ -56,6 +56,8 @@ namespace Compiler.Binding
         {
             switch (syntax.Kind)
             {
+                case SyntaxKind.IfStatement:
+                    return BindIfStatement((IfStatementSyntax) syntax);
                 case SyntaxKind.BlockStatement:
                     return BindBlockStatement((BlockStatementSyntax)syntax);
                 case SyntaxKind.ExpressionStatement:
@@ -63,6 +65,23 @@ namespace Compiler.Binding
                 default:
                     throw new Exception($"Unexpected syntax {syntax.Kind}");
             }
+        }
+
+       private BoundStatement BindIfStatement(IfStatementSyntax syntax)
+        {
+            var condition = BindExpression(syntax.ParenthesisExpression.Expression,typeof(bool), syntax.IfToken);
+            var ifStatement = BindStatement(syntax.BlockIfStatement);
+            var elseStatement = syntax.ElseClauseStatement == null ? null : BindStatement(syntax.ElseClauseStatement.ElseStatement);
+            return new BoundIfStatement(condition,ifStatement, elseStatement);
+        }
+
+        private BoundExpression BindExpression(ExpressionSyntax condition, Type targetType, SyntaxToken ifToken)
+        {
+            var result = BindExpression(condition);
+            if(result.Type != targetType)
+                _diagnostics.ReportCannotConvert(ifToken.Span,result.Type, targetType);
+
+            return result;    
         }
 
         private BoundStatement BindBlockStatement(BlockStatementSyntax syntax)

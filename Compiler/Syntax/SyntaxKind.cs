@@ -38,6 +38,10 @@ namespace Compiler.Syntax
         GreatToken,
         GreaterOrEqualsToken,
         LessToken,
-        LessOrEqualsToken
+        LessOrEqualsToken,
+        IfKeyword,
+        ElseKeyword,
+        ElseStatement,
+        IfStatement
     }
 }

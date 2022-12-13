@@ -26,6 +26,9 @@ namespace Compiler
         {
             switch (node.Kind)
             {
+                case BoundNodeKind.IfStatement:
+                    EvaluateIfStatement((BoundIfStatement) node);
+                    break;
                 case BoundNodeKind.BlockStatement:
                     EvaluateBlockStatement((BoundBlockStatement) node);
                     break;
@@ -35,6 +38,15 @@ namespace Compiler
                 default:
                     throw new Exception($"Unexpected node {node.Kind}");
             }
+        }
+
+        private void EvaluateIfStatement(BoundIfStatement node)
+        {
+            var condition = (bool)EvaluateExpression(node.Condition);
+            if(condition)
+                EvaluateStatement(node.IfStatement);
+            else if(node.ElseStatement != null) 
+                EvaluateStatement(node.ElseStatement);    
         }
 
         private void EvaluateExpressionStatement(BoundExpressionStatement node)
