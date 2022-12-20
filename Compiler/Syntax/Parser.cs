@@ -47,13 +47,63 @@ namespace Compiler.Syntax
             return new SyntaxToken(kind, Current.Position, null, null);
         }
         private SyntaxToken Current => Peek(0);
-        public SyntaxTree Parse()
+        public CompilerUnitSyntax ParseCompilationUnit()
         {
-            var expression = ParseExpression();
+            var statement = ParseStatement();
             var endOfFileToken = Match(SyntaxKind.EndOfFileToken);
 
-            return new SyntaxTree(_diagnostics, expression, endOfFileToken);
+            return new CompilerUnitSyntax(statement, endOfFileToken);
         }
+        private StatementSyntax ParseStatement()
+        {
+            switch (Current.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                    return ParseBlockStatements();
+                case SyntaxKind.IfKeyword:
+                    return ParseIfStatement();
+            }
+            return ParseExpressionStatement();
+        }
+
+         private StatementSyntax ParseIfStatement()
+        {
+            var keyword = Match(SyntaxKind.IfKeyword);
+            var condition = (ParenthesisExpressionSyntax)ParsePrimaryExpression();
+            var block = (BlockStatementSyntax)ParseBlockStatements();
+            var elseClause = ParseElseClause();
+            return new IfStatementSyntax(keyword,condition,block,elseClause);
+        }
+        private ElseClauseSyntax ParseElseClause()
+        {
+            if(Current.Kind != SyntaxKind.ElseKeyword)
+                return null;
+            
+            var keyword = Match(SyntaxKind.ElseKeyword);
+            var block = (BlockStatementSyntax)ParseBlockStatements();
+            return new ElseClauseSyntax(keyword, block);
+        }
+
+        private StatementSyntax ParseExpressionStatement()
+        {
+            var expression = ParseExpression();
+            return new ExpressionStatementSyntax(expression);
+        }
+
+        private StatementSyntax ParseBlockStatements()
+        {
+            var openBraceToken = Match(SyntaxKind.OpenBraceToken);
+            var statements = new List<StatementSyntax>();
+            while (Current.Kind != SyntaxKind.EndOfFileToken &&
+                   Current.Kind != SyntaxKind.CloseBraceToken )
+            {
+                var statement = ParseStatement();
+                statements.Add(statement);
+            }
+            var closeBraceToken = Match(SyntaxKind.CloseBraceToken);
+            return new BlockStatementSyntax(openBraceToken,statements,closeBraceToken);
+        }
+
         private ExpressionSyntax ParseExpression()
         {
             return ParseAssignmentExpression();
@@ -103,6 +153,14 @@ namespace Compiler.Syntax
         {
             switch (Current.Kind)
             {
+                case SyntaxKind.QuotesToken:
+                {
+                    var left = NextToken();
+                    var stringToken = new SyntaxToken(SyntaxKind.StringToken,0,CreateString(),CreateString());
+                    var right = Match(SyntaxKind.QuotesToken);
+
+                    return new StringExpressionSyntax(left,stringToken,right);
+                }
                 case SyntaxKind.OpenParenthesisToken:
                 {
                     var left = NextToken();
@@ -130,6 +188,18 @@ namespace Compiler.Syntax
                     return new LiteralExpression(numberToken);
                }
             }
+        }
+
+        private string CreateString()
+        {
+            string stringToken = "";
+            while (Current.Kind != SyntaxKind.QuotesToken &&
+                    Current.Kind != SyntaxKind.EndOfFileToken)
+            {
+                stringToken += $"{_tokens[_position].Text} ";
+                _position++;
+            }
+            return stringToken;
         }
     }
 }

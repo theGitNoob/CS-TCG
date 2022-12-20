@@ -26,6 +26,22 @@ namespace Compiler.Syntax
         UnaryExpression,
         NameExpression,
         AssignmentExpression,
-        EqualsToken
+        EqualsToken,
+        OpenBraceToken,
+        CloseBraceToken,
+        BlockStatement,
+        ExpressionStatement,
+        CompilerUnit,
+        StringExpression,
+        QuotesToken,
+        StringToken,
+        GreatToken,
+        GreaterOrEqualsToken,
+        LessToken,
+        LessOrEqualsToken,
+        IfKeyword,
+        ElseKeyword,
+        ElseStatement,
+        IfStatement
     }
 }

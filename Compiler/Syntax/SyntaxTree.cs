@@ -2,21 +2,26 @@ namespace Compiler.Syntax
 {
     public sealed class SyntaxTree
     {
-        public SyntaxTree(IEnumerable<Diagnostic> diagnostics, ExpressionSyntax root, SyntaxToken endOfFileToken)
+        public SyntaxTree(string text)
         {
-            Diagnostics = diagnostics.ToArray();
+            var parser = new Parser(text);
+            var root = parser.ParseCompilationUnit();
+            var diagnostics = parser.Diagnostics.ToArray();
+
+
+            Diagnostics = diagnostics;
             Root = root;
-            EndOfFileToken = endOfFileToken;
+            Text = text;
         }
 
         public IReadOnlyList<Diagnostic> Diagnostics { get;}
-        public ExpressionSyntax Root { get;}
+        public CompilerUnitSyntax Root { get;}
         public SyntaxToken EndOfFileToken { get;}
+        public string Text { get; }
 
         public static SyntaxTree Parse(string text)
         {
-            var e = new Parser(text);
-            return e.Parse();
+           return new SyntaxTree(text);
         }
     }
 }

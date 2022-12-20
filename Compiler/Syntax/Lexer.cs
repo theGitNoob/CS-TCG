@@ -70,6 +70,8 @@ namespace Compiler.Syntax
             }
             switch (Current)
             {
+                case '"':
+                    return new SyntaxToken(SyntaxKind.QuotesToken, _position++,"\"",null);
                 case '+':
                     return new SyntaxToken(SyntaxKind.PlusToken, _position++, "+", null);
                 case '-':
@@ -82,6 +84,10 @@ namespace Compiler.Syntax
                     return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
                 case ')':
                     return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
+                case '{':
+                    return new SyntaxToken(SyntaxKind.OpenBraceToken, _position++, "{", null);
+                case '}':
+                    return new SyntaxToken(SyntaxKind.CloseBraceToken, _position++, "}", null);
                 case '&':
                     if(LoookaHead == '&')
                     {
@@ -106,7 +112,29 @@ namespace Compiler.Syntax
                     {
                         _position++;
                         return new SyntaxToken(SyntaxKind.EqualsToken, start, "=", null);
-                    }   
+                    } 
+                case '<':
+                    if(LoookaHead == '=')
+                    {
+                        _position += 2;
+                        return new SyntaxToken(SyntaxKind.LessOrEqualsToken, start, "<=", null);
+                    }
+                    else
+                    {
+                        _position++;
+                        return new SyntaxToken(SyntaxKind.LessToken, start, "<", null);
+                    }  
+                case '>':
+                    if(LoookaHead == '=')
+                    {
+                        _position += 2;
+                        return new SyntaxToken(SyntaxKind.GreaterOrEqualsToken, start, ">=", null);
+                    }
+                    else
+                    {
+                        _position++;
+                        return new SyntaxToken(SyntaxKind.GreatToken, start, ">", null);
+                    }  
                 case '!':
                     if(LoookaHead == '=')
                     {

@@ -6,10 +6,11 @@ namespace Compiler
 {
     internal sealed class Evaluator
     {
-        private readonly BoundExpression _root;
+        private readonly BoundStatement _root;
         private readonly Dictionary<VariableSymbol, object> _variables;
+        private object _lastValue;
 
-        public Evaluator(BoundExpression root, Dictionary<VariableSymbol,object> variables)
+        public Evaluator(BoundStatement root, Dictionary<VariableSymbol,object> variables)
         {
             this._root = root;
             _variables = variables;
@@ -18,8 +19,47 @@ namespace Compiler
 
         public object Evaluate()
         {
-            return EvaluateExpression(_root);
+            EvaluateStatement(_root);
+            return _lastValue;
         }
+        private void EvaluateStatement(BoundStatement node)
+        {
+            switch (node.Kind)
+            {
+                case BoundNodeKind.IfStatement:
+                    EvaluateIfStatement((BoundIfStatement) node);
+                    break;
+                case BoundNodeKind.BlockStatement:
+                    EvaluateBlockStatement((BoundBlockStatement) node);
+                    break;
+                case BoundNodeKind.ExpressionStatement:
+                    EvaluateExpressionStatement((BoundExpressionStatement) node);
+                    break;    
+                default:
+                    throw new Exception($"Unexpected node {node.Kind}");
+            }
+        }
+
+        private void EvaluateIfStatement(BoundIfStatement node)
+        {
+            var condition = (bool)EvaluateExpression(node.Condition);
+            if(condition)
+                EvaluateStatement(node.IfStatement);
+            else if(node.ElseStatement != null) 
+                EvaluateStatement(node.ElseStatement);    
+        }
+
+        private void EvaluateExpressionStatement(BoundExpressionStatement node)
+        {
+            _lastValue = EvaluateExpression(node.Expression);
+        }
+
+        private void EvaluateBlockStatement(BoundBlockStatement node)
+        {
+            foreach(var statement in node.Statements)
+                EvaluateStatement(statement);
+        }
+
         private object EvaluateExpression(BoundExpression node)
         {
             if (node is BoundLiteralExpression n)
@@ -57,7 +97,11 @@ namespace Compiler
                 switch (b.Op.Kind)
                 {
                     case BoundBinaryOperatorKind.Addition:
-                        return (int)left + (int)right;
+                        {
+                            if(left.GetType() == typeof(string) && right.GetType() == typeof(string))
+                                return (string)left + (string)right;
+                            return (int)left + (int)right;    
+                        }
                     case BoundBinaryOperatorKind.Subtraction:
                         return (int)left - (int)right;
                     case BoundBinaryOperatorKind.Multiplication:
@@ -72,6 +116,14 @@ namespace Compiler
                         return Equals(left,right);
                     case BoundBinaryOperatorKind.NotEquals:
                         return !Equals(left,right);
+                    case BoundBinaryOperatorKind.Less:
+                        return (int)left < (int)right;
+                    case BoundBinaryOperatorKind.LessOrEquals:
+                        return (int)left <= (int)right;
+                    case BoundBinaryOperatorKind.Great:
+                        return (int)left > (int)right;
+                    case BoundBinaryOperatorKind.GreaterOrEquals:
+                        return (int)left >= (int)right;
                     default:
                         throw new Exception($"Unexpected binary operator {b.Op}");
                 }                
