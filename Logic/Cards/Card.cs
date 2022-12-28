@@ -9,16 +9,24 @@ public enum CardType
 public class SimpleCard : ICard
 {
     public CardType Type { set; get; }
-    public int Id { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public int Id { get; init; }
+
     public string Name { set; get; }
     public string Description { set; get; }
+
+    public string Effect { get; set; }
 
     public SimpleCard(string name, string description, string effect)
     {
         Name = name;
         Description = description;
+        Effect = "";
+
+        Id = GenRandId();
 
     }
+
+    public int GenRandId() => Guid.NewGuid().ToString().GetHashCode();
 }
 public class ItemCard : SimpleCard
 {
