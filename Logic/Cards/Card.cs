@@ -70,6 +70,18 @@ public class HeroCard : SimpleCard
 {
     //Holds the equiped items of the hero
     private List<ItemCard> _items;
+
+
+    //Hero attack
+    public int Attack { get; protected set; }
+
+    //Hero defense
+    public int Defense { get; protected set; }
+
+
+    //Hero Mana
+    public int Mana { get; protected set; }
+
     public HeroCard(string name, string description, string effect) : base(name, description, effect)
     {
         Type = CardType.Hero;
@@ -82,13 +94,47 @@ public class HeroCard : SimpleCard
     public void EquipItem(ItemCard item)
     {
         _items.Add(item);
-
     }
 
     //Removes the item from the equiped items
     public void RemoveItem(ItemCard item)
     {
         _items.Remove(item);
+    }
 
+
+    ///<summary>
+    ///Sets the hero attack
+    ///</summary>
+    public void UpdateAttack(int attack)
+    {
+        if (attack < 0 || attack > 100)
+            throw new ArgumentException("Attack must be a value between 0 and 100");
+        Attack = attack;
+    }
+
+
+    ///<summary>
+    ///Sets the hero defense
+    ///</summary>
+
+    public void UpdateDefense(int defense)
+    {
+        if (defense < 0 || defense > 100)
+            throw new ArgumentException("Defense must be between 0 and 100");
+
+        this.Defense = defense;
+    }
+
+    ///<summary>
+    ///Sets the hero mana
+    ///</summary>
+
+    public void UpdateMana(int mana)
+    {
+        if (mana < 0)
+            throw new ArgumentException("Mana can't be negative");
+
+        this.Mana = mana;
     }
 }
