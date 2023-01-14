@@ -1,20 +1,21 @@
 ﻿namespace Field;
-public class Field : IField
+using Cards;
+public class SimpleField : IField
 {
     //Holds the HeroZone Cards
-    private List<ICard> HeroZone;
+    public List<HeroCard> HeroZone { private set; get; }
 
     //Holds the ItemZone Cards
-    private List<ICard> ItemZone;
+    public List<ItemCard> ItemZone { private set; get; }
 
     //Holds the CementeryZone Cards
-    private List<ICard> CementeryZone;
+    public List<SimpleCard> CementeryZone { private set; get; }
 
     //Max number of Hero cards on the Field
-    public int maxHeroCards { set; get; }
+    public int maxHeroCards { private set; get; }
 
     //Max number of Item cards on the Field
-    public int maxItemCards { set; get; }
+    public int maxItemCards { private set; get; }
 
 
     ///<summary>
@@ -25,32 +26,14 @@ public class Field : IField
     ///<param name="maxItemCards">Max number of Item cards on the Field</param>
     ///<returns>A new Field</returns>
 
-    public Field(int maxHeroCards, int maxItemCards)
+    public SimpleField(int maxHeroCards, int maxItemCards)
     {
         this.maxHeroCards = maxHeroCards;
         this.maxItemCards = maxItemCards;
-        HeroZone = new List<ICard>();
-        ItemZone = new List<ICard>();
-        CementeryZone = new List<ICard>();
+        HeroZone = new List<HeroCard>();
+        ItemZone = new List<ItemCard>();
+        CementeryZone = new List<SimpleCard>();
     }
-
-    ///<summary>
-    ///Removes a card from the Field
-    ///</summary>
-    ///<param name="card">Card to be removed</param>
-    public void RemoveCard(ICard card)
-    {
-        switch (card.Type)
-        {
-            case Cards.CardType.Hero:
-                RemoveHero(card);
-                break;
-            case Cards.CardType.Item:
-                RemoveItem(card);
-                break;
-        }
-    }
-
 
 
     ///<summary>
@@ -58,34 +41,75 @@ public class Field : IField
     ///and remove it from the hero zone along 
     ///with it equiped items
     /// </summary>
-    private void RemoveHero(ICard hero)
+    ///<param name="hero">Hero to be removed</param>
+    ///<returns>True if the hero was removed, false otherwise</returns>
+    public bool RemoveHero(HeroCard hero)
     {
         throw new NotImplementedException();
 
-    }
-
-
-    //Remove a item and delet it from the equiped
-    // items of the corresponding Hero
-    private void RemoveItem(ICard item)
-    {
-        throw new NotImplementedException();
     }
 
     ///<summary>
-    ///Place the given card according to its type
-    ///</summary>
-    public void PlaceCard(ICard card)
+    ///Sends a given item to the cementery
+    ///and remove it from the item zone
+    /// </summary>
+    ///<param name="item">Item to be removed</param>
+    ///<returns>True if the item was removed, false otherwise</returns>
+
+    public bool RemoveItem(ItemCard item)
     {
-        switch (card.Type)
-        {
-            case Cards.CardType.Hero:
-                HeroZone.Add(card);
-                break;
-            case Cards.CardType.Item:
-                ItemZone.Add(card);
-                break;
-        }
+        throw new NotImplementedException();
     }
 
+
+    ///<summary>
+    ///Places a given hero on the field
+    /// </summary>
+    ///<param name="hero">Hero to be placed</param>
+    ///<returns>True if the hero was placed, false otherwise</returns>
+
+    public bool PlaceHero(HeroCard hero)
+    {
+        if (CanInvokeHero())
+        {
+            HeroZone.Add(hero);
+            return true;
+        }
+        return false;
+    }
+
+    ///<summary>
+    ///Places a given item on the field
+    /// </summary>
+    ///<param name="item">Item to be placed</param>
+    ///<returns>True if the item was placed, false otherwise</returns>
+
+    public bool PlaceItem(ItemCard item)
+    {
+        if (CanEquipItem())
+        {
+            ItemZone.Add(item);
+            return true;
+        }
+        return false;
+    }
+
+    ///<summary>
+    ///Checks if a hero can be placed on the field
+    /// </summary>
+    ///<returns>True if a hero can be placed, false otherwise</returns>
+
+    public bool CanInvokeHero()
+    {
+        return HeroZone.Count < maxHeroCards;
+    }
+    ///<summary>
+    ///Checks if an item can be placed on the field
+    /// </summary>
+    ///<returns>True if an item can be placed, false otherwise</returns>
+
+    public bool CanEquipItem()
+    {
+        return ItemZone.Count < maxItemCards;
+    }
 }
