@@ -1,153 +1,202 @@
-﻿namespace Deck
+﻿namespace Deck;
+using Cards;
+
+public interface IDeck
 {
+    List<SimpleCard> Cards { get; }
 
-    public interface IDeck
-    {
+    List<SimpleCard> GetTop(int numberOfCards);
 
-        //Holds the Collection of cards
-        IEnumerable<ICard> Cards { get; set; }
+    List<SimpleCard> GetBottom(int numberOfCards);
 
-        //Retrieves a finite number of cards from the begining 
-        IEnumerable<ICard> GetTop(int numberOfCards);
+    int CardsLeft { get; }
 
-        //Retrieves a finite number of cards from the end
-        IEnumerable<ICard> GetBottom(int numberOfCards);
+    int MaxCards { get; }
 
+    int MinCards { get; }
 
-        //Holds the number of cards on the Deck Currently
-        int CardsLeft { get; }
+    void PlaceBottom(List<SimpleCard> cards);
 
-        //Maximum posible number of cards of the deck
-        int MaxCards { get; set; }
+    void PlaceTop(List<SimpleCard> cards);
 
-        //Minimun posible numbers of cards of the deck
-        int MinCards { get; set; }
+    void Shuffle();
 
-        //Place a finite number of cards at the bottom of the deck
-        void PlaceBottom(IEnumerable<ICard> cards);
+    bool IsEmpty();
 
-        //Place a finite number of cards at the top of the deck
-        void PlaceTop(IEnumerable<ICard> cards);
-
-        //Shuffles the deck
-        void Shuffle();
-
-        //Checks wether no card lefts on deck
-        bool IsEmpty();
-
-        //Gets the Card at given position
-        ICard GetIthCard(int cardIdx);
-
-    }
-
-    public class SimpleDeck : IDeck
-    {
-
-        public int MaxCards { set; get; }
-
-        public int MinCards { set; get; }
-
-        public IEnumerable<ICard> Cards { set; get; }
-
-        public int CardsLeft { get => Cards.Count(); }
-
-        public SimpleDeck(IEnumerable<ICard> cards, int minCards, int maxCards)
-        {
-            Cards = cards;
-            MinCards = minCards;
-            MaxCards = maxCards;
-
-        }
-
-        public bool IsEmpty()
-        {
-            return CardsLeft == 0;
-        }
-
-        public void PlaceBottom(IEnumerable<ICard> cards)
-        {
-            Cards = Cards.Concat(cards);
-        }
-
-        public void PlaceTop(IEnumerable<ICard> cards)
-        {
-            Cards = cards.Concat(Cards);
-        }
-
-
-
-        //Swaps two elements from the deck
-        public void Swap(int i, int j)
-        {
-            IList<ICard> aux = Cards.ToList();
-            ICard temp = aux[i];
-            aux[i] = aux[j];
-            aux[j] = temp;
-            Cards = aux;
-
-        }
-
-        //Shuffles a collection of elements using
-        //Fisher-Yates-Durstenfeld shuffle
-        public void Shuffle()
-        {
-            Random rand = new Random();
-
-            IList<ICard> aux = Cards.ToList();
-
-            for (int i = CardsLeft - 1; i > 0; i--)
-            {
-                int j = rand.Next(i + 1);
-
-                Swap(i, j);
-            }
-
-            Cards = aux;
-        }
-        public IEnumerable<ICard> GetTop(int numberOfCards)
-        {
-            if (numberOfCards <= 0 || numberOfCards > CardsLeft)
-            {
-                throw new ArgumentException("Number of cards should be greater than 0, and equal or less than de `CardsLeft`");
-            }
-
-            return Cards.Take(numberOfCards);
-
-        }
-
-
-        public IEnumerable<ICard> GetBottom(int numberOfCards)
-        {
-            if (numberOfCards <= 0 || numberOfCards > CardsLeft)
-            {
-                throw new ArgumentException("Number of cards should be greater than 0, and equal or less than de `CardsLeft`");
-            }
-
-            return Cards.TakeLast(numberOfCards);
-        }
-
-        public ICard GetIthCard(int cardIdx)
-        {
-            if (cardIdx < 0 || cardIdx >= CardsLeft)
-            {
-                throw new ArgumentException("Card index must be between 0 and `CardsLeft`- 1");
-            }
-
-            return Cards.ElementAt(cardIdx);
-
-        }
-
-
-        //Retrieves a random card from the Deck
-        public ICard GetRandomCard()
-        {
-            Random rand = new Random();
-
-            int cardIdx = rand.Next(0, CardsLeft);
-
-            return GetIthCard(cardIdx);
-
-        }
-    }
+    SimpleCard GetIthCard(int cardIdx);
 
 }
+
+public class SimpleDeck : IDeck
+{
+
+    public int MaxCards { private set; get; }
+
+    public int MinCards { private set; get; }
+
+    public List<SimpleCard> Cards { private set; get; }
+
+    public int CardsLeft { get => Cards.Count(); }
+
+
+    /// <summary>
+    /// Creates a new deck with a given number of cards
+    /// </summary>
+    /// <param name="cards">List of cards to be added to the deck</param>
+    /// <param name="minCards">Minimum number of cards in the deck</param>
+    /// <param name="maxCards">Maximum number of cards in the deck</param>
+    public SimpleDeck(List<SimpleCard> cards, int minCards, int maxCards)
+    {
+        Cards = cards;
+        MinCards = minCards;
+        MaxCards = maxCards;
+
+    }
+
+
+    /// <summary>
+    /// Checks if the deck is empty
+    /// </summary>
+    /// <returns>True if the deck is empty, false otherwise</returns>
+
+    public bool IsEmpty()
+    {
+        return CardsLeft == 0;
+    }
+
+    /// <summary>
+    /// Places a list of cards at the bottom of the deck
+    /// </summary>
+    /// <param name="cards">List of cards to be placed at the bottom of the deck</param>
+
+    public void PlaceBottom(List<SimpleCard> cards)
+    {
+        Cards = Cards.Concat(cards).ToList();
+    }
+
+    /// <summary>
+    /// Places a list of cards at the top of the deck
+    /// </summary>
+    /// <param name="cards">List of cards to be placed at the top of the deck</param>
+
+    public void PlaceTop(List<SimpleCard> cards)
+    {
+        Cards = cards.Concat(Cards).ToList();
+    }
+
+
+
+    /// <summary>
+    /// Swaps two cards in the deck
+    /// </summary>
+    /// <param name="i">Index of the first card</param>
+    /// <param name="j">Index of the second card</param>
+
+    public void Swap(int i, int j)
+    {
+        List<SimpleCard> aux = Cards.ToList();
+        SimpleCard temp = aux[i];
+        aux[i] = aux[j];
+        aux[j] = temp;
+        Cards = aux;
+
+    }
+
+    /// <summary>
+    ///Shuffles a collection of elements using
+    ///Fisher-Yates-Durstenfeld shuffle
+    /// </summary>
+
+    public void Shuffle()
+    {
+        Random rand = new Random();
+
+        List<SimpleCard> aux = Cards.ToList();
+
+        for (int i = CardsLeft - 1; i > 0; i--)
+        {
+            int j = rand.Next(i + 1);
+
+            Swap(i, j);
+        }
+
+        Cards = aux;
+    }
+
+
+    /// <summary>
+    /// Gets the n top cards of the deck and removes them from the deck
+    /// </summary>
+    /// <param name="numberOfCards">Number of cards to be taken from the top of the deck</param>
+    /// <returns>A list of the top n cards of the deck</returns>
+
+
+    public List<SimpleCard> GetTop(int numberOfCards)
+    {
+        if (numberOfCards <= 0 || numberOfCards > CardsLeft)
+        {
+            throw new ArgumentException("Number of cards should be greater than 0, and equal or less than de `CardsLeft`");
+        }
+
+        List<SimpleCard> aux = Cards.Take(numberOfCards).ToList();
+
+        Cards.RemoveRange(0, numberOfCards);
+
+        return aux;
+
+    }
+
+    /// <summary>
+    /// Gets the n bottom cards of the deck and removes them from the deck
+    /// </summary>
+    /// <param name="numberOfCards">Number of cards to be taken from the bottom of the deck</param>
+    /// <returns>A list of the bottom n cards of the deck</returns>
+
+    public List<SimpleCard> GetBottom(int numberOfCards)
+    {
+        if (numberOfCards <= 0 || numberOfCards > CardsLeft)
+        {
+            throw new ArgumentException("Number of cards should be greater than 0, and equal or less than de `CardsLeft`");
+        }
+
+        List<SimpleCard> aux = Cards.TakeLast(numberOfCards).ToList();
+
+        Cards.RemoveRange(CardsLeft - numberOfCards, numberOfCards);
+
+        return aux;
+    }
+
+    /// <summary>
+    /// Gets the ith card of the deck
+    /// </summary>
+    /// <param name="cardIdx">Index of the card to be taken</param>
+    /// <returns>The ith card of the deck</returns>
+
+    public SimpleCard GetIthCard(int cardIdx)
+    {
+        if (cardIdx < 0 || cardIdx >= CardsLeft)
+        {
+            throw new ArgumentException("Card index must be between 0 and `CardsLeft`- 1");
+        }
+
+        return Cards.ElementAt(cardIdx);
+
+    }
+
+
+    /// <summary>
+    /// Returns a random card from the deck
+    /// </summary>
+
+    public SimpleCard GetRandomCard()
+    {
+        Random rand = new Random();
+
+        int cardIdx = rand.Next(0, CardsLeft);
+
+        return GetIthCard(cardIdx);
+
+    }
+}
+
+
