@@ -13,10 +13,7 @@ public interface IField
 
     bool RemoveItem(ItemCard item);
 
-
     bool CanInvokeHero();
 
     bool CanEquipItem();
-
-
 }

@@ -21,11 +21,9 @@ public class SimpleField : IField
     ///<summary>
     ///Creates a new Field with the given max number of cards
     ///</summary>
-
     ///<param name="maxHeroCards">Max number of Hero cards on the Field</param>
     ///<param name="maxItemCards">Max number of Item cards on the Field</param>
     ///<returns>A new Field</returns>
-
     public SimpleField(int maxHeroCards, int maxItemCards)
     {
         this.maxHeroCards = maxHeroCards;
@@ -55,7 +53,6 @@ public class SimpleField : IField
     /// </summary>
     ///<param name="item">Item to be removed</param>
     ///<returns>True if the item was removed, false otherwise</returns>
-
     public bool RemoveItem(ItemCard item)
     {
         throw new NotImplementedException();
@@ -67,7 +64,6 @@ public class SimpleField : IField
     /// </summary>
     ///<param name="hero">Hero to be placed</param>
     ///<returns>True if the hero was placed, false otherwise</returns>
-
     public bool PlaceHero(HeroCard hero)
     {
         if (CanInvokeHero())
@@ -83,7 +79,6 @@ public class SimpleField : IField
     /// </summary>
     ///<param name="item">Item to be placed</param>
     ///<returns>True if the item was placed, false otherwise</returns>
-
     public bool PlaceItem(ItemCard item)
     {
         if (CanEquipItem())
@@ -96,18 +91,17 @@ public class SimpleField : IField
 
     ///<summary>
     ///Checks if a hero can be placed on the field
-    /// </summary>
+    ///</summary>
     ///<returns>True if a hero can be placed, false otherwise</returns>
-
     public bool CanInvokeHero()
     {
         return HeroZone.Count < maxHeroCards;
     }
+
     ///<summary>
     ///Checks if an item can be placed on the field
-    /// </summary>
+    ///</summary>
     ///<returns>True if an item can be placed, false otherwise</returns>
-
     public bool CanEquipItem()
     {
         return ItemZone.Count < maxItemCards;
