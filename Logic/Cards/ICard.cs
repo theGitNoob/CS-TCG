@@ -1,14 +1,17 @@
 using Cards;
 public interface ICard
 {
-    CardType Type { get; set; }
+    CardType Type { get; }
+
     int Id { get; init; }
 
     int GenRandId();
-    String Name { get; set; }
-    String Description { get; set; }
 
-    String Effect { get; set; }
+    String Name { get; }
+
+    String Description { get; }
+
+    String Effect { get; }
 
 
 }

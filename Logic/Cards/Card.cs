@@ -1,45 +1,103 @@
 ﻿namespace Cards;
 
+/// <summary>
+/// Represents a card type
+/// </summary>
 public enum CardType
 {
     Hero = 0,
     Item = 1
 }
 
+/// <summary>
+/// Represents a card
+/// </summary>
 public class SimpleCard : ICard
 {
-    public CardType Type { set; get; }
+    /// <summary>
+    /// The type of the card
+    /// </summary>
+    public CardType Type { get; init; }
+
+    /// <summary>
+    /// The id of the card
+    /// </summary>
     public int Id { get; init; }
 
+    /// <summary>
+    /// The name of the card
+    /// </summary>
     public string Name { set; get; }
-    public string Description { set; get; }
 
-    public string Effect { get; set; }
+    /// <summary>
+    /// The description of the card
+    /// </summary>
+    public string Description { get; init; }
 
+    /// <summary>
+    /// The effect of the card
+    /// </summary>
+    public string Effect { get; init; }
+
+    /// <summary>
+    /// Creates a new card
+    /// </summary>
+    /// <param name="name">The name of the card</param>
+    /// <param name="description">The description of the card</param>
+    /// <param name="effect">The effect of the card</param>
+    /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
+    /// <returns>A new card</returns>
     public SimpleCard(string name, string description, string effect)
     {
+        if (name == null || description == null || effect == null) throw new ArgumentNullException();
+
         Name = name;
+
         Description = description;
-        Effect = "";
+
+        Effect = effect;
 
         Id = GenRandId();
 
     }
 
+    /// <summary>
+    /// Generates a random id
+    /// </summary>
+    /// <returns>A random id</returns>
     public int GenRandId() => Guid.NewGuid().ToString().GetHashCode();
 }
+/// <summary>
+/// Represents a hero card
+/// </summary>
 public class ItemCard : SimpleCard
 {
-    //Holds the Hero to which the item is equiped
+    /// <summary>
+    /// The hero that has this item
+    /// </summary>
     private HeroCard? Hero;
+
+    /// <summary>
+    /// Creates a new item
+    /// </summary>
+    /// <param name="name">The name of the item</param>
+    /// <param name="description">The description of the item</param>
+    /// <param name="effect">The effect of the item</param>
+    /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
+    /// <returns>A new item</returns>
     public ItemCard(string name, string description, string effect) : base(name, description, effect)
     {
         Type = CardType.Item;
+
         Hero = null;
 
     }
 
-    //Add the equipped hero with this item
+    /// <summary>
+    /// Equips the item to a hero
+    /// </summary>
+    /// <param name="hero">The hero to equip the item</param>
+    /// <exception cref="Exception">Thrown when the item is already equiped to a hero</exception>
     public void EquipToHero(HeroCard hero)
     {
         if (Hero != null)
@@ -52,6 +110,10 @@ public class ItemCard : SimpleCard
 
 
     //Removes the item
+    /// <summary>
+    /// Removes the item from the hero
+    /// </summary>
+    /// <exception cref="Exception">Thrown when the item is not equiped to a hero</exception>
     public void RemoveFromHero()
     {
         if (Hero == null)
@@ -66,23 +128,38 @@ public class ItemCard : SimpleCard
 
 
 }
+/// <summary>
+/// Represents a hero
+/// </summary>
 public class HeroCard : SimpleCard
 {
-    //Holds the equiped items of the hero
+    /// <summary>
+    /// The items that the hero has equiped
+    /// </summary>
     private List<ItemCard> _items;
 
 
-    //Hero attack
+    /// <summary>
+    /// The attack of the hero
+    /// </summary>
     public int Attack { get; protected set; }
 
-    //Hero defense
+    /// <summary>
+    /// The defense of the hero
+    /// </summary>
     public int Defense { get; protected set; }
 
-
-    //Hero Mana
-    public int Mana { get; protected set; }
-
-    public HeroCard(string name, string description, string effect) : base(name, description, effect)
+    /// <summary>
+    /// Creates a new hero
+    /// </summary>
+    /// <param name="name">The name of the hero</param>
+    /// <param name="attack">The attack of the hero</param>
+    /// <param name="defense">The defense of the hero</param>
+    /// <param name="description">The description of the hero</param>
+    /// <param name="effect">The effect of the hero</param>
+    /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
+    /// <returns>A new hero</returns>
+    public HeroCard(string name, int attack, int defense, string description, string effect) : base(name, description, effect)
     {
         Type = CardType.Hero;
 
@@ -90,13 +167,21 @@ public class HeroCard : SimpleCard
     }
 
 
-    //Equips the given item to the hero
+    /// <summary>
+    /// Equips the given item to the hero
+    /// </summary>
+    /// <param name="item">The item to equip</param>
     public void EquipItem(ItemCard item)
     {
         _items.Add(item);
     }
 
     //Removes the item from the equiped items
+    /// <summary>
+    /// Removes the given item from the hero
+    /// </summary>
+    /// <param name="item">The item to remove</param>
+    ///<exception cref="ArgumentException">Thrown when the item is not equiped to the hero</exception>
     public void RemoveItem(ItemCard item)
     {
         _items.Remove(item);
@@ -106,6 +191,8 @@ public class HeroCard : SimpleCard
     ///<summary>
     ///Sets the hero attack
     ///</summary>
+    ///<param name="attack">The attack of the hero</param>
+    ///<exception cref="ArgumentException">Thrown when the attack is not between 0 and 100</exception>
     public void UpdateAttack(int attack)
     {
         if (attack < 0 || attack > 100)
@@ -117,7 +204,8 @@ public class HeroCard : SimpleCard
     ///<summary>
     ///Sets the hero defense
     ///</summary>
-
+    ///<param name="defense">The defense of the hero</param>
+    ///<exception cref="ArgumentException">Thrown when the defense is not between 0 and 100</exception>
     public void UpdateDefense(int defense)
     {
         if (defense < 0 || defense > 100)
@@ -126,15 +214,4 @@ public class HeroCard : SimpleCard
         this.Defense = defense;
     }
 
-    ///<summary>
-    ///Sets the hero mana
-    ///</summary>
-
-    public void UpdateMana(int mana)
-    {
-        if (mana < 0)
-            throw new ArgumentException("Mana can't be negative");
-
-        this.Mana = mana;
-    }
 }

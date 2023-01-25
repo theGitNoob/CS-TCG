@@ -1,7 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <ProjectReference Include="..\Deck\Deck.csproj" />
+    <ProjectReference Include="..\Cards\Cards.csproj" />
+    <ProjectReference Include="..\Field\Field.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

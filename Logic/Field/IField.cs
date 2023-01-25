@@ -1,11 +1,19 @@
+using Cards;
 public interface IField
 {
-    int maxHeroCards { get; set; }
+    int maxHeroCards { get; }
 
-    int maxItemCards { get; set; }
+    int maxItemCards { get; }
 
-    void PlaceCard(ICard card);
+    bool PlaceHero(HeroCard hero);
 
-    void RemoveCard(ICard card);
+    bool PlaceItem(ItemCard item);
 
+    bool RemoveHero(HeroCard hero);
+
+    bool RemoveItem(ItemCard item);
+
+    bool CanInvokeHero();
+
+    bool CanEquipItem();
 }
