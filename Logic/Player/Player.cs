@@ -4,24 +4,55 @@ using Cards;
 using Field;
 using Deck;
 
+///<summary>
+///Represents a player in the game
+///</summary>
 public interface IPlayer
 {
+    ///<summary>
+    ///The player's health points
+    ///</summary>
     int HP { set; get; }
 
+    ///<summary>
+    ///The player's deck
+    ///</summary>
     SimpleDeck Deck { get; }
 
+    ///<summary>
+    ///The player's hand
+    ///</summary>
     List<SimpleCard> Hand { get; }
 
+    ///<summary>
+    ///The player's field
+    ///</summary>
     SimpleField PlayerField { get; }
 
+    ///<summary>
+    ///The player's hero zone
+    ///</summary>
     List<HeroCard> HeroZone { get; }
 
+    ///<summary>
+    ///The player's item zone
+    ///</summary>
     List<ItemCard> ItemZone { get; }
 }
 
+///<summary>
+///Represents a player in the game
+///</summary>
 public class SimplePlayer : IPlayer
 {
+    ///<summary>
+    ///Indicates if the player is in the initial turn
+    ///</summary>
     protected bool _initialTurn { get; set; }
+
+    ///<summary>
+    ///The player's health points
+    ///</summary>
     private int _hp;
 
     public int HP
@@ -186,6 +217,7 @@ public class AIPlayer : SimplePlayer
     ///<summary>
     ///Plays the AI Player using a greedy strategy
     ///</summary>
+    ///<exception cref="Exception">Thrown when the enemy is not set</exception>
     public void Play()
     {
         if (_enemy == null)
@@ -274,7 +306,6 @@ public class AIPlayer : SimplePlayer
     ///</summary>
     ///<param name="hero">Hero that will attack</param>
     ///<param name="enemy">Enemy player</param>
-
     private void DirectAttack(HeroCard hero, AIPlayer enemy)
     {
         enemy.UpdateLife(-hero.Attack);
@@ -327,6 +358,10 @@ public class AIPlayer : SimplePlayer
         return (HasHeroOnHand() && PlayerField.CanInvokeHero());
     }
 
+    ///<summary>
+    /// Checks if an item can be equipped
+    ///</summary>
+    ///<returns>True if an item can be equipped, false otherwise</returns>
     public bool CanEquipItem()
     {
         return (HasItemOnHand() && HasHeroOnField() && PlayerField.CanEquipItem());
