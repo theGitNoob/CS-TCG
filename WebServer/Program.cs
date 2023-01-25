@@ -19,6 +19,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+Game.GameController.StartGame();
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
