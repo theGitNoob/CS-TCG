@@ -61,6 +61,7 @@ public static class GameController
         HeroCard card = new HeroCard(name, attack, defense, description, jsonEffect);
 
         Cards.Add(card);
+        SaveCards();
     }
 
 
@@ -75,6 +76,7 @@ public static class GameController
         ItemCard card = new ItemCard(name, description, jsonEffect);
 
         Cards.Add(card);
+        SaveCards();
     }
 
 
@@ -130,12 +132,12 @@ public static class GameController
     ///<param name="maxItemCards">The maximum number of item cards a player can have</param>
     ///<param name="minDeckCards">The minimum number of cards a player can have in their deck</param>
     ///<param name="maxDeckCards">The maximum number of cards a player can have in their deck</param>
-    public static void NewGame(int maxHeroCards = 5, int maxItemCards = 5, int minDeckCards = 1, int maxDeckCards = 50)
+    public static void NewGame( AIPlayer p1, AIPlayer p2, int maxHeroCards = 5, int maxItemCards = 5, int minDeckCards = 1, int maxDeckCards = 50)
     {
         SimpleField field = new SimpleField(maxHeroCards, maxItemCards);
         SimpleDeck deck = new SimpleDeck(Cards, minDeckCards, maxDeckCards);
-        AIPlayer p1 = new AIPlayer(4000, maxHeroCards, maxItemCards, deck);
-        AIPlayer p2 = new AIPlayer(4000, maxHeroCards, maxItemCards, deck);
+        p1 = new AIPlayer(4000, maxHeroCards, maxItemCards, deck);
+        p2 = new AIPlayer(4000, maxHeroCards, maxItemCards, deck);
 
     }
 
@@ -172,7 +174,6 @@ public static class GameController
 
     public static void ExitGame()
     {
-        SaveCards();
         Environment.Exit(0);
     }
 
