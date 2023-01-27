@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
-    <ProjectReference Include="..\Compiler\Compiler.csproj" />
     <ProjectReference Include="..\Logic\Game\Game.csproj" />
     <ProjectReference Include="..\Logic\Cards\Cards.csproj" />
     <ProjectReference Include="..\Logic\Effect\Effect.csproj" />
