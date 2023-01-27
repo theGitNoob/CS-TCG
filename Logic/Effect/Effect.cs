@@ -1,26 +1,25 @@
 ﻿using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using System.Text.Json.Serialization;
-using Player;
 
 namespace Effect
 {
     ///<summary>
     ///Represents an effect
     ///</summary>
-    public class Habilitie
+    public class Habilitie<T>
     {
         ///<summary>
         ///The condition for the effect
         ///</summary>
         [JsonIgnore]
-        public Condition _condition { get; private init; }
+        public Condition<T> _condition { get; private init; }
 
         ///<summary>
         ///The action for the effect
         ///</summary>
         [JsonIgnore]
-        public Action _action { get; private init; }
+        public Action<T> _action { get; private init; }
 
         ///<summary>
         ///The condition for the effect as a string
@@ -39,7 +38,7 @@ namespace Effect
         ///<param name="action">The action for the effect</param>
         ///<exception cref="ArgumentNullException">Thrown when the condition or action is null</exception>
         ///<returns>A new effect</returns>
-        public Habilitie(Condition condition, Action action)
+        public Habilitie(Condition<T> condition, Action<T> action)
         {
             if (condition == null) throw new ArgumentNullException(nameof(condition));
             if (action == null) throw new ArgumentNullException(nameof(action));
@@ -64,8 +63,8 @@ namespace Effect
             if (conditionString == null) throw new ArgumentNullException(nameof(conditionString));
             if (actionString == null) throw new ArgumentNullException(nameof(actionString));
 
-            this._condition = new Condition(conditionString);
-            this._action = new Action(actionString);
+            this._condition = new Condition<T>(conditionString);
+            this._action = new Action<T>(actionString);
         }
 
         ///<summary>
@@ -75,7 +74,7 @@ namespace Effect
         ///<param name="p2">The second player</param>
         ///<exception cref="ArgumentNullException">Thrown when the first or second player is null</exception>
         ///<returns>True if the effect can be activated, false otherwise</returns>
-        public bool CanActivate(SimplePlayer p1, SimplePlayer p2)
+        public bool CanActivate(T p1, T p2)
         {
             if (p1 == null || p2 == null) throw new ArgumentNullException();
             return _condition.Evaluate(p1, p2);
@@ -87,7 +86,7 @@ namespace Effect
         ///<param name="p1">The first player</param>
         ///<param name="p2">The second player</param>
         ///<exception cref="ArgumentNullException">Thrown when the first or second player is null</exception>
-        public void Activate(SimplePlayer p1, SimplePlayer p2)
+        public void Activate(T p1, T p2)
         {
             if (p1 == null || p2 == null) throw new ArgumentNullException();
             if (CanActivate(p1, p2))
@@ -99,13 +98,13 @@ namespace Effect
     ///<summary>
     ///Represents an contion for an `Effect`
     ///</summary>
-    public class Condition
+    public class Condition<T>
     {
         ///<summary>
         ///The condition to evaluate
         ///</summary>
         [JsonIgnore]
-        public Func<SimplePlayer, SimplePlayer, bool> _condition { get; init; }
+        public Func<T, T, bool> _condition { get; init; }
 
         ///<summary>
         ///The condition as a string
@@ -119,7 +118,7 @@ namespace Effect
         ///<param name="p2">The second player</param>
         ///<exception cref="ArgumentNullException">Thrown when the first or second player is null</exception>
         ///<returns>True if the condition is true, false otherwise</returns>
-        public bool Evaluate(SimplePlayer p1, SimplePlayer p2)
+        public bool Evaluate(T p1, T p2)
         {
             if (p1 == null || p2 == null) throw new ArgumentNullException();
             return _condition.Invoke(p1, p2);
@@ -139,9 +138,9 @@ namespace Effect
         {
             if (conditionString == null) throw new ArgumentNullException();
 
-            var options = ScriptOptions.Default.AddReferences(typeof(SimplePlayer).Assembly).AddImports("Player");
+            var options = ScriptOptions.Default.AddReferences(typeof(T).Assembly).AddImports("Player");
 
-            var t = CSharpScript.EvaluateAsync<Func<SimplePlayer, SimplePlayer, bool>>(conditionString, options);
+            var t = CSharpScript.EvaluateAsync<Func<T, T, bool>>(conditionString, options);
 
             t.Wait();
 
@@ -154,13 +153,13 @@ namespace Effect
     ///<summary>
     ///Represents an action for an `Effect`
     ///</summary>
-    public class Action
+    public class Action<T>
     {
         ///<summary>
         ///The action to execute
         ///</summary>
         [JsonIgnore]
-        public Action<SimplePlayer, SimplePlayer> _action { get; init; }
+        public Action<T, T> _action { get; init; }
 
         ///<summary>
         ///The action as a string
@@ -174,7 +173,7 @@ namespace Effect
         ///<param name="p1">The first player</param>
         ///<param name="p2">The second player</param>
         ///<exception cref="ArgumentNullException">Thrown when the first or second player is null</exception>
-        public void Execute(SimplePlayer p1, SimplePlayer p2)
+        public void Execute(T p1, T p2)
         {
             if (p1 == null || p2 == null) throw new ArgumentNullException();
             _action.Invoke(p1, p2);
@@ -194,9 +193,9 @@ namespace Effect
         {
             if (actionString == null) throw new ArgumentNullException();
 
-            var options = ScriptOptions.Default.AddReferences(typeof(SimplePlayer).Assembly).AddImports("Player");
+            var options = ScriptOptions.Default.AddReferences(typeof(T).Assembly).AddImports("Player");
 
-            var t = CSharpScript.EvaluateAsync<Action<SimplePlayer, SimplePlayer>>(actionString, options);
+            var t = CSharpScript.EvaluateAsync<Action<T, T>>(actionString, options);
 
             t.Wait();
 

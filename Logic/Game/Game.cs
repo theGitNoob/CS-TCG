@@ -31,7 +31,7 @@ public static class GameController
         {
             System.Console.WriteLine(card.Id);
             System.Console.WriteLine(card.Effect);
-            Habilitie x = DeserializeEffect(card.Effect);
+            Habilitie<SimplePlayer> x = DeserializeEffect(card.Effect);
             System.Console.WriteLine(x.ActionString);
             System.Console.WriteLine(x.ConditionString);
         });
@@ -54,7 +54,7 @@ public static class GameController
         if (condition == null) throw new ArgumentNullException(nameof(condition));
         if (action == null) throw new ArgumentNullException(nameof(action));
 
-        Habilitie effect = new Habilitie(condition, action);
+        Habilitie<SimplePlayer> effect = new Habilitie<SimplePlayer>(condition, action);
 
         string jsonEffect = SerializeEffect(effect);
 
@@ -68,7 +68,7 @@ public static class GameController
     {
         if (name == null || description == null || condition == null || action == null) throw new ArgumentNullException();
 
-        Habilitie effect = new Habilitie(condition, action);
+        Habilitie<SimplePlayer> effect = new Habilitie<SimplePlayer>(condition, action);
 
         string jsonEffect = SerializeEffect(effect);
 
@@ -146,11 +146,11 @@ public static class GameController
     ///<param name="effect">The `Habilitie` to serialize</param>
     ///<exception cref="ArgumentNullException">Thrown when the `Habilitie` is null</exception>
     ///<returns>A string formated as json</returns>
-    static string SerializeEffect(Habilitie effect)
+    static string SerializeEffect(Habilitie<SimplePlayer> effect)
     {
         if (effect == null) throw new ArgumentNullException();
 
-        string jsonEffect = JsonSerializer.Serialize<Habilitie>(effect);
+        string jsonEffect = JsonSerializer.Serialize<Habilitie<SimplePlayer>>(effect);
 
         return jsonEffect;
     }
@@ -161,11 +161,11 @@ public static class GameController
     ///<param name="jsonEffect">The string to deserialize</param>
     ///<exception cref="ArgumentNullException">Thrown when the string is null</exception>
     ///<returns>A `Habilitie`</returns>
-    static Habilitie DeserializeEffect(string jsonEffect)
+    static Habilitie<SimplePlayer> DeserializeEffect(string jsonEffect)
     {
         if (jsonEffect == "") throw new ArgumentNullException();
 
-        Habilitie effect = JsonSerializer.Deserialize<Habilitie>(jsonEffect)!;
+        Habilitie<SimplePlayer> effect = JsonSerializer.Deserialize<Habilitie<SimplePlayer>>(jsonEffect)!;
 
         return effect;
     }
