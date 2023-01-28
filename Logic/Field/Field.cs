@@ -41,10 +41,18 @@ public class SimpleField : IField
     /// </summary>
     ///<param name="hero">Hero to be removed</param>
     ///<returns>True if the hero was removed, false otherwise</returns>
-    public bool RemoveHero(HeroCard hero)
+    public bool RemoveHero(HeroCard heroToDelete)
     {
-        throw new NotImplementedException();
+        foreach (HeroCard hero in HeroZone)
+        {
+            if (hero.Equals(heroToDelete))
+            {
+                HeroZone.Remove(hero);
+                return true;
+            }
+        }
 
+        return false;
     }
 
     ///<summary>
@@ -53,9 +61,19 @@ public class SimpleField : IField
     /// </summary>
     ///<param name="item">Item to be removed</param>
     ///<returns>True if the item was removed, false otherwise</returns>
-    public bool RemoveItem(ItemCard item)
+    public bool RemoveItem(ItemCard itemToDelete)
     {
-        throw new NotImplementedException();
+        foreach (ItemCard card in ItemZone)
+        {
+            if (card.Equals(itemToDelete))
+            {
+                ItemZone.Remove(itemToDelete);
+                card.RemoveFromHero();
+                return true;
+            }
+        }
+
+        return false;
     }
 
 

@@ -1,4 +1,6 @@
-﻿namespace Cards;
+﻿using System.Collections;
+
+namespace Cards;
 
 /// <summary>
 /// Represents a card type
@@ -58,7 +60,6 @@ public class SimpleCard : ICard
         Effect = effect;
 
         Id = GenRandId();
-
     }
 
     /// <summary>
@@ -67,6 +68,7 @@ public class SimpleCard : ICard
     /// <returns>A random id</returns>
     public int GenRandId() => Guid.NewGuid().ToString().GetHashCode();
 }
+
 /// <summary>
 /// Represents a hero card
 /// </summary>
@@ -90,7 +92,6 @@ public class ItemCard : SimpleCard
         Type = CardType.Item;
 
         Hero = null;
-
     }
 
     /// <summary>
@@ -122,12 +123,15 @@ public class ItemCard : SimpleCard
         }
 
         Hero = null;
-
     }
 
-
-
+    public override bool Equals(object? obj)
+    {
+        var c = obj as ItemCard;
+        return c!.Id == Id;
+    }
 }
+
 /// <summary>
 /// Represents a hero
 /// </summary>
@@ -159,7 +163,8 @@ public class HeroCard : SimpleCard
     /// <param name="effect">The effect of the hero</param>
     /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
     /// <returns>A new hero</returns>
-    public HeroCard(string name, int attack, int defense, string description, string effect) : base(name, description, effect)
+    public HeroCard(string name, int attack, int defense, string description, string effect) : base(name, description,
+        effect)
     {
         Type = CardType.Hero;
 
@@ -214,4 +219,10 @@ public class HeroCard : SimpleCard
         this.Defense = defense;
     }
 
+    public override bool Equals(object? o)
+    {
+        var h = o as HeroCard;
+
+        return h!.Id == Id;
+    }
 }

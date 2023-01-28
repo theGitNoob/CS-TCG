@@ -1,4 +1,6 @@
 ﻿using Game;
+using Player;
+
 namespace GameLoop;
 
 public interface IGameLoop
@@ -7,42 +9,40 @@ public interface IGameLoop
     void EndGame();
     void Update();
     void CheckEndGame();
-
 }
 
-public class GameLoop : IGameLoop
+public class GameLoop
 {
-    public Game GamePlay { get; }
-    public AIPlayer Player1 { get; }
-    public AIPlayer Player2 { get; }
-
-    public GameLoop(Game gamePlay, AIPlayer player1, AIPlayer player2)
+    public GameLoop()
     {
-        GamePlay = gamePlay;
-        Player1 = player1;
-        Player2 = player2;
+        // Player1 = player1;
+        // Player2 = player2;
     }
 
     public void StartGame()
     {
         bool player1Turn = true;
         bool gameStart = false;
-        while (!CheckEndGame())
+        while (!CheckEndGame(player1Turn))
         {
             if (!gameStart)
             {
                 gameStart = true;
-                GamePlay.NewGame(Player1, Player2);
+                GameController.NewGame();
             }
-            if(player1Turn)
+
+            if (player1Turn)
             {
-                Player1.Play();
+                GameController.RetrievePlayer(1).Play();
                 player1Turn = false;
-            }else
+            }
+            else
             {
-                Player2.Play();
+                GameController.RetrievePlayer(2).Play();
                 player1Turn = true;
             }
+
+            Task.Delay(1000);
         }
     }
 
@@ -58,24 +58,16 @@ public class GameLoop : IGameLoop
 
     public bool CheckEndGame(bool player)
     {
-        if(Player1.HP <= 0 || Player2.HP <= 0)
-        {
+        if (GameController.RetrievePlayer(1).HP <= 0 || GameController.RetrievePlayer(2).HP <= 0)
             return true;
-        }
-        if (player)
+
+        switch (player)
         {
-            if (Player1.Deck.Count == 0)
-            {
+            case true when GameController.RetrievePlayer(1).Deck.Cards.Count == 0:
+            case false when GameController.RetrievePlayer(2).Deck.Cards.Count == 0:
                 return true;
-            }
+            default:
+                return false;
         }
-        else
-        {
-            if (Player2.Deck.Count == 0)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -3,12 +3,12 @@ using Field;
 using Deck;
 using Player;
 using Effect;
-
 using System.Text.Json;
+
 namespace Game;
+
 public static class GameController
 {
-
     ///<summary>
     ///The cards in the game
     ///</summary>
@@ -19,12 +19,13 @@ public static class GameController
     ///</summary>
     public static string cardsPath = "../Content/cards.json";
 
+    private static List<AIPlayer> Players;
+
     ///<summary>
     ///Starts the game
     ///</summary>
     public static void StartGame()
     {
-
         LoadCards();
 
         Cards.ForEach(card =>
@@ -47,7 +48,8 @@ public static class GameController
     ///<param name="condition">The condition for the effect</param>
     ///<param name="action">The action for the effect</param>
     ///<exception cref="ArgumentNullException">Thrown when the name, description, condition or action is null</exception>
-    public static void CreateHeroCard(string name, int attack, int defense, string description, string condition, string action)
+    public static void CreateHeroCard(string name, int attack, int defense, string description, string condition,
+        string action)
     {
         if (name == null) throw new ArgumentNullException(nameof(name));
         if (description == null) throw new ArgumentNullException(nameof(description));
@@ -67,7 +69,8 @@ public static class GameController
 
     public static void CreateItemCard(string name, string description, string condition, string action)
     {
-        if (name == null || description == null || condition == null || action == null) throw new ArgumentNullException();
+        if (name == null || description == null || condition == null || action == null)
+            throw new ArgumentNullException();
 
         Habilitie effect = new Habilitie(condition, action);
 
@@ -132,13 +135,26 @@ public static class GameController
     ///<param name="maxItemCards">The maximum number of item cards a player can have</param>
     ///<param name="minDeckCards">The minimum number of cards a player can have in their deck</param>
     ///<param name="maxDeckCards">The maximum number of cards a player can have in their deck</param>
-    public static void NewGame( AIPlayer p1, AIPlayer p2, int maxHeroCards = 5, int maxItemCards = 5, int minDeckCards = 1, int maxDeckCards = 50)
+    public static void NewGame(int maxHeroCards = 5, int maxItemCards = 5, int minDeckCards = 1, int maxDeckCards = 50)
     {
         SimpleField field = new SimpleField(maxHeroCards, maxItemCards);
         SimpleDeck deck = new SimpleDeck(Cards, minDeckCards, maxDeckCards);
-        p1 = new AIPlayer(4000, maxHeroCards, maxItemCards, deck);
-        p2 = new AIPlayer(4000, maxHeroCards, maxItemCards, deck);
 
+        Players = new List<AIPlayer>()
+        {
+            new AIPlayer(4000, maxHeroCards, maxItemCards, deck),
+            new AIPlayer(4000, maxHeroCards, maxItemCards, deck)
+        };
+    }
+
+    public static AIPlayer RetrievePlayer(int i)
+    {
+        i--;
+        // if(    i  < 0  i >= Players.Count())\
+        if (i < 0 || i >= Players.Count)
+            throw new IndexOutOfRangeException();
+
+        return Players[i];
     }
 
 
@@ -176,5 +192,4 @@ public static class GameController
     {
         Environment.Exit(0);
     }
-
 }

@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <ProjectReference Include="..\Deck\Deck.csproj" />
-    <ProjectReference Include="..\Cards\Cards.csproj" />
-    <ProjectReference Include="..\Field\Field.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Cards\Cards.csproj" />
+      <ProjectReference Include="..\Deck\Deck.csproj" />
+      <ProjectReference Include="..\Field\Field.csproj" />
+    </ItemGroup>
 
 </Project>
