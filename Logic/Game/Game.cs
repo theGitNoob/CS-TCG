@@ -2,10 +2,12 @@
 using Field;
 using Deck;
 using Player;
-using Effect;
+using Habilitie;
 
 using System.Text.Json;
+
 namespace Game;
+
 public static class GameController
 {
 
@@ -19,60 +21,87 @@ public static class GameController
     ///</summary>
     public static string cardsPath = "../Content/cards.json";
 
+    public static string cardsDir = "../Content/";
+
     ///<summary>
     ///Starts the game
     ///</summary>
     public static void StartGame()
     {
-
+        //Reads all the cards and deserialize them
         LoadCards();
 
         Cards.ForEach(card =>
         {
             System.Console.WriteLine(card.Id);
             System.Console.WriteLine(card.Effect);
-            Habilitie<SimplePlayer> x = DeserializeEffect(card.Effect);
-            System.Console.WriteLine(x.ActionString);
-            System.Console.WriteLine(x.ConditionString);
+            System.Console.WriteLine(card.Effect.ConditionString);
+            System.Console.WriteLine(card.Effect.ActionString);
         });
+    }
+
+
+    ///<summary>
+    ///Creates a new `Effect` if is correct
+    ///</summary>
+    ///<param name="condition">The condition for the effect</param>
+    ///<param name="action">The action for the effect</param>
+    ///<returns>A new `Effect`</returns>
+    public static Effect CreateEffect(string condition, string action)
+    {
+        Effect.CheckIsCorrect<SimplePlayer>(condition, action, "Player");
+
+        Effect effect = new Effect(condition, action, "Player");
+
+        return effect;
     }
 
     ///<summary>
     ///Creates a new `HeroCard`
     ///</summary>
-    ///<param name="name">The name of the card</param>
+    ///<param name="name">The name of the `HeroCard`</param>
     ///<param name="attack">The attack of the `HeroCard`</param>
     ///<param name="defense">The defense of the `HeroCard`</param>
     ///<param name="description">The description of the card</param>
     ///<param name="condition">The condition for the effect</param>
     ///<param name="action">The action for the effect</param>
     ///<exception cref="ArgumentNullException">Thrown when the name, description, condition or action is null</exception>
-    public static void CreateHeroCard(string name, int attack, int defense, string description, string condition, string action)
+    ///<exception cref="CompilationErrorException">Thrown when the condition or action are not correct</exception>
+    public static void CreateHeroCard(string? name, int attack, int defense, string? description, string? condition, string? action)
     {
         if (name == null) throw new ArgumentNullException(nameof(name));
         if (description == null) throw new ArgumentNullException(nameof(description));
         if (condition == null) throw new ArgumentNullException(nameof(condition));
         if (action == null) throw new ArgumentNullException(nameof(action));
 
-        Habilitie<SimplePlayer> effect = new Habilitie<SimplePlayer>(condition, action);
+        Effect effect = CreateEffect(condition, action);
 
-        string jsonEffect = SerializeEffect(effect);
-
-        HeroCard card = new HeroCard(name, attack, defense, description, jsonEffect);
+        HeroCard card = new HeroCard(name, attack, defense, description, effect);
 
         Cards.Add(card);
     }
 
 
-    public static void CreateItemCard(string name, string description, string condition, string action)
+    ///<summary>
+    ///Creates a new `ItemCard`
+    ///</summary>
+    ///<param name="name">The name of the `ItemCard`</param>
+    ///<param name="description">The description of the card</param>
+    ///<param name="condition">The condition for the effect</param>
+    ///<param name="action">The action for the effect</param>
+    ///<exception cref="ArgumentNullException">Thrown when the name, description, condition or action is null</exception>
+    ///<exception cref="CompilationErrorException">Thrown when the condition or action are not correct</exception>
+    public static void CreateItemCard(string? name, string? description, string? condition, string? action)
     {
-        if (name == null || description == null || condition == null || action == null) throw new ArgumentNullException();
+        if (name == null) throw new ArgumentNullException(nameof(name));
+        if (description == null) throw new ArgumentNullException(nameof(description));
+        if (condition == null) throw new ArgumentNullException(nameof(condition));
+        if (action == null) throw new ArgumentNullException(nameof(action));
 
-        Habilitie<SimplePlayer> effect = new Habilitie<SimplePlayer>(condition, action);
 
-        string jsonEffect = SerializeEffect(effect);
+        Effect effect = CreateEffect(condition, action);
 
-        ItemCard card = new ItemCard(name, description, jsonEffect);
+        ItemCard card = new ItemCard(name, description, effect);
 
         Cards.Add(card);
     }
@@ -106,6 +135,16 @@ public static class GameController
     ///</summary>
     public static void LoadCards()
     {
+        if (!Directory.Exists(cardsDir))
+        {
+            Directory.CreateDirectory(cardsDir);
+        }
+
+        if (!File.Exists(cardsPath))
+        {
+            File.Create(cardsPath).Dispose();
+        }
+
         string jsonFile = File.ReadAllText(cardsPath);
 
         if (jsonFile == "") return;
@@ -139,37 +178,9 @@ public static class GameController
 
     }
 
-
     ///<summary>
-    ///Serializes a `Habilitie` to json format
+    ///Saves all the cards to disk and gracefully shutdown
     ///</summary>
-    ///<param name="effect">The `Habilitie` to serialize</param>
-    ///<exception cref="ArgumentNullException">Thrown when the `Habilitie` is null</exception>
-    ///<returns>A string formated as json</returns>
-    static string SerializeEffect(Habilitie<SimplePlayer> effect)
-    {
-        if (effect == null) throw new ArgumentNullException();
-
-        string jsonEffect = JsonSerializer.Serialize<Habilitie<SimplePlayer>>(effect);
-
-        return jsonEffect;
-    }
-
-    ///<summary>
-    ///Deserializes a string formated as json into a `Habilitie`
-    ///</summary>
-    ///<param name="jsonEffect">The string to deserialize</param>
-    ///<exception cref="ArgumentNullException">Thrown when the string is null</exception>
-    ///<returns>A `Habilitie`</returns>
-    static Habilitie<SimplePlayer> DeserializeEffect(string jsonEffect)
-    {
-        if (jsonEffect == "") throw new ArgumentNullException();
-
-        Habilitie<SimplePlayer> effect = JsonSerializer.Deserialize<Habilitie<SimplePlayer>>(jsonEffect)!;
-
-        return effect;
-    }
-
     public static void ExitGame()
     {
         SaveCards();
