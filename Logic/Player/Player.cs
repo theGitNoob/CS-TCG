@@ -156,15 +156,6 @@ public class SimplePlayer : IPlayer
     }
 
     ///<summary>
-    ///Checks if the player has lost
-    ///</summary>
-    ///<returns>True if the player has lost, false otherwise</returns>
-    public bool HasLost()
-    {
-        return HP == 0 || Deck.IsEmpty();
-    }
-
-    ///<summary>
     ///Creates a new Human Player
     ///</summary>
     ///<param name="hp">Initial life of the player</param>

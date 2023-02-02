@@ -1,4 +1,7 @@
-﻿namespace GameLoop;
+﻿using Game;
+using Player;
+
+namespace GameLoop;
 
 public interface IGameLoop
 {
@@ -6,21 +9,41 @@ public interface IGameLoop
     void EndGame();
     void Update();
     void CheckEndGame();
-
 }
 
-public class GameLoop : IGameLoop
+public class GameLoop
 {
-
     public GameLoop()
     {
-        throw new System.NotImplementedException();
+        // Player1 = player1;
+        // Player2 = player2;
     }
 
     public void StartGame()
     {
-        throw new System.NotImplementedException();
+        bool player1Turn = true;
+        bool gameStart = false;
+        while (!CheckEndGame(player1Turn))
+        {
+            if (!gameStart)
+            {
+                gameStart = true;
+                GameController.NewGame();
+            }
 
+            if (player1Turn)
+            {
+                GameController.RetrievePlayer(1).Play();
+                player1Turn = false;
+            }
+            else
+            {
+                GameController.RetrievePlayer(2).Play();
+                player1Turn = true;
+            }
+
+            Task.Delay(1000);
+        }
     }
 
     public void EndGame()
@@ -33,8 +56,18 @@ public class GameLoop : IGameLoop
         throw new System.NotImplementedException();
     }
 
-    public void CheckEndGame()
+    public bool CheckEndGame(bool player)
     {
-        throw new System.NotImplementedException();
+        if (GameController.RetrievePlayer(1).HP <= 0 || GameController.RetrievePlayer(2).HP <= 0)
+            return true;
+
+        switch (player)
+        {
+            case true when GameController.RetrievePlayer(1).Deck.Cards.Count == 0:
+            case false when GameController.RetrievePlayer(2).Deck.Cards.Count == 0:
+                return true;
+            default:
+                return false;
+        }
     }
 }

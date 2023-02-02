@@ -8,9 +8,9 @@ using System.Text.Json;
 
 namespace Game;
 
+
 public static class GameController
 {
-
     ///<summary>
     ///The cards in the game
     ///</summary>
@@ -23,12 +23,14 @@ public static class GameController
 
     public static string cardsDir = "../Content/";
 
+    private static List<AIPlayer>? Players;
+
     ///<summary>
     ///Starts the game
     ///</summary>
     public static void StartGame()
     {
-        //Reads all the cards and deserialize them
+
         LoadCards();
 
         Cards.ForEach(card =>
@@ -79,6 +81,7 @@ public static class GameController
         HeroCard card = new HeroCard(name, attack, defense, description, effect);
 
         Cards.Add(card);
+        SaveCards();
     }
 
 
@@ -104,6 +107,7 @@ public static class GameController
         ItemCard card = new ItemCard(name, description, effect);
 
         Cards.Add(card);
+        SaveCards();
     }
 
 
@@ -173,9 +177,22 @@ public static class GameController
     {
         SimpleField field = new SimpleField(maxHeroCards, maxItemCards);
         SimpleDeck deck = new SimpleDeck(Cards, minDeckCards, maxDeckCards);
-        AIPlayer p1 = new AIPlayer(4000, maxHeroCards, maxItemCards, deck);
-        AIPlayer p2 = new AIPlayer(4000, maxHeroCards, maxItemCards, deck);
 
+        Players = new List<AIPlayer>()
+        {
+            new AIPlayer(4000, maxHeroCards, maxItemCards, deck),
+            new AIPlayer(4000, maxHeroCards, maxItemCards, deck)
+        };
+    }
+
+    public static AIPlayer RetrievePlayer(int i)
+    {
+        i--;
+        // if(    i  < 0  i >= Players.Count())\
+        if (i < 0 || i >= Players.Count)
+            throw new IndexOutOfRangeException();
+
+        return Players[i];
     }
 
     ///<summary>
@@ -183,8 +200,6 @@ public static class GameController
     ///</summary>
     public static void ExitGame()
     {
-        SaveCards();
         Environment.Exit(0);
     }
-
 }

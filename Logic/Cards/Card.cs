@@ -1,4 +1,4 @@
-﻿using Habilitie;
+using Habilitie;
 
 namespace Cards;
 public interface ICard
@@ -77,7 +77,6 @@ public class SimpleCard : ICard
         Effect = effect;
 
         Id = GenRandId();
-
     }
 
     /// <summary>
@@ -86,6 +85,7 @@ public class SimpleCard : ICard
     /// <returns>A random id</returns>
     public int GenRandId() => Guid.NewGuid().ToString().GetHashCode();
 }
+
 /// <summary>
 /// Represents a hero card
 /// </summary>
@@ -109,7 +109,6 @@ public class ItemCard : SimpleCard
         Type = CardType.Item;
 
         Hero = null;
-
     }
 
     /// <summary>
@@ -141,12 +140,15 @@ public class ItemCard : SimpleCard
         }
 
         Hero = null;
-
     }
 
-
-
+    public override bool Equals(object? obj)
+    {
+        var c = obj as ItemCard;
+        return c!.Id == Id;
+    }
 }
+
 /// <summary>
 /// Represents a hero
 /// </summary>
@@ -233,4 +235,10 @@ public class HeroCard : SimpleCard
         this.Defense = defense;
     }
 
+    public override bool Equals(object? o)
+    {
+        var h = o as HeroCard;
+
+        return h!.Id == Id;
+    }
 }
