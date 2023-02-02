@@ -1,10 +1,11 @@
-@using Effect;
-@using System.Text.Json;
 @page "/newhero"
+@inject IJSRuntime JS
+
 <div style="display: grid;">
+  <div class="error-div"></div>
   <span style="font-size: xx-large;justify-self:center;">New Hero</span><br />
 
-  <input type="text" placeholder="Name" style="justify-self:center;" @bind="@Name">
+  <input type="text" placeholder="Hero Name" style="justify-self:center;" @bind="@HeroName">
 
   <input type="number" placeholder="Defense" style="margin-top:20px;justify-self:center;" @bind="@Defense">
 
@@ -24,49 +25,42 @@
     </code>
   </pre>
 
-  <textarea placeholder="Description" style="margin-top: 20px;" @bind=@Description></textarea>
+  <textarea placeholder="Description" style="margin-top: 20px;" @bind=@HeroDescription></textarea>
 
   <input type="button" style="font-size: x-large;margin-top:20px" value="Create New Hero" class="btn btn-success"
-    @onclick="OnClickBtnMethod" />
+    @onclick="@OnClickBtnMethod" />
 </div>
 
 @code {
-  public string Condition;
+  public string? Action;
 
-  public string Action;
+  public string? Condition;
 
-  public string Name;
+  public string? HeroName;
 
-  public string Description;
+  public string? HeroDescription;
 
   public int Attack;
 
   public int Defense;
-  public void OnClickBtnMethod()
+
+  public async void OnClickBtnMethod()
   {
     try
     {
-      @* Habilitie effect = new Habilitie("(p1,p2)=>p1.HP > p2.HP", "(p1,p2)=>p1.HP -= 10");
-
-        string jsonEffect = JsonSerializer.Serialize<Habilitie>(effect);
-        System.Console.WriteLine(jsonEffect);
-        Habilitie x = JsonSerializer.Deserialize<Habilitie>(jsonEffect);
-
-        System.Console.WriteLine(x.ActionString);
-        System.Console.WriteLine(x.ConditionString); *@
-
-      @* System.Console.WriteLine(jsonEffect); *@
-      @* System.Console.WriteLine(x.ConditionString); *@
-
-
-
-      GameController.CreateHeroCard(Name, Attack, Defense, Description, Condition, Action);
-
+      Game.GameController.CreateHeroCard(HeroName, Attack, Defense, HeroDescription, Condition, Action);
     }
     catch (System.Exception e)
     {
-      System.Console.WriteLine(e.ToString());
-      throw;
+      if (e is CompilationErrorException || e is ArgumentNullException)
+      {
+        await JS.InvokeVoidAsync("ShowError", e.Message);
+      }
+      else
+      {
+        throw e;
+      }
     }
+
   }
 }
