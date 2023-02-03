@@ -94,7 +94,7 @@ public class ItemCard : SimpleCard
     /// <summary>
     /// The hero that has this item
     /// </summary>
-    private HeroCard? Hero;
+    public HeroCard? Hero{get; private set;}
 
     /// <summary>
     /// Creates a new item
