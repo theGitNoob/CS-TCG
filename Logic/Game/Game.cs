@@ -25,7 +25,7 @@ public static class GameController
     ///<summary>
     ///The path to the heros.json file
     ///</summary>
-    public static string heroesFilePath = "../Content/heros.json";
+    public static string heroesFilePath = "../Content/heroes.json";
 
     ///<summary>
     ///The path to the cards directory
@@ -41,7 +41,24 @@ public static class GameController
 
         LoadCards();
 
-        Cards.ForEach(card => Console.WriteLine($"{card.Name} - {card as HeroCard}"));
+
+
+        if (Environment.GetEnvironmentVariable("ENV") == "dev")
+        {
+            ///Prints attack and defense if it is a hero
+            Cards.ForEach(card =>
+            {
+                if (card is HeroCard hero)
+                {
+                    System.Console.WriteLine($"{hero.Name} {hero.Attack}");
+                    System.Console.WriteLine($"{hero.Name} {hero.Defense}");
+                }
+                else if (card is ItemCard item)
+                {
+                    System.Console.WriteLine($"{item.Name} {item.Description}");
+                }
+            });
+        }
     }
 
 
