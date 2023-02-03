@@ -9,7 +9,7 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
-        <div class="nav-item px-3">
+        <div class="nav-item px-3" @onclick="NewGame">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> New Game
             </NavLink>
@@ -40,6 +40,11 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private void NewGame()
+    {
+        Game.GameController.NewGame();
     }
     private void ExitGame()
     {

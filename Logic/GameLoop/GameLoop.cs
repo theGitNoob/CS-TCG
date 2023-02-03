@@ -19,6 +19,19 @@ public class GameLoop
     public GameLoop(params SimplePlayer[] players)
     {
         this._players = players;
+
+        for (int curr = 0; curr < players.Length; curr++)
+        {
+            for (int next = curr + 1; next < players.Length; next++)
+            {
+                AIPlayer p1 = (AIPlayer)players[curr];
+                AIPlayer p2 = (AIPlayer)players[next];
+
+                p1.SetEnemy(p2);
+                p2.SetEnemy(p1);
+
+            }
+        }
     }
 
     ///<summary>
@@ -75,7 +88,7 @@ public class GameLoop
     ///<returns>True if the player has lost, false otherwise</returns>
     public bool CheckPlayerHasLost(SimplePlayer player)
     {
-        if (player.HP == 0 || player.Hand.Count == 0)
+        if (player.HP == 0 || player.Deck.IsEmpty())
             return true;
 
         return false;

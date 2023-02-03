@@ -243,7 +243,11 @@ public class HeroCard : SimpleCard
         this.Defense = defense;
     }
 
-
+    ///<summary>
+    ///Reimplementing the equals method
+    ///</summary>
+    ///<param name="obj">The object to compare</param>
+    ///<returns>True if the objects are equal, false otherwise</returns>
     public override bool Equals(object? obj)
     {
         if (!(obj is HeroCard)) return false;
@@ -253,6 +257,10 @@ public class HeroCard : SimpleCard
         return hero!.Id == Id;
     }
 
+    ///<summary>
+    ///Reimplementing the gethashcode method
+    ///</summary>
+    ///<returns>The hashcode of the object</returns>
     public override int GetHashCode()
     {
         return this.Id;

@@ -6,6 +6,7 @@
     <ProjectReference Include="..\Field\Field.csproj" />
     <ProjectReference Include="..\Player\Player.csproj" />
     <ProjectReference Include="..\Effect\Effect.csproj" />
+    <ProjectReference Include="..\GameLoop\GameLoop.csproj" />
   </ItemGroup>
 
 

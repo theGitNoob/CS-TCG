@@ -127,11 +127,14 @@ public class SimpleField : IField
     ///<summary>
     ///Returns a hero card with the given name
     ///</summary>
+    ///<param name="name">Name of the hero to be found</param>
+    ///<exception cref="Exception">Thrown when the hero is not found</exception>
+    ///<returns>The hero with the given name</returns>
     public HeroCard GetHeroCard(string name)
     {
         foreach (HeroCard hero in HeroZone)
         {
-            if(hero.Name == name)
+            if (hero.Name == name)
             {
                 return hero;
             }
@@ -141,11 +144,14 @@ public class SimpleField : IField
     ///<summary>
     ///Returns an item card with the given name
     ///</summary>
+    ///<param name="name">Name of the item to be found</param>
+    ///<exception cref="Exception">Thrown when the item is not found</exception>
+    ///<returns>The item with the given name</returns>
     public ItemCard GetItemCard(string name)
     {
         foreach (ItemCard item in ItemZone)
         {
-            if(item.Name == name)
+            if (item.Name == name)
             {
                 return item;
             }
