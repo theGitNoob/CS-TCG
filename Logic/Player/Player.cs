@@ -10,6 +10,11 @@ using Deck;
 public interface IPlayer
 {
     ///<summary>
+    ///Player's Name
+    ///<summary>
+    string Name { get; }
+
+    ///<summary>
     ///The player's health points
     ///</summary>
     int HP { set; get; }
@@ -45,10 +50,7 @@ public interface IPlayer
 ///</summary>
 public class SimplePlayer : IPlayer
 {
-    ///<summary>
-    ///Indicates if the player is in the initial turn
-    ///</summary>
-    protected bool _initialTurn { get; set; }
+    public string Name { get; set; }
 
     ///<summary>
     ///The player's health points
@@ -137,14 +139,6 @@ public class SimplePlayer : IPlayer
         }
     }
 
-    ///<summary>
-    ///Ends the turn of the player
-    ///</summary>
-    public void EndTurn()
-    {
-        _initialTurn = false;
-        throw new NotImplementedException();
-    }
 
     ///<summary>
     ///Update the life of the player
@@ -156,30 +150,22 @@ public class SimplePlayer : IPlayer
     }
 
     ///<summary>
-    ///Checks if the player has lost
-    ///</summary>
-    ///<returns>True if the player has lost, false otherwise</returns>
-    public bool HasLost()
-    {
-        return HP == 0 || Deck.IsEmpty();
-    }
-
-    ///<summary>
     ///Creates a new Human Player
     ///</summary>
+    ///<param name="name"> Name of the player</param>
     ///<param name="hp">Initial life of the player</param>
     ///<param name="maxHeroCards">Max number of Hero cards on the Field</param>
     ///<param name="maxItemCards">Max number of Item cards on the Field</param>
     ///<param name="deck">Deck of the player</param>
     ///<param name="field">Field of the player</param>
     ///<returns>A new Human Player</returns>
-    public SimplePlayer(int hp, int maxHeroCards, int maxItemCards, SimpleDeck deck)
+    public SimplePlayer(string name, int hp, int maxHeroCards, int maxItemCards, SimpleDeck deck)
     {
-        HP = hp;
-        Deck = deck;
-        _initialTurn = true;
-        Hand = new List<SimpleCard>();
-        PlayerField = new SimpleField(maxHeroCards, maxItemCards);
+        this.Name = name;
+        this.HP = hp;
+        this.Deck = deck;
+        this.Hand = new List<SimpleCard>();
+        this.PlayerField = new SimpleField(maxHeroCards, maxItemCards);
     }
 }
 
@@ -195,12 +181,13 @@ public class AIPlayer : SimplePlayer
     ///<summary>
     ///Creates a new AI Player
     ///</summary>
+    ///<param name="name"> Name of the player</param>
     ///<param name="hp">Initial life of the player</param>
     ///<param name="maxHeroCards">Max number of Hero cards on the Field</param>
     ///<param name="maxItemCards">Max number of Item cards on the Field</param>
     ///<param name="deck">Deck of the player</param>
     ///<returns>A new AI Player</returns>
-    public AIPlayer(int hp, int maxHeroCards, int maxItemCards, SimpleDeck deck) : base(hp, maxHeroCards, maxItemCards, deck)
+    public AIPlayer(string name, int hp, int maxHeroCards, int maxItemCards, SimpleDeck deck) : base(name, hp, maxHeroCards, maxItemCards, deck)
     {
 
     }
@@ -225,10 +212,6 @@ public class AIPlayer : SimplePlayer
             throw new Exception("Enemy not set");
         }
 
-        int drawCardsCnt = (_initialTurn == true) ? 5 : 1;
-
-        DrawCards(drawCardsCnt);
-
         if (CanInvokeHero())
         {
             HeroCard hero = GetHeroWithHigherAttack(Hand);
@@ -239,7 +222,7 @@ public class AIPlayer : SimplePlayer
 
         if (HasHeroOnField())
         {
-            //My strongest hero
+            //AI strongest Hero
             HeroCard strongestHero = GetHeroWithHigherAttack(PlayerField.HeroZone);
 
             //Atack the enemy hero with the lowest defense
@@ -268,8 +251,6 @@ public class AIPlayer : SimplePlayer
         }
 
 
-        //End turn
-        EndTurn();
     }
 
     ///<summary>

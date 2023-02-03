@@ -1,40 +1,83 @@
-﻿namespace GameLoop;
+﻿using Player;
 
-public interface IGameLoop
+namespace GameLoop;
+
+///<summary>
+///The game loop
+///</summary>
+public class GameLoop
 {
-    void StartGame();
-    void EndGame();
-    void Update();
-    void CheckEndGame();
+    ///<summary>
+    ///The players in the game
+    ///</summary>
+    SimplePlayer[] _players { get; set; }
 
-}
-
-public class GameLoop : IGameLoop
-{
-
-    public GameLoop()
+    ///<summary>
+    ///Creates a new `GameLoop`
+    ///</summary>
+    ///<param name="players">The players in the game</param>
+    public GameLoop(params SimplePlayer[] players)
     {
-        throw new System.NotImplementedException();
+        this._players = players;
     }
 
+    ///<summary>
+    ///Starts the game
+    ///</summary>
     public void StartGame()
     {
-        throw new System.NotImplementedException();
+        bool initialTurn = true;
+
+        while (true)
+        {
+            foreach (SimplePlayer player in _players)
+            {
+                if (CheckPlayerHasLost(player))
+                {
+                    EndGame();
+                    return;
+                }
+
+                if (player is AIPlayer)
+                {
+                    AIPlayer aiPlayer = (AIPlayer)player;
+                    aiPlayer.DrawCards(initialTurn ? 5 : 1);
+                    aiPlayer.Play();
+                }
+            }
+            initialTurn = false;
+        }
 
     }
 
+    ///<summary>
+    ///Ends the game and prints the winning player
+    ///</summary>
     public void EndGame()
     {
-        throw new System.NotImplementedException();
+        foreach (SimplePlayer player in _players)
+        {
+            if (CheckPlayerHasLost(player))
+            {
+                System.Console.WriteLine($"{player.Name} has lost");
+            }
+            else
+            {
+                System.Console.WriteLine($"{player.Name} has won");
+            }
+        }
     }
 
-    public void Update()
+    ///<summary>
+    ///Checks whether a player has lost because of his HP or his hand
+    ///</summary>
+    ///<param name="player">The player to check</param>
+    ///<returns>True if the player has lost, false otherwise</returns>
+    public bool CheckPlayerHasLost(SimplePlayer player)
     {
-        throw new System.NotImplementedException();
-    }
+        if (player.HP == 0 || player.Hand.Count == 0)
+            return true;
 
-    public void CheckEndGame()
-    {
-        throw new System.NotImplementedException();
+        return false;
     }
 }

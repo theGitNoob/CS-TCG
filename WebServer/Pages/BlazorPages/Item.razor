@@ -1,36 +1,55 @@
-@using Player;
 @page "/newitem"
+@inject IJSRuntime JS
+
 <div style="display: grid;">
-    <span style="font-size: xx-large;justify-self:center">New Item</span><br />
-    <input type="text" placeholder="Name" style="justify-self:center;">
-    <textarea placeholder="Description" style="margin-top:20px"></textarea>
-    <textarea style="font-size: x-large; height: 200px;margin-top: 20px;" width="100%" @bind="@Text"
-        placeholder="Your code here">
-  </textarea>
-    <input type="button" style="font-size: x-large;margin-top:20px" value="Create New Item" class="btn btn-success"
-        @onclick="OnClickBtnMethod" />
+	<div class="error-div"></div>
+	<span style="font-size: xx-large;justify-self:center">New Item</span><br />
+
+	<input type="text" placeholder="Item Name" style="justify-self:center;" @bind="@ItemName">
+
+	<textarea placeholder="Description" style="margin-top:20px" @bind="@ItemDescription"></textarea>
+
+	<pre>
+		<code style="width: 100%;">
+			<textarea style="margin-top:20px;font-size: x-large; height: 100px;width:100%;" @bind="@ConditionCode"
+			placeholder="Code of the condition"></textarea>
+		</code>
+	</pre>
+
+	<pre>
+		<code style="width: 100%;">
+			<textarea style="margin-top:20px;font-size: x-large; height: 100px;width:100%" @bind="@ActionCode"
+			placeholder="Code of the action"></textarea>
+		</code>
+	</pre>
+
+	<input type="button" style="font-size: x-large;margin-top:20px" value="Create New Item" class="btn btn-success"
+		@onclick="OnClickBtnMethod" />
 </div>
 @code {
-    public string Text;
-    public void OnClickBtnMethod()
-    {
-        System.Console.WriteLine(Text);
+	public string? ConditionCode;
 
-        var options = ScriptOptions.Default.AddReferences(typeof(SimplePlayer).Assembly).AddImports("Player");
-        @* System.Console.WriteLine(typeof(SimplePlayer).AssemblyQualifiedName); *@
+	public string? ActionCode;
 
-        var t = CSharpScript.EvaluateAsync<Func<SimplePlayer, SimplePlayer, bool>>(Text, options);
-        t.Wait();
+	public string? ItemName;
 
-        SimpleDeck deck = new SimpleDeck(GameController.Cards, 1, 50);
-        AIPlayer p1 = new AIPlayer(4000, 5, 5, deck);
-        AIPlayer p2 = new AIPlayer(4000, 5, 5, deck);
-        p1.SetEnemy(p2);
-        p2.SetEnemy(p1);
-        System.Console.WriteLine(t.Result.Invoke(p1, p2));
-
-        @* t.Wait(); *@
-        @* System.Console.WriteLine(t.Result); *@
-
-    }
+	public string? ItemDescription;
+	public async void OnClickBtnMethod()
+	{
+		try
+		{
+			Game.GameController.CreateItemCard(ItemName, ItemDescription, ConditionCode, ActionCode);
+		}
+		catch (System.Exception err)
+		{
+			if (err is CompilationErrorException || err is ArgumentNullException)
+			{
+				await JS.InvokeVoidAsync("ShowError", err.Message);
+			}
+			else
+			{
+				throw err;
+			}
+		}
+	}
 }

@@ -1,5 +1,22 @@
-﻿namespace Cards;
+using Habilitie;
 
+namespace Cards;
+public interface ICard
+{
+    CardType Type { get; }
+
+    int Id { get; init; }
+
+    int GenRandId();
+
+    String Name { get; }
+
+    String Description { get; }
+
+    Effect Effect { get; }
+
+
+}
 /// <summary>
 /// Represents a card type
 /// </summary>
@@ -37,7 +54,7 @@ public class SimpleCard : ICard
     /// <summary>
     /// The effect of the card
     /// </summary>
-    public string Effect { get; init; }
+    public Effect Effect { get; init; }
 
     /// <summary>
     /// Creates a new card
@@ -47,9 +64,11 @@ public class SimpleCard : ICard
     /// <param name="effect">The effect of the card</param>
     /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
     /// <returns>A new card</returns>
-    public SimpleCard(string name, string description, string effect)
+    public SimpleCard(string name, string description, Effect effect)
     {
-        if (name == null || description == null || effect == null) throw new ArgumentNullException();
+        if (name == null) throw new ArgumentNullException(nameof(name));
+        if (description == null) throw new ArgumentNullException(nameof(description));
+        if (effect == null) throw new ArgumentNullException(nameof(effect));
 
         Name = name;
 
@@ -58,7 +77,6 @@ public class SimpleCard : ICard
         Effect = effect;
 
         Id = GenRandId();
-
     }
 
     /// <summary>
@@ -67,6 +85,7 @@ public class SimpleCard : ICard
     /// <returns>A random id</returns>
     public int GenRandId() => Guid.NewGuid().ToString().GetHashCode();
 }
+
 /// <summary>
 /// Represents a hero card
 /// </summary>
@@ -85,12 +104,11 @@ public class ItemCard : SimpleCard
     /// <param name="effect">The effect of the item</param>
     /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
     /// <returns>A new item</returns>
-    public ItemCard(string name, string description, string effect) : base(name, description, effect)
+    public ItemCard(string name, string description, Effect effect) : base(name, description, effect)
     {
         Type = CardType.Item;
 
         Hero = null;
-
     }
 
     /// <summary>
@@ -122,12 +140,23 @@ public class ItemCard : SimpleCard
         }
 
         Hero = null;
-
     }
 
+    public override bool Equals(object? obj)
+    {
+        if (!(obj is ItemCard)) return false;
 
+        var item = obj as ItemCard;
 
+        return item!.Id == Id;
+    }
+
+    public override int GetHashCode()
+    {
+        return this.Id;
+    }
 }
+
 /// <summary>
 /// Represents a hero
 /// </summary>
@@ -159,7 +188,7 @@ public class HeroCard : SimpleCard
     /// <param name="effect">The effect of the hero</param>
     /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
     /// <returns>A new hero</returns>
-    public HeroCard(string name, int attack, int defense, string description, string effect) : base(name, description, effect)
+    public HeroCard(string name, int attack, int defense, string description, Effect effect) : base(name, description, effect)
     {
         Type = CardType.Hero;
 
@@ -214,4 +243,18 @@ public class HeroCard : SimpleCard
         this.Defense = defense;
     }
 
+
+    public override bool Equals(object? obj)
+    {
+        if (!(obj is HeroCard)) return false;
+
+        var hero = obj as HeroCard;
+
+        return hero!.Id == Id;
+    }
+
+    public override int GetHashCode()
+    {
+        return this.Id;
+    }
 }
