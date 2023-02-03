@@ -193,9 +193,7 @@ public static class GameController
         AIPlayer p1 = new AIPlayer("p1", 4000, maxHeroCards, maxItemCards, deck);
         AIPlayer p2 = new AIPlayer("p2", 4000, maxHeroCards, maxItemCards, deck);
 
-        SimplePlayer[] players = new SimplePlayer[] { p1, p2 };
-
-        GameLoop.GameLoop loop = new GameLoop.GameLoop(players);
+        GameLoop.GameLoop loop = new GameLoop.GameLoop(new List<SimplePlayer> { p1, p2 });
 
         loop.StartGame();
     }
