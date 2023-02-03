@@ -93,7 +93,13 @@ public class SimpleDeck : IDeck
     /// <param name="maxCards">Maximum number of cards in the deck</param>
     public SimpleDeck(List<SimpleCard> cards, int minCards, int maxCards)
     {
-        Cards = cards;
+        Cards = new List<SimpleCard>();
+
+        foreach (SimpleCard card in cards)
+        {
+            Cards.Add(card);
+        }
+
         MinCards = minCards;
         MaxCards = maxCards;
 
