@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Game\Game.csproj" />
       <ProjectReference Include="..\Player\Player.csproj" />
       <ProjectReference Include="..\Deck\Deck.csproj" />
       <ProjectReference Include="..\Cards\Cards.csproj" />

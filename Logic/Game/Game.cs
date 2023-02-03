@@ -23,7 +23,6 @@ public static class GameController
 
     public static string cardsDir = "../Content/";
 
-    private static List<AIPlayer>? Players;
 
     ///<summary>
     ///Starts the game
@@ -199,21 +198,12 @@ public static class GameController
         SimpleField field = new SimpleField(maxHeroCards, maxItemCards);
         SimpleDeck deck = new SimpleDeck(Cards, minDeckCards, maxDeckCards);
 
-        Players = new List<AIPlayer>()
-        {
-            new AIPlayer("p1",4000, maxHeroCards, maxItemCards, deck),
-            new AIPlayer("p2",4000, maxHeroCards, maxItemCards, deck)
-        };
-    }
+        AIPlayer p1 = new AIPlayer("p1", 4000, maxHeroCards, maxItemCards, deck);
+        AIPlayer p2 = new AIPlayer("p2", 4000, maxHeroCards, maxItemCards, deck);
 
-    public static SimplePlayer? RetrievePlayer(int playerIdx)
-    {
-        playerIdx--;
 
-        if (playerIdx < 0 || playerIdx >= Players?.Count)
-            throw new IndexOutOfRangeException();
-
-        return Players?[playerIdx];
+        GameLoop.GameLoop loop = new GameLoop.GameLoop(p1, p2);
+        loop.StartGame();
     }
 
     ///<summary>
