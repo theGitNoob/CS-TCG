@@ -251,6 +251,15 @@ public class AIPlayer : SimplePlayer
         }
 
 
+        //Activates all possibly effects
+        List<SimpleCard> cards = Enumerable.Concat<SimpleCard>(HeroZone, ItemZone).ToList();
+
+        foreach (SimpleCard card in cards)
+        {
+            if (card.Effect.CanActivate<SimplePlayer>(this, _enemy))
+                card.Effect.Activate<SimplePlayer>(this, _enemy);
+
+        }
     }
 
     ///<summary>
