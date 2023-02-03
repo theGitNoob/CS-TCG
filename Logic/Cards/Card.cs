@@ -144,8 +144,16 @@ public class ItemCard : SimpleCard
 
     public override bool Equals(object? obj)
     {
-        var c = obj as ItemCard;
-        return c!.Id == Id;
+        if (!(obj is ItemCard)) return false;
+
+        var item = obj as ItemCard;
+
+        return item!.Id == Id;
+    }
+
+    public override int GetHashCode()
+    {
+        return this.Id;
     }
 }
 
@@ -235,10 +243,18 @@ public class HeroCard : SimpleCard
         this.Defense = defense;
     }
 
-    public override bool Equals(object? o)
-    {
-        var h = o as HeroCard;
 
-        return h!.Id == Id;
+    public override bool Equals(object? obj)
+    {
+        if (!(obj is HeroCard)) return false;
+
+        var hero = obj as HeroCard;
+
+        return hero!.Id == Id;
+    }
+
+    public override int GetHashCode()
+    {
+        return this.Id;
     }
 }
