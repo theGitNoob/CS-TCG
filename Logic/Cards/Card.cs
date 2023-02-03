@@ -1,4 +1,4 @@
-using Habilitie;
+﻿using Habilitie;
 
 namespace Cards;
 public interface ICard
@@ -171,12 +171,12 @@ public class HeroCard : SimpleCard
     /// <summary>
     /// The attack of the hero
     /// </summary>
-    public int Attack { get; protected set; }
+    public int Attack { get; set; }
 
     /// <summary>
     /// The defense of the hero
     /// </summary>
-    public int Defense { get; protected set; }
+    public int Defense { get; set; }
 
     /// <summary>
     /// Creates a new hero

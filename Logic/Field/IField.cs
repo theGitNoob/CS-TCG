@@ -16,4 +16,8 @@ public interface IField
     bool CanInvokeHero();
 
     bool CanEquipItem();
+
+    HeroCard GetHeroCard(string name); 
+
+    ItemCard GetItemCard(string name); 
 }
