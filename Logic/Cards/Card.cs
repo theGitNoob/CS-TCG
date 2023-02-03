@@ -94,7 +94,7 @@ public class ItemCard : SimpleCard
     /// <summary>
     /// The hero that has this item
     /// </summary>
-    public HeroCard? Hero{get; private set;}
+    public HeroCard? Hero { get; private set; }
 
     /// <summary>
     /// Creates a new item
@@ -191,6 +191,10 @@ public class HeroCard : SimpleCard
     public HeroCard(string name, int attack, int defense, string description, Effect effect) : base(name, description, effect)
     {
         Type = CardType.Hero;
+
+        this.Attack = attack;
+
+        this.Defense = defense;
 
         _items = new List<ItemCard>();
     }
