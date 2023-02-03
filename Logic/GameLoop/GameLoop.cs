@@ -75,7 +75,7 @@ public class GameLoop
     ///<returns>True if the player has lost, false otherwise</returns>
     public bool CheckPlayerHasLost(SimplePlayer player)
     {
-        if (player.HP == 0 || player.Hand.Count == 0)
+        if (player.HP == 0 || player.Deck.IsEmpty())
             return true;
 
         return false;
