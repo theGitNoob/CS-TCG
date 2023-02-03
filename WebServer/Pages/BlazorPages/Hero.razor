@@ -49,6 +49,12 @@
     try
     {
       Game.GameController.CreateHeroCard(HeroName, Attack, Defense, HeroDescription, Condition, Action);
+      Action = "";
+      Condition = "";
+      HeroName = "";
+      HeroDescription = "";
+      Attack = 0;
+      Defense = 0;
     }
     catch (System.Exception e)
     {
