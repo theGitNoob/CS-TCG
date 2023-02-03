@@ -1,73 +1,83 @@
-﻿using Game;
-using Player;
+﻿using Player;
 
 namespace GameLoop;
 
-public interface IGameLoop
-{
-    void StartGame();
-    void EndGame();
-    void Update();
-    void CheckEndGame();
-}
-
+///<summary>
+///The game loop
+///</summary>
 public class GameLoop
 {
-    public GameLoop()
+    ///<summary>
+    ///The players in the game
+    ///</summary>
+    SimplePlayer[] _players { get; set; }
+
+    ///<summary>
+    ///Creates a new `GameLoop`
+    ///</summary>
+    ///<param name="players">The players in the game</param>
+    public GameLoop(params SimplePlayer[] players)
     {
-        // Player1 = player1;
-        // Player2 = player2;
+        this._players = players;
     }
 
+    ///<summary>
+    ///Starts the game
+    ///</summary>
     public void StartGame()
     {
-        bool player1Turn = true;
-        bool gameStart = false;
-        while (!CheckEndGame(player1Turn))
-        {
-            if (!gameStart)
-            {
-                gameStart = true;
-                GameController.NewGame();
-            }
+        bool initialTurn = true;
 
-            if (player1Turn)
+        while (true)
+        {
+            foreach (SimplePlayer player in _players)
             {
-                GameController.RetrievePlayer(1).Play();
-                player1Turn = false;
+                if (CheckPlayerHasLost(player))
+                {
+                    EndGame();
+                    return;
+                }
+
+                if (player is AIPlayer)
+                {
+                    AIPlayer aiPlayer = (AIPlayer)player;
+                    aiPlayer.DrawCards(initialTurn ? 5 : 1);
+                    aiPlayer.Play();
+                }
+            }
+            initialTurn = false;
+        }
+
+    }
+
+    ///<summary>
+    ///Ends the game and prints the winning player
+    ///</summary>
+    public void EndGame()
+    {
+        foreach (SimplePlayer player in _players)
+        {
+            if (CheckPlayerHasLost(player))
+            {
+                System.Console.WriteLine($"{player.Name} has lost");
             }
             else
             {
-                GameController.RetrievePlayer(2).Play();
-                player1Turn = true;
+                System.Console.WriteLine($"{player.Name} has won");
             }
-
-            Task.Delay(1000);
         }
     }
 
-    public void EndGame()
+    ///<summary>
+    ///Checks whether a player has lost because of his HP or his hand
+    ///</summary>
+    ///<param name="player">The player to check</param>
+    ///<returns>True if the player has lost, false otherwise</returns>
+    public bool CheckPlayerHasLost(SimplePlayer player)
     {
-        throw new System.NotImplementedException();
-    }
-
-    public void Update()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public bool CheckEndGame(bool player)
-    {
-        if (GameController.RetrievePlayer(1).HP <= 0 || GameController.RetrievePlayer(2).HP <= 0)
+        if (player.HP == 0 || player.Hand.Count == 0)
             return true;
 
-        switch (player)
-        {
-            case true when GameController.RetrievePlayer(1).Deck.Cards.Count == 0:
-            case false when GameController.RetrievePlayer(2).Deck.Cards.Count == 0:
-                return true;
-            default:
-                return false;
-        }
+        return false;
     }
 }
