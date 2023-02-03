@@ -80,8 +80,25 @@ public static class GameController
 
         HeroCard card = new HeroCard(name, attack, defense, description, effect);
 
-        Cards.Add(card);
-        SaveCards();
+        if (IsUnique(card))
+        {
+            Cards.Add(card);
+
+            SaveCards();
+        }
+
+    }
+
+
+    ///<summary>
+    ///Checks if there exists another card with the same name
+    ///</summary>
+    ///<param name="newCard">The card to check if already exists</param>
+    ///<returns>True if the card doensn't currently exists, false otherwise</returns>
+    static bool IsUnique(SimpleCard newCard)
+    {
+        return !Cards.Exists(card => card.Name == newCard.Name);
+
     }
 
 
@@ -106,8 +123,12 @@ public static class GameController
 
         ItemCard card = new ItemCard(name, description, effect);
 
-        Cards.Add(card);
-        SaveCards();
+        if (IsUnique(card))
+        {
+            Cards.Add(card);
+
+            SaveCards();
+        }
     }
 
 
