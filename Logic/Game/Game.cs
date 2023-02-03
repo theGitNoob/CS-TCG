@@ -180,19 +180,19 @@ public static class GameController
 
         Players = new List<AIPlayer>()
         {
-            new AIPlayer(4000, maxHeroCards, maxItemCards, deck),
-            new AIPlayer(4000, maxHeroCards, maxItemCards, deck)
+            new AIPlayer("p1",4000, maxHeroCards, maxItemCards, deck),
+            new AIPlayer("p2",4000, maxHeroCards, maxItemCards, deck)
         };
     }
 
-    public static AIPlayer RetrievePlayer(int i)
+    public static SimplePlayer? RetrievePlayer(int playerIdx)
     {
-        i--;
-        // if(    i  < 0  i >= Players.Count())\
-        if (i < 0 || i >= Players.Count)
+        playerIdx--;
+
+        if (playerIdx < 0 || playerIdx >= Players?.Count)
             throw new IndexOutOfRangeException();
 
-        return Players[i];
+        return Players?[playerIdx];
     }
 
     ///<summary>
