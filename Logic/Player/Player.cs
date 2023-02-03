@@ -110,7 +110,8 @@ public class SimplePlayer : IPlayer
     ///<param name="item">Item to be equipped</param>
     public void EquipItem(HeroCard hero, ItemCard item)
     {
-        throw new NotImplementedException();
+        hero.EquipItem(item);
+        item.EquipToHero(hero);
     }
 
     ///<summary>
@@ -251,6 +252,15 @@ public class AIPlayer : SimplePlayer
         }
 
 
+        //Activates all possibly effects
+        List<SimpleCard> cards = Enumerable.Concat<SimpleCard>(HeroZone, ItemZone).ToList();
+
+        foreach (SimpleCard card in cards)
+        {
+            if (card.Effect.CanActivate<SimplePlayer>(this, _enemy))
+                card.Effect.Activate<SimplePlayer>(this, _enemy);
+
+        }
     }
 
     ///<summary>

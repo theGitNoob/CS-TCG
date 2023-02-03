@@ -66,12 +66,12 @@ public class Effect
     ///<param name="p2">The second parameter</param>
     ///<exception cref="ArgumentNullException">Thrown when the parameters are null</exception>
     ///<returns>True if the effect can be activated</returns>
-    public bool CanActivate<T>(T p1, T p2, params string[] imports)
+    public bool CanActivate<T>(T p1, T p2)
     {
         if (p1 == null) throw new ArgumentNullException(nameof(p1));
         if (p2 == null) throw new ArgumentNullException(nameof(p2));
 
-        return Condition.Evaluate<T>(this.ConditionString, p1, p2, imports);
+        return Condition.Evaluate<T>(this.ConditionString, p1, p2, this.Imports);
     }
 
     ///<summary>
@@ -80,12 +80,12 @@ public class Effect
     ///<param name="p1">The first parameter</param>
     ///<param name="p2">The second parameter</param>
     ///<exception cref="ArgumentNullException">Thrown when the parameters are null</exception>
-    public void Activate<T>(T p1, T p2, params string[] imports)
+    public void Activate<T>(T p1, T p2)
     {
         if (p1 == null) throw new ArgumentNullException(nameof(p1));
         if (p2 == null) throw new ArgumentNullException(nameof(p2));
 
-        Action.Execute<T>(this.ActionString, p1, p2, imports);
+        Action.Execute<T>(this.ActionString, p1, p2, this.Imports);
     }
 
 }

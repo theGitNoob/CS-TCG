@@ -39,6 +39,10 @@
 		try
 		{
 			Game.GameController.CreateItemCard(ItemName, ItemDescription, ConditionCode, ActionCode);
+			ActionCode = "";
+			ConditionCode = "";
+			ItemName = "";
+			ItemDescription = "";
 		}
 		catch (System.Exception err)
 		{
