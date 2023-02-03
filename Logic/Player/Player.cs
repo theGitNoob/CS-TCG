@@ -110,7 +110,8 @@ public class SimplePlayer : IPlayer
     ///<param name="item">Item to be equipped</param>
     public void EquipItem(HeroCard hero, ItemCard item)
     {
-        throw new NotImplementedException();
+        hero.EquipItem(item);
+        item.EquipToHero(hero);
     }
 
     ///<summary>
