@@ -124,4 +124,32 @@ public class SimpleField : IField
     {
         return ItemZone.Count < maxItemCards;
     }
+    ///<summary>
+    ///Returns a hero card with the given name
+    ///</summary>
+    public HeroCard GetHeroCard(string name)
+    {
+        foreach (HeroCard hero in HeroZone)
+        {
+            if(hero.Name == name)
+            {
+                return hero;
+            }
+        }
+        throw new Exception("Card not found");
+    }
+    ///<summary>
+    ///Returns an item card with the given name
+    ///</summary>
+    public ItemCard GetItemCard(string name)
+    {
+        foreach (ItemCard item in ItemZone)
+        {
+            if(item.Name == name)
+            {
+                return item;
+            }
+        }
+        throw new Exception("Card not found");
+    }
 }
