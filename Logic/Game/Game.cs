@@ -1,5 +1,4 @@
 ﻿using Cards;
-using Field;
 using Deck;
 using Player;
 using Habilitie;
@@ -8,7 +7,9 @@ using System.Text.Json;
 
 namespace Game;
 
-
+///<summary>
+///The brinde between UI and Logic
+///</summary>
 public static class GameController
 {
     ///<summary>
@@ -17,10 +18,18 @@ public static class GameController
     public static List<SimpleCard> Cards { get; private set; } = new List<SimpleCard>();
 
     ///<summary>
-    ///The path to the cards.json file
+    ///The path to the items.json file
     ///</summary>
-    public static string cardsPath = "../Content/cards.json";
+    public static string itemsFilePath = "../Content/items.json";
 
+    ///<summary>
+    ///The path to the heros.json file
+    ///</summary>
+    public static string heroesFilePath = "../Content/heros.json";
+
+    ///<summary>
+    ///The path to the cards directory
+    ///</summary>
     public static string cardsDir = "../Content/";
 
 
@@ -31,6 +40,8 @@ public static class GameController
     {
 
         LoadCards();
+
+        Cards.ForEach(card => Console.WriteLine($"{card.Name} - {card as HeroCard}"));
     }
 
 
@@ -92,7 +103,6 @@ public static class GameController
 
     }
 
-
     ///<summary>
     ///Creates a new `ItemCard`
     ///</summary>
@@ -124,27 +134,58 @@ public static class GameController
 
 
     ///<summary>
-    ///Deserializes a string formated as json into a `List<SimpleCards>`
+    ///Deserializes a `List<SimpleCards>` from a string formated as json
     ///</summary>
-    ///<param name="jsonFile">The json file to deserialize</param>
-    ///<returns>A `List<SimpleCards>` with all the cards</returns>
-    public static List<SimpleCard> DeserializeCards(string jsonFile)
+    ///<param name = "jsonFile"> The string to deserialize</param>
+    ///<returns>A string formated as json</returns>
+    public static List<ItemCard> DeserializeItem(string jsonFile)
     {
-        List<SimpleCard> cards = JsonSerializer.Deserialize<List<SimpleCard>>(jsonFile)!;
-        return cards;
+        List<ItemCard> items = JsonSerializer.Deserialize<List<ItemCard>>(jsonFile)!;
+        return items;
     }
 
     ///<summary>
-    ///Serializes a `List<SimpleCards>` into a string formated as json
+    ///Deserializes a `List<SimpleCards>` from a string formated as json
+    ///</summary>
+    ///<param name = "jsonFile"> The string to deserialize</param>
+    ///<returns>A string formated as json</returns>
+    public static List<HeroCard> DeserializeHeros(string jsonFile)
+    {
+        List<HeroCard> heroes = JsonSerializer.Deserialize<List<HeroCard>>(jsonFile)!;
+        return heroes;
+    }
+
+
+    ///<summary>
+    ///Serializes a `List<ItemCard>` into a string formated as json
     ///</summary>
     ///<returns>A string formated as json</returns>
-    public static string SerializeCards()
+    public static string SerializeHeroes()
     {
-        if (Cards.Count == 0) return "";
+        List<HeroCard> heroes = Cards.OfType<HeroCard>().ToList();
 
-        string jsonFile = JsonSerializer.Serialize<List<SimpleCard>>(Cards);
+        if (heroes.Count == 0) return "";
+
+        string jsonFile = JsonSerializer.Serialize<List<HeroCard>>(heroes);
+
         return jsonFile;
     }
+
+    ///<summary>
+    ///Serializes a `List<ItemCard>` into a string formated as json
+    ///</summary>
+    ///<returns>A string formated as json</returns>
+    public static string SerializeItems()
+    {
+        List<ItemCard> items = Cards.OfType<ItemCard>().ToList();
+
+        if (items.Count == 0) return "";
+
+        string jsonFile = JsonSerializer.Serialize<List<ItemCard>>(items);
+
+        return jsonFile;
+    }
+
 
     ///<summary>
     ///Loads cards from disk on json format
@@ -156,16 +197,32 @@ public static class GameController
             Directory.CreateDirectory(cardsDir);
         }
 
-        if (!File.Exists(cardsPath))
+        if (!File.Exists(itemsFilePath))
         {
-            File.Create(cardsPath).Dispose();
+            File.Create(itemsFilePath).Dispose();
         }
 
-        string jsonFile = File.ReadAllText(cardsPath);
+        if (!File.Exists(heroesFilePath))
+        {
+            File.Create(heroesFilePath).Dispose();
+        }
 
-        if (jsonFile == "") return;
+        string heroesFile = File.ReadAllText(heroesFilePath);
 
-        Cards = DeserializeCards(jsonFile);
+        if (heroesFile != "")
+        {
+            var aux = DeserializeHeros(heroesFile);
+            Cards.AddRange(aux);
+        }
+
+        string itemsFile = File.ReadAllText(itemsFilePath);
+
+        if (itemsFile != "")
+        {
+            var aux = DeserializeItem(itemsFile);
+            Cards.AddRange(aux);
+        }
+
     }
 
     ///<summary>
@@ -173,8 +230,13 @@ public static class GameController
     ///</summary>
     public static void SaveCards()
     {
-        string jsonFile = SerializeCards();
-        File.WriteAllText(cardsPath, jsonFile);
+        string itemsJsonFile = SerializeItems();
+
+        File.WriteAllText(itemsFilePath, itemsJsonFile);
+
+        string heroesJsonFile = SerializeHeroes();
+
+        File.WriteAllText(heroesFilePath, heroesJsonFile);
     }
 
 
@@ -187,11 +249,11 @@ public static class GameController
     ///<param name="maxDeckCards">The maximum number of cards a player can have in their deck</param>
     public static void NewGame(int maxHeroCards = 5, int maxItemCards = 5, int minDeckCards = 1, int maxDeckCards = 50)
     {
-        SimpleField field = new SimpleField(maxHeroCards, maxItemCards);
-        SimpleDeck deck = new SimpleDeck(Cards, minDeckCards, maxDeckCards);
+        SimpleDeck d1 = new SimpleDeck(Cards, minDeckCards, maxDeckCards);
+        SimpleDeck d2 = new SimpleDeck(Cards, minDeckCards, maxDeckCards);
 
-        AIPlayer p1 = new AIPlayer("p1", 4000, maxHeroCards, maxItemCards, deck);
-        AIPlayer p2 = new AIPlayer("p2", 4000, maxHeroCards, maxItemCards, deck);
+        AIPlayer p1 = new AIPlayer("Player 1", 4000, maxHeroCards, maxItemCards, d1);
+        AIPlayer p2 = new AIPlayer("Player 2", 4000, maxHeroCards, maxItemCards, d2);
 
         GameLoop.GameLoop loop = new GameLoop.GameLoop(new List<SimplePlayer> { p1, p2 });
 
