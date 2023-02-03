@@ -248,7 +248,8 @@ public class AIPlayer : SimplePlayer
             HeroCard hero = GetRandomInvokedHero();
             ItemCard item = GetRandomItem();
 
-            EquipItem(hero, item);
+            if (item.Hero == null)
+                EquipItem(hero, item);
         }
 
 
