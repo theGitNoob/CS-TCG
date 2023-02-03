@@ -31,14 +31,6 @@ public static class GameController
     {
 
         LoadCards();
-
-        Cards.ForEach(card =>
-        {
-            System.Console.WriteLine(card.Id);
-            System.Console.WriteLine(card.Effect);
-            System.Console.WriteLine(card.Effect.ConditionString);
-            System.Console.WriteLine(card.Effect.ActionString);
-        });
     }
 
 
@@ -201,8 +193,10 @@ public static class GameController
         AIPlayer p1 = new AIPlayer("p1", 4000, maxHeroCards, maxItemCards, deck);
         AIPlayer p2 = new AIPlayer("p2", 4000, maxHeroCards, maxItemCards, deck);
 
+        SimplePlayer[] players = new SimplePlayer[] { p1, p2 };
 
-        GameLoop.GameLoop loop = new GameLoop.GameLoop(p1, p2);
+        GameLoop.GameLoop loop = new GameLoop.GameLoop(players);
+
         loop.StartGame();
     }
 
