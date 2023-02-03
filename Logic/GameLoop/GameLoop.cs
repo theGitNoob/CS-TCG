@@ -41,6 +41,11 @@ public class GameLoop
     {
         bool initialTurn = true;
 
+        foreach (SimplePlayer player in _players)
+        {
+            player.Deck.Shuffle();
+        }
+
         while (true)
         {
             foreach (SimplePlayer player in _players)
@@ -70,6 +75,7 @@ public class GameLoop
     void PrintPlayer(SimplePlayer player)
     {
         System.Console.WriteLine($"{player.Name} has {player.HP} HP and {player.Deck.CardsLeft} cards in his deck");
+        System.Console.WriteLine($"It has {player.Hand.Count} cards in his hand");
         System.Console.WriteLine($"It has {player.HeroZone.Count} cards in his hero zone");
         System.Console.WriteLine($"It has {player.ItemZone.Count} cards in his item zone");
     }
