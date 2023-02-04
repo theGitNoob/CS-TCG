@@ -39,18 +39,23 @@ public class GameLoop
     ///</summary>
     public void StartGame()
     {
-        bool initialTurn = true;
+        bool canAttack = false;
 
         foreach (SimplePlayer player in _players)
         {
             player.Deck.Shuffle();
         }
 
+        int cardsToDraw = 4;
+
         while (true)
         {
-            foreach (SimplePlayer player in _players)
+            for (int idx = 0; idx < _players.Count; idx++)
             {
-                PrintPlayer(player);
+                var player = _players[idx];
+
+                //The last player is the first to attack
+                if (idx == _players.Count - 1) canAttack = true;
 
                 if (CheckPlayerHasLost(player))
                 {
@@ -61,12 +66,14 @@ public class GameLoop
                 if (player is AIPlayer)
                 {
                     AIPlayer aiPlayer = (AIPlayer)player;
-                    aiPlayer.DrawCards(initialTurn ? 5 : 1);
-                    aiPlayer.Play();
+                    aiPlayer.DrawCards(cardsToDraw);
+                    aiPlayer.Play(canAttack);
                 }
 
+                PrintPlayer(player);
+
             }
-            initialTurn = false;
+            cardsToDraw = 1;
         }
 
     }

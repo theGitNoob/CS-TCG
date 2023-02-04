@@ -206,7 +206,7 @@ public class AIPlayer : SimplePlayer
     ///Plays the AI Player using a greedy strategy
     ///</summary>
     ///<exception cref="Exception">Thrown when the enemy is not set</exception>
-    public void Play()
+    public void Play(bool canAttack)
     {
         if (_enemy == null)
         {
@@ -221,7 +221,7 @@ public class AIPlayer : SimplePlayer
             InvokeHero(hero);
         }
 
-        if (HasHeroOnField())
+        if (canAttack && HasHeroOnField())
         {
             //AI strongest Hero
             HeroCard strongestHero = GetHeroWithHigherAttack(PlayerField.HeroZone);

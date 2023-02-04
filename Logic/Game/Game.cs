@@ -266,6 +266,8 @@ public static class GameController
     ///<param name="maxDeckCards">The maximum number of cards a player can have in their deck</param>
     public static void NewGame(int maxHeroCards = 5, int maxItemCards = 5, int minDeckCards = 1, int maxDeckCards = 50)
     {
+        Console.Clear();
+
         SimpleDeck d1 = new SimpleDeck(Cards, minDeckCards, maxDeckCards);
         SimpleDeck d2 = new SimpleDeck(Cards, minDeckCards, maxDeckCards);
 
