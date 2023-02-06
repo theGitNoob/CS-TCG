@@ -18,12 +18,12 @@ public class SimpleField : IField
     public int maxItemCards { private set; get; }
 
 
-    ///<summary>
-    ///Creates a new Field with the given max number of cards
-    ///</summary>
-    ///<param name="maxHeroCards">Max number of Hero cards on the Field</param>
-    ///<param name="maxItemCards">Max number of Item cards on the Field</param>
-    ///<returns>A new Field</returns>
+    /// <summary>
+    /// Creates a new Field with the given max number of cards
+    /// </summary>
+    /// <param name="maxHeroCards">Max number of Hero cards on the Field</param>
+    /// <param name="maxItemCards">Max number of Item cards on the Field</param>
+    /// <returns>A new Field</returns>
     public SimpleField(int maxHeroCards, int maxItemCards)
     {
         this.maxHeroCards = maxHeroCards;
@@ -89,11 +89,11 @@ public class SimpleField : IField
     }
 
 
-    ///<summary>
-    ///Places a given hero on the field
+    /// <summary>
+    /// Places a given hero on the field
     /// </summary>
-    ///<param name="hero">Hero to be placed</param>
-    ///<returns>True if the hero was placed, false otherwise</returns>
+    /// <param name="hero">Hero to be placed</param>
+    /// <returns>True if the hero was placed, false otherwise</returns>
     public bool PlaceHero(HeroCard hero)
     {
         if (CanInvokeHero())
@@ -104,11 +104,11 @@ public class SimpleField : IField
         return false;
     }
 
-    ///<summary>
-    ///Places a given item on the field
+    /// <summary>
+    /// Places a given item on the field
     /// </summary>
-    ///<param name="item">Item to be placed</param>
-    ///<returns>True if the item was placed, false otherwise</returns>
+    /// <param name="item">Item to be placed</param>
+    /// <returns>True if the item was placed, false otherwise</returns>
     public bool PlaceItem(ItemCard item)
     {
         if (CanEquipItem())
@@ -119,50 +119,50 @@ public class SimpleField : IField
         return false;
     }
 
-    ///<summary>
-    ///Checks if a hero can be placed on the field
-    ///</summary>
-    ///<returns>True if a hero can be placed, false otherwise</returns>
+    /// <summary>
+    /// Checks if a hero can be placed on the field
+    /// </summary>
+    /// <returns>True if a hero can be placed, false otherwise</returns>
     public bool CanInvokeHero()
     {
         return HeroZone.Count < maxHeroCards;
     }
 
-    ///<summary>
-    ///Checks if an item can be placed on the field
-    ///</summary>
-    ///<returns>True if an item can be placed, false otherwise</returns>
+    /// <summary>
+    /// Checks if an item can be placed on the field
+    /// </summary>
+    /// <returns>True if an item can be placed, false otherwise</returns>
     public bool CanEquipItem()
     {
         return ItemZone.Count < maxItemCards;
     }
 
-    ///<summary>
-    ///Checks if the hero is currently on the Player Field
-    ///</summary>
-    ///<param name="heroName"> The name of the hero to search for</param>
-    ///<returns>True if hero is on Field, false otherwise</returns>
+    /// <summary>
+    /// Checks if the hero is currently on the Player Field
+    /// </summary>
+    /// <param name="heroName"> The name of the hero to search for</param>
+    /// <returns>True if hero is on Field, false otherwise</returns>
     public bool IsHeroOnField(string heroName)
     {
         return HeroZone.Exists(hero => hero.Name == heroName);
     }
 
-    ///<summary>
-    ///Checks if the item is currently on the Player Field
-    ///</summary>
-    ///<param name="itemName"> The name of the item to search for</param>
-    ///<returns>True if item is on Field, false otherwise</returns>
+    /// <summary>
+    /// Checks if the item is currently on the Player Field
+    /// </summary>
+    /// <param name="itemName"> The name of the item to search for</param>
+    /// <returns>True if item is on Field, false otherwise</returns>
     public bool IsItemOnField(string itemName)
     {
         return ItemZone.Exists(item => item.Name == itemName);
     }
 
-    ///<summary>
-    ///Returns a hero card with the given name
-    ///</summary>
-    ///<param name="heroName">Name of the hero to be found</param>
-    ///<exception cref="Exception">Thrown when the hero is not found</exception>
-    ///<returns>The hero with the given name</returns>
+    /// <summary>
+    /// Returns a hero card with the given name
+    /// </summary>
+    /// <param name="heroName">Name of the hero to be found</param>
+    /// <exception cref="Exception">Thrown when the hero is not found</exception>
+    /// <returns>The hero with the given name</returns>
     public HeroCard GetHeroCard(string heroName)
     {
         foreach (HeroCard hero in HeroZone)
@@ -174,12 +174,12 @@ public class SimpleField : IField
         }
         throw new Exception($"Card {heroName} was not found");
     }
-    ///<summary>
-    ///Returns an item card with the given name
-    ///</summary>
-    ///<param name="cardName">Name of the item to be found</param>
-    ///<exception cref="Exception">Thrown when the item is not found</exception>
-    ///<returns>The item with the given name</returns>
+    /// <summary>
+    /// Returns an item card with the given name
+    /// </summary>
+    /// <param name="cardName">Name of the item to be found</param>
+    /// <exception cref="Exception">Thrown when the item is not found</exception>
+    /// <returns>The item with the given name</returns>
     public ItemCard GetItemCard(string cardName)
     {
         foreach (ItemCard item in ItemZone)
