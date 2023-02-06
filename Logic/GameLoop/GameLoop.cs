@@ -2,20 +2,20 @@
 
 namespace GameLoop;
 
-///<summary>
-///The game loop
-///</summary>
+/// <summary>
+/// The game loop
+/// </summary>
 public class GameLoop
 {
-    ///<summary>
-    ///The players in the game
-    ///</summary>
+    /// <summary>
+    /// The players in the game
+    /// </summary>
     List<SimplePlayer> _players { get; set; }
 
-    ///<summary>
-    ///Creates a new `GameLoop`
-    ///</summary>
-    ///<param name="players">The players in the game</param>
+    /// <summary>
+    /// Creates a new `GameLoop`
+    /// </summary>
+    /// <param name="players">The players in the game</param>
     public GameLoop(List<SimplePlayer> players)
     {
         this._players = players;
@@ -34,9 +34,9 @@ public class GameLoop
         }
     }
 
-    ///<summary>
-    ///Starts the game
-    ///</summary>
+    /// <summary>
+    /// Starts the game
+    /// </summary>
     public void StartGame()
     {
         bool canAttack = false;
@@ -50,6 +50,8 @@ public class GameLoop
 
         while (true)
         {
+            Printer.Print(_players[0], _players[1]);
+
             for (int idx = 0; idx < _players.Count; idx++)
             {
                 var player = _players[idx];
@@ -70,7 +72,8 @@ public class GameLoop
                     aiPlayer.Play(canAttack);
                 }
 
-                PrintPlayer(player);
+                Task.Delay(500).Wait();
+                Printer.Print(_players[0], _players[1]);
 
             }
             cardsToDraw = 1;
@@ -78,20 +81,9 @@ public class GameLoop
 
     }
 
-
-    void PrintPlayer(SimplePlayer player)
-    {
-        System.Console.WriteLine($"{player.Name} has {player.HP} HP and {player.Deck.CardsLeft} cards in his deck");
-        System.Console.WriteLine($"It has {player.Hand.Count} cards in his hand");
-        System.Console.WriteLine($"It has {player.HeroZone.Count} cards in his hero zone");
-        System.Console.WriteLine($"It has {player.ItemZone.Count} cards in his item zone");
-    }
-
-
-
-    ///<summary>
-    ///Ends the game and prints the winning player
-    ///</summary>
+    /// <summary>
+    /// Ends the game and prints the winning player
+    /// </summary>
     public void EndGame(SimplePlayer looserPlayer)
     {
         foreach (SimplePlayer player in _players)
@@ -109,11 +101,11 @@ public class GameLoop
         _players = new List<SimplePlayer>();
     }
 
-    ///<summary>
-    ///Checks whether a player has lost because of his HP or his hand
-    ///</summary>
-    ///<param name="player">The player to check</param>
-    ///<returns>True if the player has lost, false otherwise</returns>
+    /// <summary>
+    /// Checks whether a player has lost because of his HP or his hand
+    /// </summary>
+    /// <param name="player">The player to check</param>
+    /// <returns>True if the player has lost, false otherwise</returns>
     public bool CheckPlayerHasLost(SimplePlayer player)
     {
         if (player.HP == 0 || player.Deck.IsEmpty())
