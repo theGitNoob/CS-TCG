@@ -138,12 +138,10 @@ public class SimpleDeck : IDeck
     /// <param name="j">Index of the second card</param>
     public void Swap(int i, int j)
     {
-        List<SimpleCard> aux = Cards.ToList();
-        SimpleCard temp = aux[i];
-        aux[i] = aux[j];
-        aux[j] = temp;
-        Cards = aux;
+        SimpleCard temp = Cards[i];
 
+        Cards[i] = Cards[j];
+        Cards[j] = temp;
     }
 
     /// <summary>
@@ -154,8 +152,6 @@ public class SimpleDeck : IDeck
     {
         Random rand = new Random();
 
-        List<SimpleCard> aux = Cards.ToList();
-
         for (int i = CardsLeft - 1; i > 0; i--)
         {
             int j = rand.Next(i + 1);
@@ -163,7 +159,6 @@ public class SimpleDeck : IDeck
             Swap(i, j);
         }
 
-        Cards = aux;
     }
 
 
