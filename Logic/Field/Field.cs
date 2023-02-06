@@ -28,26 +28,36 @@ public class SimpleField : IField
     {
         this.maxHeroCards = maxHeroCards;
         this.maxItemCards = maxItemCards;
+
         HeroZone = new List<HeroCard>();
         ItemZone = new List<ItemCard>();
+
         CementeryZone = new List<SimpleCard>();
     }
 
 
-    ///<summary>
-    ///Sends a given hero to the cementery
-    ///and remove it from the hero zone along 
-    ///with it equiped items
+    /// <summary>
+    /// Sends a given hero to the cementery
+    /// and remove it from the hero zone along 
+    /// with it equiped items
     /// </summary>
-    ///<param name="hero">Hero to be removed</param>
-    ///<returns>True if the hero was removed, false otherwise</returns>
+    /// <param name="hero">Hero to be removed</param>
+    /// <returns>True if the hero was removed, false otherwise</returns>
     public bool RemoveHero(HeroCard heroToDelete)
     {
         foreach (HeroCard hero in HeroZone)
         {
             if (hero.Equals(heroToDelete))
             {
-                HeroZone.Remove(hero);
+                foreach (ItemCard items in hero.Items)
+                {
+                    RemoveItem(items);
+                }
+
+                hero.RemoveAllItems();
+                HeroZone.Remove(heroToDelete);
+                CementeryZone.Add(heroToDelete);
+
                 return true;
             }
         }
@@ -55,20 +65,22 @@ public class SimpleField : IField
         return false;
     }
 
-    ///<summary>
-    ///Sends a given item to the cementery
-    ///and remove it from the item zone
+    /// <summary>
+    /// Sends a given item to the cementery
+    /// and remove it from the item zone
     /// </summary>
-    ///<param name="item">Item to be removed</param>
-    ///<returns>True if the item was removed, false otherwise</returns>
+    /// <param name="item">Item to be removed</param>
+    /// <returns>True if the item was removed, false otherwise</returns>
     public bool RemoveItem(ItemCard itemToDelete)
     {
-        foreach (ItemCard card in ItemZone)
+        foreach (ItemCard item in ItemZone)
         {
-            if (card.Equals(itemToDelete))
+            if (item.Equals(itemToDelete))
             {
-                ItemZone.Remove(itemToDelete);
-                card.RemoveFromHero();
+                ItemZone.Remove(item);
+                item.RemoveFromHero();
+                CementeryZone.Add(item);
+
                 return true;
             }
         }
@@ -124,38 +136,59 @@ public class SimpleField : IField
     {
         return ItemZone.Count < maxItemCards;
     }
+
+    ///<summary>
+    ///Checks if the hero is currently on the Player Field
+    ///</summary>
+    ///<param name="heroName"> The name of the hero to search for</param>
+    ///<returns>True if hero is on Field, false otherwise</returns>
+    public bool IsHeroOnField(string heroName)
+    {
+        return HeroZone.Exists(hero => hero.Name == heroName);
+    }
+
+    ///<summary>
+    ///Checks if the item is currently on the Player Field
+    ///</summary>
+    ///<param name="itemName"> The name of the item to search for</param>
+    ///<returns>True if item is on Field, false otherwise</returns>
+    public bool IsItemOnField(string itemName)
+    {
+        return ItemZone.Exists(item => item.Name == itemName);
+    }
+
     ///<summary>
     ///Returns a hero card with the given name
     ///</summary>
-    ///<param name="name">Name of the hero to be found</param>
+    ///<param name="heroName">Name of the hero to be found</param>
     ///<exception cref="Exception">Thrown when the hero is not found</exception>
     ///<returns>The hero with the given name</returns>
-    public HeroCard GetHeroCard(string name)
+    public HeroCard GetHeroCard(string heroName)
     {
         foreach (HeroCard hero in HeroZone)
         {
-            if (hero.Name == name)
+            if (hero.Name == heroName)
             {
                 return hero;
             }
         }
-        throw new Exception("Card not found");
+        throw new Exception($"Card {heroName} was not found");
     }
     ///<summary>
     ///Returns an item card with the given name
     ///</summary>
-    ///<param name="name">Name of the item to be found</param>
+    ///<param name="cardName">Name of the item to be found</param>
     ///<exception cref="Exception">Thrown when the item is not found</exception>
     ///<returns>The item with the given name</returns>
-    public ItemCard GetItemCard(string name)
+    public ItemCard GetItemCard(string cardName)
     {
         foreach (ItemCard item in ItemZone)
         {
-            if (item.Name == name)
+            if (item.Name == cardName)
             {
                 return item;
             }
         }
-        throw new Exception("Card not found");
+        throw new Exception($"Card {cardName} was not found");
     }
 }
