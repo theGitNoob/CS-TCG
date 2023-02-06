@@ -209,17 +209,24 @@ public class HeroCard : SimpleCard
         Items.Add(item);
     }
 
-    //Removes the item from the equiped items
     /// <summary>
     /// Removes the given item from the hero
     /// </summary>
     /// <param name="item">The item to remove</param>
-    ///<exception cref="ArgumentException">Thrown when the item is not equiped to the hero</exception>
+    /// <exception cref="Exception">Thrown when the item is not equiped to the hero</exception>
     public void RemoveItem(ItemCard item)
     {
-        Items.Remove(item);
+        if (Items.Remove(item) == false)
+            throw new Exception($"The item {item.Name} is not equiped to the hero {Name}");
     }
 
+    /// <summary>
+    /// Removes all items from hero
+    /// </summary>
+    public void RemoveAllItems()
+    {
+        Items.Clear();
+    }
 
     ///<summary>
     ///Sets the hero attack
@@ -267,6 +274,6 @@ public class HeroCard : SimpleCard
     ///<returns>The hashcode of the object</returns>
     public override int GetHashCode()
     {
-        return this.Id;
+        return this.Name.GetHashCode();
     }
 }
