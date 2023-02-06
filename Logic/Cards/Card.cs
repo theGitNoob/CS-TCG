@@ -228,11 +228,11 @@ public class HeroCard : SimpleCard
         Items.Clear();
     }
 
-    ///<summary>
-    ///Sets the hero attack
-    ///</summary>
-    ///<param name="attack">The attack of the hero</param>
-    ///<exception cref="ArgumentException">Thrown when the attack is not between 0 and 100</exception>
+    /// <summary>
+    /// Sets the hero attack
+    /// </summary>
+    /// <param name="attack">The attack of the hero</param>
+    /// <exception cref="ArgumentException">Thrown when the attack is not between 0 and 100</exception>
     public void UpdateAttack(int attack)
     {
         if (attack < 0 || attack > 100)
@@ -241,11 +241,11 @@ public class HeroCard : SimpleCard
     }
 
 
-    ///<summary>
-    ///Sets the hero defense
-    ///</summary>
-    ///<param name="defense">The defense of the hero</param>
-    ///<exception cref="ArgumentException">Thrown when the defense is not between 0 and 100</exception>
+    /// <summary>
+    /// Sets the hero defense
+    /// </summary>
+    /// <param name="defense">The defense of the hero</param>
+    /// <exception cref="ArgumentException">Thrown when the defense is not between 0 and 100</exception>
     public void UpdateDefense(int defense)
     {
         if (defense < 0 || defense > 100)
@@ -254,11 +254,11 @@ public class HeroCard : SimpleCard
         this.Defense = defense;
     }
 
-    ///<summary>
-    ///Reimplementing the equals method
-    ///</summary>
-    ///<param name="obj">The object to compare</param>
-    ///<returns>True if the objects are equal, false otherwise</returns>
+    /// <summary>
+    /// Reimplementing the equals method
+    /// </summary>
+    /// <param name="obj">The object to compare</param>
+    /// <returns>True if the objects are equal, false otherwise</returns>
     public override bool Equals(object? obj)
     {
         if (!(obj is HeroCard)) return false;
@@ -268,10 +268,10 @@ public class HeroCard : SimpleCard
         return hero!.Id == Id;
     }
 
-    ///<summary>
-    ///Reimplementing the gethashcode method
-    ///</summary>
-    ///<returns>The hashcode of the object</returns>
+    /// <summary>
+    /// Reimplementing the gethashcode method
+    /// </summary>
+    /// <returns>The hashcode of the object</returns>
     public override int GetHashCode()
     {
         return this.Name.GetHashCode();
