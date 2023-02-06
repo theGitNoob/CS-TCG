@@ -82,6 +82,8 @@ public class SimplePlayer : IPlayer
 
     public List<ItemCard> ItemZone => PlayerField.ItemZone;
 
+    public List<SimpleCard> CementeryZone => PlayerField.CementeryZone;
+
 
     ///<summary>
     ///Draw a given number of cards from the deck
@@ -104,14 +106,16 @@ public class SimplePlayer : IPlayer
     }
 
     ///<summary>
-    ///Equip a given item to a given hero
+    ///Equip a given item to a given hero, places it on the field and removes it from hand
     ///</summary>
     ///<param name="hero">Hero that will equip the item</param>
     ///<param name="item">Item to be equipped</param>
     public void EquipItem(HeroCard hero, ItemCard item)
     {
         hero.EquipItem(item);
+        PlayerField.PlaceItem(item);
         item.EquipToHero(hero);
+        Hand.Remove(item);
     }
 
     ///<summary>
