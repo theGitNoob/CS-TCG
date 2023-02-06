@@ -165,7 +165,7 @@ public class HeroCard : SimpleCard
     /// <summary>
     /// The items that the hero has equiped
     /// </summary>
-    private List<ItemCard> _items;
+    public List<ItemCard> Items { get; }
 
 
     /// <summary>
@@ -196,7 +196,7 @@ public class HeroCard : SimpleCard
 
         this.Defense = defense;
 
-        _items = new List<ItemCard>();
+        Items = new List<ItemCard>();
     }
 
 
@@ -206,7 +206,7 @@ public class HeroCard : SimpleCard
     /// <param name="item">The item to equip</param>
     public void EquipItem(ItemCard item)
     {
-        _items.Add(item);
+        Items.Add(item);
     }
 
     //Removes the item from the equiped items
@@ -217,7 +217,7 @@ public class HeroCard : SimpleCard
     ///<exception cref="ArgumentException">Thrown when the item is not equiped to the hero</exception>
     public void RemoveItem(ItemCard item)
     {
-        _items.Remove(item);
+        Items.Remove(item);
     }
 
 
