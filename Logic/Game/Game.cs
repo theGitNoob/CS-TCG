@@ -38,27 +38,7 @@ public static class GameController
     ///</summary>
     public static void StartGame()
     {
-
         LoadCards();
-
-
-
-        if (Environment.GetEnvironmentVariable("ENV") == "dev")
-        {
-            ///Prints attack and defense if it is a hero
-            Cards.ForEach(card =>
-            {
-                if (card is HeroCard hero)
-                {
-                    System.Console.WriteLine($"{hero.Name} {hero.Attack}");
-                    System.Console.WriteLine($"{hero.Name} {hero.Defense}");
-                }
-                else if (card is ItemCard item)
-                {
-                    System.Console.WriteLine($"{item.Name} {item.Description}");
-                }
-            });
-        }
     }
 
 
@@ -87,6 +67,7 @@ public static class GameController
     ///<param name="condition">The condition for the effect</param>
     ///<param name="action">The action for the effect</param>
     ///<exception cref="ArgumentNullException">Thrown when the name, description, condition or action is null</exception>
+    ///<exception cref="Exception">Thrown when there is already another card with the same name</exception>
     ///<exception cref="CompilationErrorException">Thrown when the condition or action are not correct</exception>
     public static void CreateHeroCard(string? name, int attack, int defense, string? description, string? condition, string? action)
     {
@@ -106,6 +87,10 @@ public static class GameController
             SaveCards();
         }
 
+        else
+        {
+            throw new Exception($"There is alrady another card with the specified name {name}");
+        }
     }
 
 
@@ -128,6 +113,7 @@ public static class GameController
     ///<param name="condition">The condition for the effect</param>
     ///<param name="action">The action for the effect</param>
     ///<exception cref="ArgumentNullException">Thrown when the name, description, condition or action is null</exception>
+    ///<exception cref="Exception">Thrown when there is already another card with the same name</exception>
     ///<exception cref="CompilationErrorException">Thrown when the condition or action are not correct</exception>
     public static void CreateItemCard(string? name, string? description, string? condition, string? action)
     {
@@ -146,6 +132,11 @@ public static class GameController
             Cards.Add(card);
 
             SaveCards();
+        }
+
+        else
+        {
+            throw new Exception($"There is alrady another card with the specified name {name}");
         }
     }
 
@@ -266,7 +257,6 @@ public static class GameController
     ///<param name="maxDeckCards">The maximum number of cards a player can have in their deck</param>
     public static void NewGame(int maxHeroCards = 5, int maxItemCards = 5, int minDeckCards = 1, int maxDeckCards = 50)
     {
-        Console.Clear();
 
         SimpleDeck d1 = new SimpleDeck(Cards, minDeckCards, maxDeckCards);
         SimpleDeck d2 = new SimpleDeck(Cards, minDeckCards, maxDeckCards);
