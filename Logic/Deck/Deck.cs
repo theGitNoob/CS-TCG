@@ -91,12 +91,13 @@ public class SimpleDeck : IDeck
     /// <param name="cards">List of cards to be added to the deck</param>
     /// <param name="minCards">Minimum number of cards in the deck</param>
     /// <param name="maxCards">Maximum number of cards in the deck</param>
-    public SimpleDeck(List<SimpleCard> cards, int minCards, int maxCards)
+    public SimpleDeck(List<SimpleCard> cards, int minCards, int maxCards, int cantDeCartas)
     {
         Cards = new List<SimpleCard>();
 
-        foreach (SimpleCard card in cards)
+        for (int i = 0; i < cantDeCartas; i++)
         {
+            SimpleCard card = cards[i];
             Cards.Add(card);
         }
 

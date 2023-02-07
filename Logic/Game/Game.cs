@@ -255,14 +255,14 @@ public static class GameController
     ///<param name="maxItemCards">The maximum number of item cards a player can have</param>
     ///<param name="minDeckCards">The minimum number of cards a player can have in their deck</param>
     ///<param name="maxDeckCards">The maximum number of cards a player can have in their deck</param>
-    public static void NewGame(int maxHeroCards = 5, int maxItemCards = 5, int minDeckCards = 1, int maxDeckCards = 50)
+    public static void NewGame(int maxHeroCards = 5, int maxItemCards = 5, int minDeckCards = 1, int maxDeckCards = 50, int healthPoints = 0,int cantDeCartas = 0)
     {
 
-        SimpleDeck d1 = new SimpleDeck(Cards, minDeckCards, maxDeckCards);
-        SimpleDeck d2 = new SimpleDeck(Cards, minDeckCards, maxDeckCards);
+        SimpleDeck d1 = new SimpleDeck(Cards, minDeckCards, maxDeckCards,cantDeCartas);
+        SimpleDeck d2 = new SimpleDeck(Cards, minDeckCards, maxDeckCards,cantDeCartas);
 
-        AIPlayer p1 = new AIPlayer("Player 1", 4000, maxHeroCards, maxItemCards, d1);
-        AIPlayer p2 = new AIPlayer("Player 2", 4000, maxHeroCards, maxItemCards, d2);
+        AIPlayer p1 = new AIPlayer("Player 1", healthPoints, maxHeroCards, maxItemCards, d1);
+        AIPlayer p2 = new AIPlayer("Player 2", healthPoints, maxHeroCards, maxItemCards, d2);
 
         GameLoop.GameLoop loop = new GameLoop.GameLoop(new List<SimplePlayer> { p1, p2 });
 

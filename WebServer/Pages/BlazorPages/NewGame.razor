@@ -1,0 +1,36 @@
+@page "/newgame"
+@inject IJSRuntime JS
+
+<h2>Health Points</h2>
+<input type="number" id="number" min="0" max="8000" placeholder="HealthPoints" @bind = "@HealthPoints"/><br/>
+<br/>
+<h2>Deck Cards</h2>
+<input type="number" id="number" min="0" max="10" placeholder="DeckCards" @bind = "@DeckCards"/>
+
+<input type="button" style="font-size: x-large;margin-top:20px; margin-left: 80px;" value="Start New Game" class="btn btn-success"
+ @onclick = "@ClickBtnMethod">
+@code{
+    public int HealthPoints;
+    public int DeckCards;
+
+    public async void ClickBtnMethod()
+    {
+        try
+        {
+            Game.GameController.NewGame(5,5,0,50,HealthPoints,DeckCards);
+            HealthPoints = 0;
+            DeckCards = 0;
+        }
+        catch(SystemException e)
+        {
+            if(e is ArgumentNullException)
+            {
+                await JS.InvokeVoidAsync("alert", e.Message);
+            }
+            else
+            {
+                throw e;
+            }
+        }
+    }    
+}
