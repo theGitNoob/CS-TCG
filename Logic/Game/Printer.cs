@@ -1,8 +1,7 @@
 using Player;
 using Cards;
 
-namespace GameLoop;
-
+namespace Game;
 
 public class Printer
 {

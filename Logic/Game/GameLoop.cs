@@ -1,6 +1,6 @@
 ﻿using Player;
 
-namespace GameLoop;
+namespace Game;
 
 /// <summary>
 /// The game loop
