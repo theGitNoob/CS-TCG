@@ -2,7 +2,9 @@
 @inject IJSRuntime JS
 
 <div style="display: grid;">
-	<div class="error-div"></div>
+	<div class="alert alert-danger d-none" role="alert"></div>
+	<div class="alert alert-success d-none" role="alert"></div>
+
 	<span style="font-size: xx-large;justify-self:center">New Item</span><br />
 
 	<input type="text" placeholder="Item Name" style="justify-self:center;" @bind="@ItemName">
@@ -43,6 +45,7 @@
 			ConditionCode = "";
 			ItemName = "";
 			ItemDescription = "";
+			await JS.InvokeVoidAsync("ShowSuccess", "Item added successfully");
 		}
 		catch (System.Exception err)
 		{
