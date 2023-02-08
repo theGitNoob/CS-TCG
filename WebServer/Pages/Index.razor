@@ -1,81 +1,282 @@
-﻿@page "/"
+﻿@inject NavigationManager uriHelper
+@inject IJSRuntime JS
+@using Game;
+@using Cards;
+@using Player;
+@using Deck;
 
-<PageTitle>Index</PageTitle>
-<style>
-    input {
-        display: inline-block;
+@page "/"
+
+<PageTitle>New Game</PageTitle>
+
+<div class="alert alert-danger d-none" role="alert"></div>
+<div class="alert alert-success d-none" role="alert"></div>
+
+<div class="container text-center" id="config">
+    <h1>Rules Configuration</h1>
+
+    <div class="row mb-1">
+        <div class="col">
+            <label class="form-label mb-2" for="min-deck-cards">Cantidad Mínima de cartas en el Deck</label>
+            <input type="number" id="min-deck-cards" class="form-control" placeholder="" min="1" max=@cards.Count
+                @bind=@minDeckCards>
+        </div>
+
+        <div class="col">
+            <label for="max-deck-cards" class="form-label mb-2">Cantidad Máxima de cartas en el Deck</label>
+            <input id="max-deck-cards" type="number" class="form-control" min="1" max=@cards.Count @bind=@maxDeckCards>
+        </div>
+
+        <div class="col">
+            <label for="hp-points" class="form-label mb-2"> Puntos de Vida</label>
+            <input type="number" id="hp-points" class="form-control" min="1" @bind=@hpPoints>
+        </div>
+    </div>
+    <div class="row mb-1">
+
+        <div class="col">
+            <label for="initial-cards" class="form-label mb-2">Cartas a robar en el Primer Turno</label>
+            <input type="number" id="initial-cards" class="form-control" min="1" @bind=@initialCards>
+        </div>
+
+        <div class="col">
+            <label for="players-cnt" class="form-label mb-2">Cantidad de Jugadores</label>
+            <input type="number" id="players-cnt" class="form-control" placeholder="Cantidad de Jugadores" min="2"
+                @bind=@playersCnt>
+        </div>
+
+        <div class="col">
+            <label for="cards-per-turn" class="form-label mb-2">Cartas por Turno</label>
+            <input type="number" id="cards-per-turn" class="form-control" placeholder="Cartas por turno" min="1"
+                @bind=@cardsPerTurn>
+        </div>
+
+    </div>
+    <div class="row mb-1 d-none">
+
+        <div class="col">
+            <input type="number" name="" id="" class="form-control" placeholder="Cantidad Máxima de Heroes" min="0">
+        </div>
+
+        <div class="col"></div>
+
+        <div class="col">
+            <input type="number" name="" id="" class="form-control" placeholder="Cantidad Máxima de Items" min="0">
+        </div>
+
+    </div>
+    <div class="col-12 mt-3">
+        <button class="btn btn-primary" @onclick=@SaveRules>Save Rules</button>
+    </div>
+</div>
+
+@* New Player Section *@
+<div class="contaier text-center d-none" id="new-player">
+    <div class="row">
+        <div class="col">
+            <label class="form-check-label mb-1" for="player-type">
+                <h2>Player Type</h2>
+            </label>
+            <div class="row">
+                <div class="col"></div>
+                <div class="col">
+                    <select id="player-type" class="form-select mb-2" aria-label="Default select example"
+                        @onchange="PlayerTypeChanged">
+                        <option value="Human">Human</option>
+                        <option value="AI" selected>AI</option>
+                    </select>
+                </div>
+                <div class="col"></div>
+            </div>
+            <nav>
+                <h2>@cards[idx].Name</h2>
+                <img src="@GetSrc()" class="img-fluid" alt="">
+                <div class="row">
+                    <div class="col">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked"
+                            @bind=@selected[idx]>
+                        <label class="form-check-label" for="flexCheckChecked">
+                            Select Card
+                        </label>
+                    </div>
+
+                    <ul class="pagination container justify-content-center">
+                        <div class="flexcolumn-xs">
+                            <li class="page-item mt-1" @onclick="@Prev"><a class="page-link" href="#">Previous</a></li>
+                        </div>
+                        <div class="col-xs">
+                            <li class="page-item mt-1" @onclick="@Next"><a class="page-link" href="#">Next</a></li>
+                        </div>
+                    </ul>
+                </div>
+
+            </nav>
+            <div class="row">
+                <div class="col">
+                    <input type=" text" class="form-control" placeholder="Nickname" required @bind=@nickName>
+                    <button class="btn btn-success mt-2" @onclick=@AddPlayer>Add Player</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="col">
+            <h3>Description</h3>
+            <textarea class="form-control w-100 h-50" readonly>@cards[idx].Description</textarea>
+            <h3 class="mt-2">Condition</h3>
+            <textarea class="form-control w-100 h-auto" readonly>@cards[idx].Effect.ConditionString</textarea>
+            <h3 class="mt-2">Action</h3>
+            <textarea class="form-control w-100 h-auto" readonly>@cards[idx].Effect.ActionString</textarea>
+        </div>
+    </div>
+</div>
+
+@code {
+    public int idx = 0;
+
+
+    string _playerType = "AI";
+
+    public List<SimpleCard> cards = GameController.Cards;
+
+    List<SimplePlayer> players = new List<SimplePlayer>();
+
+    public List<bool> selected = new List<bool>();
+
+    protected override void OnParametersSet()
+    {
+        selected = new List<bool>(cards.Count);
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            selected.Add(true);
+        }
     }
-</style>
-<div class="row justify-content-evenly">
-    <div class="col cuadro">1
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col cuadro">2
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col cuadro">3
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col cuadro">4
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col cuadro">5
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col cuadro">Deck</div>
-</div>
-<div class="row justify-content-center">
-    <div class="col-3 cuadro">1
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col-3 cuadro">2
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col-3 cuadro">3
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col-3 cuadro">4
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col-3 cuadro">5
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
 
-</div>
+    public void Next()
+    {
+        idx = (idx + 1 + cards.Count) % cards.Count;
+    }
 
-<div class="row justify-content-center">
-    <div class="col-3 cuadro">1
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col-3 cuadro">2
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col-3 cuadro">3
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col-3 cuadro">4
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col-3 cuadro">5
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-</div>
+    public void Prev()
+    {
+        idx = (idx - 1 + cards.Count) % cards.Count;
+    }
 
-<div class="row justify-content-evenly">
-    <div class="col cuadro">1
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col cuadro">2
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col cuadro">3
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col cuadro">4
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col cuadro">5
-        <img class="bg-img" src="../img/back.webp" alt="">
-    </div>
-    <div class="col cuadro">Deck</div>
-</div>
+    public string GetSrc()
+    {
+        if (cards[idx] is HeroCard)
+            return "img/heroes/" + cards[idx].Name.ToLower().Replace(" ", "_") + ".png";
+
+        return "img/items/" + cards[idx].Name.ToLower() + ".png";
+    }
+
+    public int hpPoints = 4000;
+    public int initialCards = 5;
+    public int cardsPerTurn = 1;
+    public int minDeckCards = 1;
+    public int maxDeckCards = 1;
+    public int playersCnt = 2;
+
+    public string nickName = "";
+
+
+    public async void SaveRules()
+    {
+        try
+        {
+            GameController.ChangeDefaults(hpPoints, initialCards, cardsPerTurn, minDeckCards, maxDeckCards, playersCnt);
+            await JS.InvokeVoidAsync("ShowSuccess", "Rules Saved");
+            await JS.InvokeVoidAsync("HideConfig");
+        }
+        catch (System.Exception err)
+        {
+
+            await JS.InvokeVoidAsync("ShowError", err.Message);
+        }
+
+    }
+
+    List<SimpleCard> GetSelectedCards()
+    {
+        List<SimpleCard> selectedCards = new List<SimpleCard>();
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            if (selected[i])
+                selectedCards.Add(cards[i]);
+        }
+
+        return selectedCards;
+    }
+    public async void AddPlayer()
+    {
+        nickName = nickName.Trim();
+
+        try
+        {
+
+            SimpleDeck deck = new SimpleDeck(GetSelectedCards());
+
+            SimplePlayer player;
+
+            if (_playerType == "AI")
+                player = new AIPlayer(nickName, hpPoints, 5, 5, deck);
+
+            else
+                player = new SimplePlayer(nickName, hpPoints, 5, 5, deck);
+
+            players.Add(player);
+
+            ClearSelections();
+
+
+            if (players.Count == playersCnt)
+            {
+                await JS.InvokeVoidAsync("ShowSuccess", "Game Started, Open your Terminal");
+                await JS.InvokeVoidAsync("HideAll");
+                GameController.NewGame(players);
+                ReloadPage();
+
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("ShowSuccess", "Player added successfully");
+            }
+
+
+
+        }
+        catch (System.Exception err)
+        {
+            await JS.InvokeVoidAsync("ShowError", err.Message);
+        }
+
+    }
+
+    public void PlayerTypeChanged(ChangeEventArgs ev)
+    {
+        if (ev.Value is not null)
+        {
+            _playerType = ev.Value.ToString()!;
+        }
+    }
+
+    void ClearSelections()
+    {
+        _playerType = "AI";
+
+        for (int i = 0; i < selected.Count; i++)
+        {
+            selected[i] = true;
+        }
+
+        nickName = "";
+
+        idx = 0;
+    }
+
+    void ReloadPage()
+    {
+        uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+    }
+}
