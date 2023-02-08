@@ -31,16 +31,6 @@ public interface IDeck
     int CardsLeft { get; }
 
     /// <summary>
-    /// Gets the maximum number of cards in the deck
-    /// </summary>
-    int MaxCards { get; }
-
-    /// <summary>
-    /// Gets the minimum number of cards in the deck
-    /// </summary>
-    int MinCards { get; }
-
-    /// <summary>
     /// Places a list of cards at the bottom of the deck
     /// </summary>
     /// <param name="cards">List of cards to be placed at the bottom of the deck</param>
@@ -76,10 +66,6 @@ public interface IDeck
 public class SimpleDeck : IDeck
 {
 
-    public int MaxCards { private set; get; }
-
-    public int MinCards { private set; get; }
-
     public List<SimpleCard> Cards { private set; get; }
 
     public int CardsLeft { get => Cards.Count(); }
@@ -89,9 +75,7 @@ public class SimpleDeck : IDeck
     /// Creates a new deck with a given number of cards
     /// </summary>
     /// <param name="cards">List of cards to be added to the deck</param>
-    /// <param name="minCards">Minimum number of cards in the deck</param>
-    /// <param name="maxCards">Maximum number of cards in the deck</param>
-    public SimpleDeck(List<SimpleCard> cards, int minCards, int maxCards)
+    public SimpleDeck(List<SimpleCard> cards)
     {
         Cards = new List<SimpleCard>();
 
@@ -99,12 +83,7 @@ public class SimpleDeck : IDeck
         {
             Cards.Add(card);
         }
-
-        MinCards = minCards;
-        MaxCards = maxCards;
-
     }
-
 
     public bool IsEmpty()
     {
@@ -128,8 +107,6 @@ public class SimpleDeck : IDeck
     {
         Cards = cards.Concat(Cards).ToList();
     }
-
-
 
     /// <summary>
     /// Swaps two cards in the deck
