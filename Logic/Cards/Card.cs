@@ -167,16 +167,19 @@ public class HeroCard : SimpleCard
     /// </summary>
     public List<ItemCard> Items { get; }
 
+    int _attack;
+
+    int _defense;
 
     /// <summary>
     /// The attack of the hero
     /// </summary>
-    public int Attack { get; set; }
+    public int Attack { get => this._attack; set { if (value <= 0) this._attack = 0; else this._attack = value; } }
 
     /// <summary>
     /// The defense of the hero
     /// </summary>
-    public int Defense { get; set; }
+    public int Defense { get => this._defense; set { if (value <= 0) this._defense = 0; else this._defense = value; } }
 
     /// <summary>
     /// Creates a new hero
