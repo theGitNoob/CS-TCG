@@ -163,9 +163,14 @@ public class SimplePlayer : IPlayer
     /// <param name="maxItemCards">Max number of Item cards on the Field</param>
     /// <param name="deck">Deck of the player</param>
     /// <param name="field">Field of the player</param>
-    /// <returns>A new Human Player</returns>
+    /// <exception cref="ArgumentNullException">Thrown when name or deck are null</exception>
+    /// <exception cref="ArgumentException">Thrown when name is not alphanumeric</exception>
     public SimplePlayer(string name, int hp, int maxHeroCards, int maxItemCards, SimpleDeck deck)
     {
+        if (name == "") throw new ArgumentNullException(nameof(name));
+        if (!name.All(c => char.IsLetterOrDigit(c))) throw new ArgumentException("Player name must be alphanumeric", nameof(name));
+        if (deck == null) throw new ArgumentNullException(nameof(deck));
+
         this.Name = name;
         this.HP = hp;
         this.Deck = deck;
