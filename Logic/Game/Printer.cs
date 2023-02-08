@@ -1,16 +1,18 @@
 using Player;
 using Cards;
+using System.Text;
 
 namespace Game;
 
-public class Printer
+public static class Printer
 {
+    public static StringBuilder screen = new StringBuilder();
 
 
     public static void Print(SimplePlayer p1, SimplePlayer p2)
     {
-
         Console.Clear();
+        screen.Clear();
 
         int tabSeparation = 5;
 
@@ -30,22 +32,21 @@ public class Printer
         PrintDeckAndCementery(blockWidth, blockHeight, tabSeparation, p2, true);
         PrintPlayer(blockWidth, tabSeparation, $"❤️  {p2.HP}  ❤️", p2.Name);
 
-
+        Console.Write(screen);
     }
 
     static void PrintPlayer(int blockWidth, int tabSeparation, string buff1, string buff2)
     {
-
-        Console.Write(buff1);
+        screen.Append(buff1);
 
         int usedWidth = blockWidth * 5 + tabSeparation * 4;
 
         for (int i = buff1.Length; i < usedWidth - buff2.Length; i++)
         {
-            Console.Write(" ");
+            screen.Append(" ");
         }
 
-        Console.WriteLine(buff2);
+        screen.AppendLine(buff2);
     }
 
 
@@ -67,7 +68,6 @@ public class Printer
 
         }
 
-
         for (int row = 1; row <= blockHeight; row++)
         {
             for (int block = 1; block <= 5; block++)
@@ -76,40 +76,40 @@ public class Printer
 
                 for (int col = 1; col <= blockWidth; col++)
                 {
-                    if (block > 1 && block < 5) { Console.Write(" "); continue; }
+                    if (block > 1 && block < 5) { screen.Append(" "); continue; }
 
                     if (block == 1)
                     {
                         if (row == 1 || row == blockHeight)
-                            Console.Write("-");
+                            screen.Append("-");
                         else if (row != 1 && (col == 1 || col == blockWidth))
-                            Console.Write("|");
+                            screen.Append("|");
                         else if (row == 2 && col > 1 && nameIdx < deck.Length)
-                            Console.Write(deck[nameIdx++]);
+                            screen.Append(deck[nameIdx++]);
                         else if ((row == (blockHeight + 1) / 2) && col >= (blockWidth - deckCount.ToString().Length + 1) / 2 && nameIdx < deckCount.ToString().Length)
-                            Console.Write(deckCount.ToString()[nameIdx++]);
+                            screen.Append(deckCount.ToString()[nameIdx++]);
                         else
-                            Console.Write(" ");
+                            screen.Append(" ");
                     }
                     else
                     {
                         if (row == 1 || row == blockHeight)
-                            Console.Write("-");
+                            screen.Append("-");
                         else if (row != 1 && (col == 1 || col == blockWidth))
-                            Console.Write("|");
+                            screen.Append("|");
                         else if (row == 2 && col > 1 && nameIdx < cementery.Length)
-                            Console.Write(cementery[nameIdx++]);
+                            screen.Append(cementery[nameIdx++]);
                         else if ((row == (blockHeight + 1) / 2) && col >= (blockWidth - cementeryCount.ToString().Length + 1) / 2 && nameIdx < cementeryCount.ToString().Length)
-                            Console.Write(cementeryCount.ToString()[nameIdx++]);
+                            screen.Append(cementeryCount.ToString()[nameIdx++]);
                         else
-                            Console.Write(" ");
+                            screen.Append(" ");
                     }
 
                 }
                 if (block != 5)
-                    for (int i = 1; i <= tabSeparation; i++) Console.Write(" ");
+                    for (int i = 1; i <= tabSeparation; i++) screen.Append(" ");
             }
-            System.Console.WriteLine();
+            screen.AppendLine();
         }
     }
 
@@ -142,22 +142,22 @@ public class Printer
                 for (int col = 1; col <= blockWidth; col++)
                 {
                     if (row == 1 || row == blockHeight)
-                        Console.Write("-");
+                        screen.Append("-");
                     else if (row != 1 && (col == 1 || col == blockWidth))
-                        Console.Write("|");
+                        screen.Append("|");
                     else if (row == 2 && col >= (blockWidth - heroName.Length + 1) / 2 && nameIdx < heroName.Length)
-                        Console.Write(heroName[nameIdx++]);
+                        screen.Append(heroName[nameIdx++]);
                     else if (row == 3 && attIdx < attDeff.Length && hero != null)
-                        Console.Write(attDeff[attIdx++]);
+                        screen.Append(attDeff[attIdx++]);
                     else
-                        Console.Write(" ");
+                        screen.Append(" ");
 
                 }
                 if (block != 5)
-                    for (int i = 1; i <= tabSeparation; i++) Console.Write(" ");
+                    for (int i = 1; i <= tabSeparation; i++) screen.Append(" ");
             }
-            System.Console.WriteLine();
 
+            screen.AppendLine();
         }
     }
 
@@ -182,20 +182,20 @@ public class Printer
                 for (int col = 1; col <= blockWidth; col++)
                 {
                     if (row == 1 || row == blockHeight)
-                        Console.Write("-");
+                        screen.Append("-");
                     else if (row != 1 && (col == 1 || col == blockWidth))
-                        Console.Write("|");
+                        screen.Append("|");
                     else if ((row == (blockHeight + 1) / 2) && col >= (blockWidth - itemName.Length + 1) / 2 && nameIdx < itemName.Length)
-                        Console.Write(itemName[nameIdx++]);
+                        screen.Append(itemName[nameIdx++]);
                     else
-                        Console.Write(" ");
+                        screen.Append(" ");
 
                 }
                 if (block != 5)
-                    for (int i = 1; i <= tabSeparation; i++) Console.Write(" ");
+                    for (int i = 1; i <= tabSeparation; i++) screen.Append(" ");
             }
-            System.Console.WriteLine();
 
+            screen.AppendLine();
         }
     }
 }
