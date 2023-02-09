@@ -6,6 +6,7 @@
     <ProjectReference Include="..\Logic\Effect\Effect.csproj" />
     <ProjectReference Include="..\Logic\Player\Player.csproj" />
     <ProjectReference Include="..\Logic\Deck\Deck.csproj" />
+    <ProjectReference Include="..\Compiler\Compiler.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,7 +15,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
