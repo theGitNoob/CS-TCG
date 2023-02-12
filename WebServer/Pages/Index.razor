@@ -39,11 +39,7 @@
             <input type="number" id="initial-cards" class="form-control" min="1" @bind=@initialCards>
         </div>
 
-        <div class="col">
-            <label for="players-cnt" class="form-label mb-2">Cantidad de Jugadores</label>
-            <input type="number" id="players-cnt" class="form-control" placeholder="Cantidad de Jugadores" min="2"
-                @bind=@playersCnt>
-        </div>
+        <div class="col"></div>
 
         <div class="col">
             <label for="cards-per-turn" class="form-label mb-2">Cartas por Turno</label>
@@ -52,22 +48,11 @@
         </div>
 
     </div>
-    <div class="row mb-1 d-none">
 
-        <div class="col">
-            <input type="number" name="" id="" class="form-control" placeholder="Cantidad Máxima de Heroes" min="0">
-        </div>
-
-        <div class="col"></div>
-
-        <div class="col">
-            <input type="number" name="" id="" class="form-control" placeholder="Cantidad Máxima de Items" min="0">
-        </div>
-
-    </div>
     <div class="col-12 mt-3">
         <button class="btn btn-primary" @onclick=@SaveRules>Save Rules</button>
     </div>
+
 </div>
 
 @* New Player Section *@
@@ -175,7 +160,7 @@
     public int cardsPerTurn = 1;
     public int minDeckCards = 1;
     public int maxDeckCards = 1;
-    public int playersCnt = 2;
+    const int playersCnt = 2;
 
     public string nickName = "";
 
@@ -234,7 +219,7 @@
             {
                 await JS.InvokeVoidAsync("ShowSuccess", "Game Started, Open your Terminal");
                 await JS.InvokeVoidAsync("HideAll");
-                GameController.NewGame(players);
+                GameController.NewGame(players[0], players[1]);
                 ReloadPage();
 
             }
