@@ -6,13 +6,13 @@ namespace Game;
 
 public static class Printer
 {
-    public static StringBuilder screen = new StringBuilder();
+    static StringBuilder _screen = new StringBuilder();
 
 
     public static void Print(SimplePlayer p1, SimplePlayer p2)
     {
         Console.Clear();
-        screen.Clear();
+        _screen.Clear();
 
         int tabSeparation = 5;
 
@@ -32,25 +32,26 @@ public static class Printer
         PrintDeckAndCementery(blockWidth, blockHeight, tabSeparation, p2, true);
         PrintPlayer(blockWidth, tabSeparation, $"❤️  {p2.HP}  ❤️", p2.Name);
 
-        Console.Write(screen);
+        Console.Write(_screen);
     }
 
     static void PrintPlayer(int blockWidth, int tabSeparation, string buff1, string buff2)
     {
-        screen.Append(buff1);
+        _screen.Append(buff1);
 
         int usedWidth = blockWidth * 5 + tabSeparation * 4;
 
         for (int i = buff1.Length; i < usedWidth - buff2.Length; i++)
         {
-            screen.Append(" ");
+            _screen.Append(" ");
         }
 
-        screen.AppendLine(buff2);
+        _screen.AppendLine(buff2);
     }
 
 
-    static void PrintDeckAndCementery(int blockWidth, int blockHeight, int tabSeparation, SimplePlayer player, bool invert = false)
+    static void PrintDeckAndCementery(int blockWidth, int blockHeight, int tabSeparation, SimplePlayer player,
+        bool invert = false)
     {
         string deck = "Deck";
         string cementery = "☠️Cementery☠️";
@@ -65,7 +66,6 @@ public static class Printer
             cementery = "Deck";
             deckCount = player.CementeryZone.Count;
             cementeryCount = player.Deck.CardsLeft;
-
         }
 
         for (int row = 1; row <= blockHeight; row++)
@@ -76,44 +76,54 @@ public static class Printer
 
                 for (int col = 1; col <= blockWidth; col++)
                 {
-                    if (block > 1 && block < 5) { screen.Append(" "); continue; }
+                    if (block > 1 && block < 5)
+                    {
+                        _screen.Append(" ");
+                        continue;
+                    }
 
                     if (block == 1)
                     {
                         if (row == 1 || row == blockHeight)
-                            screen.Append("-");
-                        else if (row != 1 && (col == 1 || col == blockWidth))
-                            screen.Append("|");
+                            _screen.Append("-");
+                        else if ((col == 1 || col == blockWidth))
+                            _screen.Append("|");
                         else if (row == 2 && col > 1 && nameIdx < deck.Length)
-                            screen.Append(deck[nameIdx++]);
-                        else if ((row == (blockHeight + 1) / 2) && col >= (blockWidth - deckCount.ToString().Length + 1) / 2 && nameIdx < deckCount.ToString().Length)
-                            screen.Append(deckCount.ToString()[nameIdx++]);
+                            _screen.Append(deck[nameIdx++]);
+                        else if ((row == (blockHeight + 1) / 2) &&
+                                 col >= (blockWidth - deckCount.ToString().Length + 1) / 2 &&
+                                 nameIdx < deckCount.ToString().Length)
+                            _screen.Append(deckCount.ToString()[nameIdx++]);
                         else
-                            screen.Append(" ");
+                            _screen.Append(" ");
                     }
                     else
                     {
                         if (row == 1 || row == blockHeight)
-                            screen.Append("-");
-                        else if (row != 1 && (col == 1 || col == blockWidth))
-                            screen.Append("|");
+                            _screen.Append("-");
+                        else if ( (col == 1 || col == blockWidth))
+                            _screen.Append("|");
                         else if (row == 2 && col > 1 && nameIdx < cementery.Length)
-                            screen.Append(cementery[nameIdx++]);
-                        else if ((row == (blockHeight + 1) / 2) && col >= (blockWidth - cementeryCount.ToString().Length + 1) / 2 && nameIdx < cementeryCount.ToString().Length)
-                            screen.Append(cementeryCount.ToString()[nameIdx++]);
+                            _screen.Append(cementery[nameIdx++]);
+                        else if ((row == (blockHeight + 1) / 2) &&
+                                 col >= (blockWidth - cementeryCount.ToString().Length + 1) / 2 &&
+                                 nameIdx < cementeryCount.ToString().Length)
+                            _screen.Append(cementeryCount.ToString()[nameIdx++]);
                         else
-                            screen.Append(" ");
+                            _screen.Append(" ");
                     }
-
                 }
+
                 if (block != 5)
-                    for (int i = 1; i <= tabSeparation; i++) screen.Append(" ");
+                    for (int i = 1; i <= tabSeparation; i++)
+                        _screen.Append(" ");
             }
-            screen.AppendLine();
+
+            _screen.AppendLine();
         }
     }
 
-    public static void PrintHeroes(int blockWidth, int blockHeight, int tabSeparation, SimplePlayer player)
+    static void PrintHeroes(int blockWidth, int blockHeight, int tabSeparation, SimplePlayer player)
     {
         for (int row = 1; row <= blockHeight; row++)
         {
@@ -142,28 +152,28 @@ public static class Printer
                 for (int col = 1; col <= blockWidth; col++)
                 {
                     if (row == 1 || row == blockHeight)
-                        screen.Append("-");
-                    else if (row != 1 && (col == 1 || col == blockWidth))
-                        screen.Append("|");
+                        _screen.Append("-");
+                    else if ((col == 1 || col == blockWidth))
+                        _screen.Append("|");
                     else if (row == 2 && col >= (blockWidth - heroName.Length + 1) / 2 && nameIdx < heroName.Length)
-                        screen.Append(heroName[nameIdx++]);
+                        _screen.Append(heroName[nameIdx++]);
                     else if (row == 3 && attIdx < attDeff.Length && hero != null)
-                        screen.Append(attDeff[attIdx++]);
+                        _screen.Append(attDeff[attIdx++]);
                     else
-                        screen.Append(" ");
-
+                        _screen.Append(" ");
                 }
+
                 if (block != 5)
-                    for (int i = 1; i <= tabSeparation; i++) screen.Append(" ");
+                    for (int i = 1; i <= tabSeparation; i++)
+                        _screen.Append(" ");
             }
 
-            screen.AppendLine();
+            _screen.AppendLine();
         }
     }
 
     static void PrintItems(int blockWidth, int blockHeight, int tabSeparation, SimplePlayer player)
     {
-
         for (int row = 1; row <= blockHeight; row++)
         {
             for (int block = 1; block <= 5; block++)
@@ -182,23 +192,22 @@ public static class Printer
                 for (int col = 1; col <= blockWidth; col++)
                 {
                     if (row == 1 || row == blockHeight)
-                        screen.Append("-");
-                    else if (row != 1 && (col == 1 || col == blockWidth))
-                        screen.Append("|");
-                    else if ((row == (blockHeight + 1) / 2) && col >= (blockWidth - itemName.Length + 1) / 2 && nameIdx < itemName.Length)
-                        screen.Append(itemName[nameIdx++]);
+                        _screen.Append("-");
+                    else if ((col == 1 || col == blockWidth))
+                        _screen.Append("|");
+                    else if ((row == (blockHeight + 1) / 2) && col >= (blockWidth - itemName.Length + 1) / 2 &&
+                             nameIdx < itemName.Length)
+                        _screen.Append(itemName[nameIdx++]);
                     else
-                        screen.Append(" ");
-
+                        _screen.Append(" ");
                 }
+
                 if (block != 5)
-                    for (int i = 1; i <= tabSeparation; i++) screen.Append(" ");
+                    for (int i = 1; i <= tabSeparation; i++)
+                        _screen.Append(" ");
             }
 
-            screen.AppendLine();
+            _screen.AppendLine();
         }
     }
 }
-
-
-
