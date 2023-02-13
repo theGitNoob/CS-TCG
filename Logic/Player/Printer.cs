@@ -1,12 +1,16 @@
-using Player;
 using Cards;
 using System.Text;
 
-namespace Game;
+namespace Player;
 
 public static class Printer
 {
     static StringBuilder _screen = new StringBuilder();
+
+    static string _helpMenu = "";
+
+
+    static bool _helpActive;
 
 
     public static void Print(SimplePlayer p1, SimplePlayer p2)
@@ -22,7 +26,7 @@ public static class Printer
 
         Console.Title = "Game";
 
-        PrintPlayer(blockWidth, tabSeparation, p1.Name, $"❤️  {p1.HP}  ❤️");
+        PrintPlayer(blockWidth, tabSeparation, p1.Name, $"❤️  {p1.Hp}  ❤️");
         PrintDeckAndCementery(blockWidth, blockHeight, tabSeparation, p1);
         PrintItems(blockWidth, 3, tabSeparation, p1);
         PrintHeroes(blockWidth, blockHeight, tabSeparation, p1);
@@ -30,7 +34,7 @@ public static class Printer
         PrintHeroes(blockWidth, blockHeight, tabSeparation, p2);
         PrintItems(blockWidth, 3, tabSeparation, p2);
         PrintDeckAndCementery(blockWidth, blockHeight, tabSeparation, p2, true);
-        PrintPlayer(blockWidth, tabSeparation, $"❤️  {p2.HP}  ❤️", p2.Name);
+        PrintPlayer(blockWidth, tabSeparation, $"❤️  {p2.Hp}  ❤️", p2.Name);
 
         Console.Write(_screen);
     }
@@ -76,7 +80,7 @@ public static class Printer
 
                 for (int col = 1; col <= blockWidth; col++)
                 {
-                    if (block > 1 && block < 5)
+                    if (block is > 1 and < 5)
                     {
                         _screen.Append(" ");
                         continue;
@@ -86,11 +90,11 @@ public static class Printer
                     {
                         if (row == 1 || row == blockHeight)
                             _screen.Append("-");
-                        else if ((col == 1 || col == blockWidth))
+                        else if (col == 1 || col == blockWidth)
                             _screen.Append("|");
                         else if (row == 2 && col > 1 && nameIdx < deck.Length)
                             _screen.Append(deck[nameIdx++]);
-                        else if ((row == (blockHeight + 1) / 2) &&
+                        else if (row == (blockHeight + 1) / 2 &&
                                  col >= (blockWidth - deckCount.ToString().Length + 1) / 2 &&
                                  nameIdx < deckCount.ToString().Length)
                             _screen.Append(deckCount.ToString()[nameIdx++]);
@@ -101,11 +105,11 @@ public static class Printer
                     {
                         if (row == 1 || row == blockHeight)
                             _screen.Append("-");
-                        else if ( (col == 1 || col == blockWidth))
+                        else if (col == 1 || col == blockWidth)
                             _screen.Append("|");
                         else if (row == 2 && col > 1 && nameIdx < cementery.Length)
                             _screen.Append(cementery[nameIdx++]);
-                        else if ((row == (blockHeight + 1) / 2) &&
+                        else if (row == (blockHeight + 1) / 2 &&
                                  col >= (blockWidth - cementeryCount.ToString().Length + 1) / 2 &&
                                  nameIdx < cementeryCount.ToString().Length)
                             _screen.Append(cementeryCount.ToString()[nameIdx++]);
@@ -129,9 +133,9 @@ public static class Printer
         {
             for (int block = 1; block <= 5; block++)
             {
-                HeroCard? hero = (player.HeroZone.Count >= block) ? player.HeroZone[block - 1] : null;
+                HeroCard? hero = player.HeroZone.Count >= block ? player.HeroZone[block - 1] : null;
 
-                string heroName = $"👾None👾";
+                string heroName = "👾None👾";
 
                 int nameIdx = 0;
 
@@ -163,9 +167,9 @@ public static class Printer
                         _screen.Append(" ");
                 }
 
-                if (block != 5)
-                    for (int i = 1; i <= tabSeparation; i++)
-                        _screen.Append(" ");
+                if (block == 5) continue;
+                for (int i = 1; i <= tabSeparation; i++)
+                    _screen.Append(" ");
             }
 
             _screen.AppendLine();
@@ -210,4 +214,44 @@ public static class Printer
             _screen.AppendLine();
         }
     }
+
+
+
+    public static void PrintHelp()
+    {
+
+        if (_helpMenu == "")
+        {
+            _helpMenu = @"
+            -----------------------HELP-------------------
+            F1: Toggle help menu
+            sh[0-4]: Select Hero at the Position
+            si[0-4]: Select Item at the Position
+            vh[0-4]: View the Hero at the Position
+            vi[0-4]: View the Item at the Position
+            a      : Attacks with the selected Hero
+            dh      : Unsets the current selected Hero
+            di      : Unsets the current selected item
+            ch     : Activates the Effect of the Selected Hero
+            ci     : Activates the Effect of the Selected Item
+            e      : Ends the Turn
+            q      : Surrender and quits the Game
+            ";
+        }
+
+        if (_helpActive)
+        {
+            Console.Clear();
+            Console.Write(_screen);
+
+        }
+        else
+        {
+            Console.Clear();
+            Console.Write(_helpMenu);
+        }
+
+        _helpActive = !_helpActive;
+    }
+
 }
