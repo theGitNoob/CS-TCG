@@ -8,7 +8,7 @@ public class SimpleField : IField
     //Holds the ItemZone Cards
     public List<ItemCard> ItemZone { private set; get; }
 
-    //Holds the CementeryZone Cards
+    //Holds the Cementery Zone Cards
     public List<SimpleCard> CementeryZone { private set; get; }
 
     //Max number of Hero cards on the Field
@@ -41,7 +41,7 @@ public class SimpleField : IField
     /// and remove it from the hero zone along 
     /// with it equiped items
     /// </summary>
-    /// <param name="hero">Hero to be removed</param>
+    /// <param name="heroToDelete">Hero to be removed</param>
     /// <returns>True if the hero was removed, false otherwise</returns>
     public bool RemoveHero(HeroCard heroToDelete)
     {
@@ -69,7 +69,7 @@ public class SimpleField : IField
     /// Sends a given item to the cementery
     /// and remove it from the item zone
     /// </summary>
-    /// <param name="item">Item to be removed</param>
+    /// <param name="itemToDelete">Item to be removed</param>
     /// <returns>True if the item was removed, false otherwise</returns>
     public bool RemoveItem(ItemCard itemToDelete)
     {
@@ -161,7 +161,7 @@ public class SimpleField : IField
     /// Returns a hero card with the given name
     /// </summary>
     /// <param name="heroName">Name of the hero to be found</param>
-    /// <exception cref="Exception">Thrown when the hero is not found</exception>
+    /// <exception cref="KeyNotFoundException">Thrown when the hero is not found</exception>
     /// <returns>The hero with the given name</returns>
     public HeroCard GetHeroCard(string heroName)
     {
@@ -172,7 +172,62 @@ public class SimpleField : IField
                 return hero;
             }
         }
-        throw new Exception($"Card {heroName} was not found");
+        throw new KeyNotFoundException($"Card {heroName} was not found");
+    }
+
+    public bool TryGetHeroCard(string heroName, out HeroCard? hero)
+    {
+        if (IsHeroOnField(heroName))
+        {
+            hero = GetHeroCard(heroName);
+            return true;
+        }
+
+        hero = null;
+
+        return false;
+    }
+
+    public bool TryGetItemCard(string itemName, out ItemCard? item)
+    {
+        if (IsItemOnField(itemName))
+        {
+            item = GetItemCard(itemName);
+            return true;
+        }
+
+        item = null;
+        return false;
+    }
+
+
+    public bool IsHeroAt(int position)
+    {
+        if (position >= HeroZone.Count) return false;
+
+        return true;
+    }
+
+    public bool IsItemAt(int position)
+    {
+        if (position >= ItemZone.Count) return false;
+
+        return true;
+    }
+
+    public HeroCard GetHeroCard(int position)
+    {
+        if (position >= HeroZone.Count) throw new ArgumentOutOfRangeException(nameof(position));
+
+        return HeroZone[position];
+
+    }
+    public ItemCard GetItemCard(int position)
+    {
+        if (position >= ItemZone.Count) throw new ArgumentOutOfRangeException(nameof(position));
+
+        return ItemZone[position];
+
     }
     /// <summary>
     /// Returns an item card with the given name
