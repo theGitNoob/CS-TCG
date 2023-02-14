@@ -1,9 +1,12 @@
 using Cards;
+
+namespace Field;
+
 public interface IField
 {
-    int maxHeroCards { get; }
+    int MaxHeroCards { get; }
 
-    int maxItemCards { get; }
+    int MaxItemCards { get; }
 
     bool PlaceHero(HeroCard hero);
 

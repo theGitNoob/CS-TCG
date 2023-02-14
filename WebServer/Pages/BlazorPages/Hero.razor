@@ -2,7 +2,9 @@
 @inject IJSRuntime JS
 
 <div style="display: grid;">
-  <div class="error-div"></div>
+  <div class="alert alert-danger d-none" role="alert"></div>
+  <div class="alert alert-success d-none" role="alert"></div>
+
   <span style="font-size: xx-large;justify-self:center;">New Hero</span><br />
 
   <input type="text" placeholder="Hero Name" style="justify-self:center;" @bind="@HeroName">
@@ -55,6 +57,7 @@
       HeroDescription = "";
       Attack = 0;
       Defense = 0;
+      await JS.InvokeVoidAsync("ShowSuccess", "Hero added successfully");
     }
     catch (System.Exception e)
     {

@@ -16,6 +16,7 @@
 </head>
 
 <body>
+    
     @RenderBody()
 
     <div id="blazor-error-ui">
@@ -32,15 +33,55 @@
     <script src="_framework/blazor.server.js"></script>
 </body>
 <script>
+    'use strict';
     function ShowError(message) {
-        const e = document.querySelector(".error-div");
 
-        e.textContent = message;
-        e.style.display = "block";
+        const alert = document.querySelector(".alert-danger");
+
+        window.scrollTo(0, 0);
+        alert.classList.remove("d-none");
+
+        alert.textContent = message;
 
         setTimeout(() => {
-            e.style.display = "none";
-        }, 5000);
+            alert.classList.add("d-none");
+        }, 2500);
+    }
+
+    function ShowSuccess(message) {
+
+        const alert = document.querySelector(".alert-success");
+
+        window.scrollTo(0, 0);
+        alert.classList.remove("d-none");
+
+        alert.textContent = message;
+
+        setTimeout(() => {
+            alert.classList.add("d-none");
+        }, 2500);
+    }
+
+
+    function HideConfig() {
+        const conf = document.querySelector("#config");
+        conf.classList.add("d-none");
+
+        const newPlayer = document.querySelector("#new-player");
+        newPlayer.classList.remove("d-none");
+    }
+
+    function ShowConfig() {
+        const conf = document.querySelector("#config");
+        conf.classList.remove("d-none");
+
+        const newPlayer = document.querySelector("#new-player");
+        newPlayer.classList.add("d-none");
+    }
+
+    function HideAll() {
+        const body = document.querySelector(".page");
+        body.classList.add("d-none");
     }
 
 </script>

@@ -4,81 +4,8 @@ using Cards;
 /// <summary>
 /// Represents a deck of cards
 /// </summary>
-public interface IDeck
-{
-    /// <summary>
-    /// The cards in the deck
-    /// </summary>
-    List<SimpleCard> Cards { get; }
-
-    /// <summary>
-    /// Gets the n top cards of the deck and removes them from the deck
-    /// </summary>
-    /// <param name="numberOfCards">Number of cards to be taken from the top of the deck</param>
-    /// <returns>A list of the top n cards of the deck</returns>
-    List<SimpleCard> GetTop(int numberOfCards);
-
-    /// <summary>
-    /// Gets the n bottom cards of the deck and removes them from the deck
-    /// </summary>
-    /// <param name="numberOfCards">Number of cards to be taken from the bottom of the deck</param>
-    /// <returns>A list of the bottom n cards of the deck</returns>
-    List<SimpleCard> GetBottom(int numberOfCards);
-
-    /// <summary>
-    /// Gets the number of cards in the deck
-    /// </summary>
-    int CardsLeft { get; }
-
-    /// <summary>
-    /// Gets the maximum number of cards in the deck
-    /// </summary>
-    int MaxCards { get; }
-
-    /// <summary>
-    /// Gets the minimum number of cards in the deck
-    /// </summary>
-    int MinCards { get; }
-
-    /// <summary>
-    /// Places a list of cards at the bottom of the deck
-    /// </summary>
-    /// <param name="cards">List of cards to be placed at the bottom of the deck</param>
-    void PlaceBottom(List<SimpleCard> cards);
-
-    /// <summary>
-    /// Places a list of cards at the top of the deck
-    /// </summary>
-    /// <param name="cards">List of cards to be placed at the top of the deck</param>
-    void PlaceTop(List<SimpleCard> cards);
-
-    /// <summary>
-    /// Shuffles all the Deck
-    /// </summary>
-    void Shuffle();
-
-    /// <summary>
-    /// Checks if the deck is empty
-    /// </summary>
-    bool IsEmpty();
-
-
-    /// <summary>
-    ///Gets the card at the given index
-    /// </summary>
-    SimpleCard GetIthCard(int cardIdx);
-
-}
-
-/// <summary>
-/// Represents a deck of cards
-/// </summary>
 public class SimpleDeck : IDeck
 {
-
-    public int MaxCards { private set; get; }
-
-    public int MinCards { private set; get; }
 
     public List<SimpleCard> Cards { private set; get; }
 
@@ -89,9 +16,7 @@ public class SimpleDeck : IDeck
     /// Creates a new deck with a given number of cards
     /// </summary>
     /// <param name="cards">List of cards to be added to the deck</param>
-    /// <param name="minCards">Minimum number of cards in the deck</param>
-    /// <param name="maxCards">Maximum number of cards in the deck</param>
-    public SimpleDeck(List<SimpleCard> cards, int minCards, int maxCards)
+    public SimpleDeck(List<SimpleCard> cards)
     {
         Cards = new List<SimpleCard>();
 
@@ -99,12 +24,7 @@ public class SimpleDeck : IDeck
         {
             Cards.Add(card);
         }
-
-        MinCards = minCards;
-        MaxCards = maxCards;
-
     }
-
 
     public bool IsEmpty()
     {
@@ -129,8 +49,6 @@ public class SimpleDeck : IDeck
         Cards = cards.Concat(Cards).ToList();
     }
 
-
-
     /// <summary>
     /// Swaps two cards in the deck
     /// </summary>
@@ -138,12 +56,10 @@ public class SimpleDeck : IDeck
     /// <param name="j">Index of the second card</param>
     public void Swap(int i, int j)
     {
-        List<SimpleCard> aux = Cards.ToList();
-        SimpleCard temp = aux[i];
-        aux[i] = aux[j];
-        aux[j] = temp;
-        Cards = aux;
+        SimpleCard temp = Cards[i];
 
+        Cards[i] = Cards[j];
+        Cards[j] = temp;
     }
 
     /// <summary>
@@ -154,8 +70,6 @@ public class SimpleDeck : IDeck
     {
         Random rand = new Random();
 
-        List<SimpleCard> aux = Cards.ToList();
-
         for (int i = CardsLeft - 1; i > 0; i--)
         {
             int j = rand.Next(i + 1);
@@ -163,7 +77,6 @@ public class SimpleDeck : IDeck
             Swap(i, j);
         }
 
-        Cards = aux;
     }
 
 
