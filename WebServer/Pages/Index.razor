@@ -1,9 +1,5 @@
-﻿@inject NavigationManager uriHelper
-@inject IJSRuntime JS
-@using Game;
-@using Cards;
-@using Player;
-@using Deck;
+﻿@inject NavigationManager UriHelper
+@inject IJSRuntime Js
 
 @page "/"
 
@@ -18,25 +14,25 @@
     <div class="row mb-1">
         <div class="col">
             <label class="form-label mb-2" for="min-deck-cards">Cantidad Mínima de cartas en el Deck</label>
-            <input type="number" id="min-deck-cards" class="form-control" placeholder="" min="1" max=@cards.Count
-                @bind=@minDeckCards>
+            <input type="number" id="min-deck-cards" class="form-control" placeholder="" min="1" max=@_cards.Count
+                @bind=@_minDeckCards>
         </div>
 
         <div class="col">
             <label for="max-deck-cards" class="form-label mb-2">Cantidad Máxima de cartas en el Deck</label>
-            <input id="max-deck-cards" type="number" class="form-control" min="1" max=@cards.Count @bind=@maxDeckCards>
+            <input id="max-deck-cards" type="number" class="form-control" min="1" max=@_cards.Count @bind=@_maxDeckCards>
         </div>
 
         <div class="col">
             <label for="hp-points" class="form-label mb-2"> Puntos de Vida</label>
-            <input type="number" id="hp-points" class="form-control" min="1" @bind=@hpPoints>
+            <input type="number" id="hp-points" class="form-control" min="1" @bind=@_hpPoints>
         </div>
     </div>
     <div class="row mb-1">
 
         <div class="col">
             <label for="initial-cards" class="form-label mb-2">Cartas a robar en el Primer Turno</label>
-            <input type="number" id="initial-cards" class="form-control" min="1" @bind=@initialCards>
+            <input type="number" id="initial-cards" class="form-control" min="1" @bind=@_initialCards>
         </div>
 
         <div class="col"></div>
@@ -44,7 +40,7 @@
         <div class="col">
             <label for="cards-per-turn" class="form-label mb-2">Cartas por Turno</label>
             <input type="number" id="cards-per-turn" class="form-control" placeholder="Cartas por turno" min="1"
-                @bind=@cardsPerTurn>
+                @bind=@_cardsPerTurn>
         </div>
 
     </div>
@@ -56,7 +52,7 @@
 </div>
 
 @* New Player Section *@
-<div class="contaier text-center d-none" id="new-player">
+<div class="container text-center d-none" id="new-player">
     <div class="row">
         <div class="col">
             <label class="form-check-label mb-1" for="player-type">
@@ -74,19 +70,19 @@
                 <div class="col"></div>
             </div>
             <nav>
-                <h2>@cards[idx].Name</h2>
+                <h2>@_cards[_idx].Name</h2>
                 <img src="@GetSrc()" class="img-fluid" alt="">
                 <div class="row">
                     <div class="col">
                         <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked"
-                            @bind=@selected[idx]>
+                            @bind=@_selected[_idx]>
                         <label class="form-check-label" for="flexCheckChecked">
                             Select Card
                         </label>
                     </div>
 
                     <ul class="pagination container justify-content-center">
-                        <div class="flexcolumn-xs">
+                        <div class="flex-column-xs">
                             <li class="page-item mt-1" @onclick="@Prev"><a class="page-link" href="#">Previous</a></li>
                         </div>
                         <div class="col-xs">
@@ -98,7 +94,7 @@
             </nav>
             <div class="row">
                 <div class="col">
-                    <input type=" text" class="form-control" placeholder="Nickname" required @bind=@nickName>
+                    <input type="text" class="form-control" placeholder="Nickname" required @bind=@_nickName>
                     <button class="btn btn-success mt-2" @onclick=@AddPlayer>Add Player</button>
                 </div>
             </div>
@@ -106,96 +102,97 @@
         </div>
         <div class="col">
             <h3>Description</h3>
-            <textarea class="form-control w-100 h-50" readonly>@cards[idx].Description</textarea>
+            <textarea class="form-control w-100 h-50" readonly>@_cards[_idx].Description</textarea>
             <h3 class="mt-2">Condition</h3>
-            <textarea class="form-control w-100 h-auto" readonly>@cards[idx].Effect.ConditionString</textarea>
+            <textarea class="form-control w-100 h-auto" readonly>@_cards[_idx].Effect.ConditionString</textarea>
             <h3 class="mt-2">Action</h3>
-            <textarea class="form-control w-100 h-auto" readonly>@cards[idx].Effect.ActionString</textarea>
+            <textarea class="form-control w-100 h-auto" readonly>@_cards[_idx].Effect.ActionString</textarea>
         </div>
     </div>
 </div>
 
 @code {
-    public int idx = 0;
+    private int _idx ;
 
 
     string _playerType = "AI";
 
-    public List<SimpleCard> cards = GameController.Cards;
+    private readonly List<SimpleCard> _cards = GameController.Cards;
 
-    List<SimplePlayer> players = new List<SimplePlayer>();
+    readonly List<SimplePlayer> _players = new List<SimplePlayer>();
 
-    public List<bool> selected = new List<bool>();
+    private List<bool> _selected = new List<bool>();
 
     protected override void OnParametersSet()
     {
-        selected = new List<bool>(cards.Count);
+        _selected = new List<bool>(_cards.Count);
 
-        for (int i = 0; i < cards.Count; i++)
+        for (int i = 0; i < _cards.Count; i++)
         {
-            selected.Add(true);
+            _selected.Add(true);
         }
     }
 
-    public void Next()
+    private void Next()
     {
-        idx = (idx + 1 + cards.Count) % cards.Count;
+        _idx = (_idx + 1 + _cards.Count) % _cards.Count;
     }
 
-    public void Prev()
+    private void Prev()
     {
-        idx = (idx - 1 + cards.Count) % cards.Count;
+        _idx = (_idx - 1 + _cards.Count) % _cards.Count;
     }
 
-    public string GetSrc()
+    private string GetSrc()
     {
-        if (cards[idx] is HeroCard)
-            return "img/heroes/" + cards[idx].Name.ToLower().Replace(" ", "_") + ".png";
+        if (_cards[_idx] is HeroCard)
+            return "img/heroes/" + _cards[_idx].Name.ToLower().Replace(" ", "_") + ".png";
 
-        return "img/items/" + cards[idx].Name.ToLower() + ".png";
+        return "img/items/" + _cards[_idx].Name.ToLower() + ".png";
     }
 
-    public int hpPoints = 4000;
-    public int initialCards = 5;
-    public int cardsPerTurn = 1;
-    public int minDeckCards = 1;
-    public int maxDeckCards = 1;
-    const int playersCnt = 2;
+    private int _hpPoints = 4000;
+    private int _initialCards = 5;
+    private int _cardsPerTurn = 1;
+    private int _minDeckCards = 1;
+    private int _maxDeckCards = 1;
+    private  const int PlayersCnt = 2;
 
-    public string nickName = "";
+    private string _nickName = "";
 
 
-    public async void SaveRules()
+    private async void SaveRules()
     {
         try
         {
-            GameController.ChangeDefaults(hpPoints, initialCards, cardsPerTurn, minDeckCards, maxDeckCards, playersCnt);
-            await JS.InvokeVoidAsync("ShowSuccess", "Rules Saved");
-            await JS.InvokeVoidAsync("HideConfig");
+            GameController.ChangeDefaults(_hpPoints, _initialCards, _cardsPerTurn, _minDeckCards, _maxDeckCards, PlayersCnt);
+            await Js.InvokeVoidAsync("ShowSuccess", "Rules Saved");
+            await Js.InvokeVoidAsync("HideConfig");
         }
-        catch (System.Exception err)
+        catch (Exception err)
         {
 
-            await JS.InvokeVoidAsync("ShowError", err.Message);
+            await Js.InvokeVoidAsync("ShowError", err.Message);
         }
 
     }
 
-    List<SimpleCard> GetSelectedCards()
+    private List<SimpleCard> GetSelectedCards()
     {
         List<SimpleCard> selectedCards = new List<SimpleCard>();
 
-        for (int i = 0; i < cards.Count; i++)
+        for (int i = 0; i < _cards.Count; i++)
         {
-            if (selected[i])
-                selectedCards.Add(cards[i]);
+            if (_selected[i])
+                selectedCards.Add(_cards[i]);
         }
 
         return selectedCards;
     }
-    public async void AddPlayer()
+
+    private async void AddPlayer()
     {
-        nickName = nickName.Trim();
+        _nickName = _nickName.Trim();
 
         try
         {
@@ -204,41 +201,37 @@
 
             SimplePlayer player;
 
-            if (_playerType == "AI")
+            @* if (_playerType == "AI")
                 player = new AIPlayer(nickName, hpPoints, 5, 5, deck);
 
-            else
-                player = new SimplePlayer(nickName, hpPoints, 5, 5, deck);
-
-            players.Add(player);
-
-            ClearSelections();
-
-
-            if (players.Count == playersCnt)
-            {
-                await JS.InvokeVoidAsync("ShowSuccess", "Game Started, Open your Terminal");
-                await JS.InvokeVoidAsync("HideAll");
-                GameController.NewGame(players[0], players[1]);
-                ReloadPage();
-
-            }
-            else
-            {
-                await JS.InvokeVoidAsync("ShowSuccess", "Player added successfully");
-            }
-
-
-
+            else *@
+                player = new SimplePlayer(_nickName, _hpPoints, 5, 5, deck);
+        _players.Add(player);
         }
-        catch (System.Exception err)
+        catch (Exception err)
         {
-            await JS.InvokeVoidAsync("ShowError", err.Message);
+            await Js.InvokeVoidAsync("ShowError", err.Message);
+        }
+         
+        ClearSelections();
+         
+         
+        if (_players.Count == PlayersCnt)
+        {
+            await Js.InvokeVoidAsync("ShowSuccess", "Game Started, Open your Terminal");
+            await Js.InvokeVoidAsync("HideAll");
+            GameController.NewGame(_players[0], _players[1]);
+            ReloadPage();
+         
+        }
+        else
+        {
+            await Js.InvokeVoidAsync("ShowSuccess", "Player added successfully");
         }
 
     }
 
-    public void PlayerTypeChanged(ChangeEventArgs ev)
+    private void PlayerTypeChanged(ChangeEventArgs ev)
     {
         if (ev.Value is not null)
         {
@@ -250,18 +243,18 @@
     {
         _playerType = "AI";
 
-        for (int i = 0; i < selected.Count; i++)
+        for (int i = 0; i < _selected.Count; i++)
         {
-            selected[i] = true;
+            _selected[i] = true;
         }
 
-        nickName = "";
+        _nickName = "";
 
-        idx = 0;
+        _idx = 0;
     }
 
     void ReloadPage()
     {
-        uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+        UriHelper.NavigateTo(UriHelper.Uri, forceLoad: true);
     }
 }

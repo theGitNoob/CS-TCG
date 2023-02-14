@@ -20,17 +20,17 @@ public static class GameController
     /// <summary>
     /// The path to the items.json file
     /// </summary>
-    public static string itemsFilePath = "../Content/items.json";
+    static string itemsFilePath = "../Content/items.json";
 
     /// <summary>
     /// The path to the heros.json file
     /// </summary>
-    public static string heroesFilePath = "../Content/heroes.json";
+    static string heroesFilePath = "../Content/heroes.json";
 
     /// <summary>
     /// The path to the cards directory
     /// </summary>
-    public static string cardsDir = "../Content/";
+    static string cardsDir = "../Content/";
 
     /// <summary>
     /// The Initial HP points of each player
@@ -78,7 +78,7 @@ public static class GameController
     /// <param name="condition">The condition for the effect</param>
     /// <param name="action">The action for the effect</param>
     /// <returns>A new `Effect`</returns>
-    public static Effect CreateEffect(string condition, string action)
+    static Effect CreateEffect(string condition, string action)
     {
         Effect.CheckIsCorrect<SimplePlayer>(condition, action, "Player");
 
@@ -144,7 +144,6 @@ public static class GameController
     /// <param name="action">The action for the effect</param>
     /// <exception cref="ArgumentNullException">Thrown when the name, description, condition or action is null</exception>
     /// <exception cref="Exception">Thrown when there is already another card with the same name</exception>
-    /// <exception cref="CompilationErrorException">Thrown when the condition or action are not correct</exception>
     public static void CreateItemCard(string? name, string? description, string? condition, string? action)
     {
         if (name == null) throw new ArgumentNullException(nameof(name));
@@ -172,22 +171,23 @@ public static class GameController
 
 
     /// <summary>
-    /// Deserializes a `List<SimpleCards>` from a string formated as json
+    /// Deserializes a `List`
+    /// from a string formatted as json
     /// </summary>
     /// <param name = "jsonFile"> The string to deserialize</param>
-    /// <returns>A string formated as json</returns>
-    public static List<ItemCard> DeserializeItem(string jsonFile)
+    /// <returns>A string formatted as json</returns>
+    static List<ItemCard> DeserializeItem(string jsonFile)
     {
         List<ItemCard> items = JsonSerializer.Deserialize<List<ItemCard>>(jsonFile)!;
         return items;
     }
 
     /// <summary>
-    /// Deserializes a `List<SimpleCards>` from a string formated as json
+    /// Deserializes a `List<HeroCard>` from a string formated as json
     /// </summary>
     /// <param name = "jsonFile"> The string to deserialize</param>
     /// <returns>A string formated as json</returns>
-    public static List<HeroCard> DeserializeHeros(string jsonFile)
+    static List<HeroCard> DeserializeHeros(string jsonFile)
     {
         List<HeroCard> heroes = JsonSerializer.Deserialize<List<HeroCard>>(jsonFile)!;
         return heroes;
@@ -195,10 +195,10 @@ public static class GameController
 
 
     /// <summary>
-    /// Serializes a `List<ItemCard>` into a string formated as json
+    /// Serializes a `List<ItemCard>` into a string formatted as json
     /// </summary>
-    /// <returns>A string formated as json</returns>
-    public static string SerializeHeroes()
+    /// <returns>A string formatted as json</returns>
+    static string SerializeHeroes()
     {
         List<HeroCard> heroes = Cards.OfType<HeroCard>().ToList();
 
@@ -210,10 +210,10 @@ public static class GameController
     }
 
     /// <summary>
-    /// Serializes a `List<ItemCard>` into a string formated as json
+    /// Serializes a `List<ItemCard>` into a string formatted as json
     /// </summary>
-    /// <returns>A string formated as json</returns>
-    public static string SerializeItems()
+    /// <returns>A string formatted as json</returns>
+    static string SerializeItems()
     {
         List<ItemCard> items = Cards.OfType<ItemCard>().ToList();
 
@@ -228,7 +228,7 @@ public static class GameController
     /// <summary>
     /// Loads cards from disk on json format
     /// </summary>
-    public static void LoadCards()
+    static void LoadCards()
     {
         if (!Directory.Exists(cardsDir))
         {
@@ -266,7 +266,7 @@ public static class GameController
     /// <summary>
     /// Saves cards to disk on json format
     /// </summary>
-    public static void SaveCards()
+    static void SaveCards()
     {
         string itemsJsonFile = SerializeItems();
 
@@ -281,13 +281,13 @@ public static class GameController
     /// <summary>
     /// Creates a new game
     /// </summary>
-    public static void NewGame(List<SimplePlayer> players)
+    public static void NewGame(SimplePlayer p1, SimplePlayer p2)
     {
-        if (players.Count != _playersCnt) throw new ArgumentException("The number of players is not correct", nameof(players));
+        if (p1 == null) throw new ArgumentNullException($"{nameof(p1)} can't be null");
+        if (p2 == null) throw new ArgumentNullException($"{nameof(p2)} can't be null");
 
-        Game.GameLoop loop = new Game.GameLoop(players);
 
-        loop.StartGame();
+        GameLoop.StartGame(_initialCards, _cardsPerTurn, p1, p2);
     }
 
     public static void ChangeDefaults(int hpPoints, int initialCards, int cardsPerTurn, int minDeckCards, int maxDeckCards, int playersCnt)
