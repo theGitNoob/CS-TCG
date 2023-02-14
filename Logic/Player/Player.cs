@@ -11,13 +11,13 @@ public interface IPlayer
 {
     /// <summary>
     /// Player's Name
-    /// <summary>
+    /// </summary>
     string Name { get; }
 
     /// <summary>
     /// The player's health points
     /// </summary>
-    int HP { set; get; }
+    int Hp { set; get; }
 
     /// <summary>
     /// The player's deck
@@ -43,6 +43,10 @@ public interface IPlayer
     /// The player's item zone
     /// </summary>
     List<ItemCard> ItemZone { get; }
+
+    // void Play(bool canAttack);
+
+
 }
 
 /// <summary>
@@ -57,20 +61,10 @@ public class SimplePlayer : IPlayer
     /// </summary>
     private int _hp;
 
-    public int HP
+    public int Hp
     {
         get => _hp;
-        set
-        {
-            if (value < 0)
-            {
-                _hp = 0;
-            }
-            else
-            {
-                _hp = value;
-            }
-        }
+        set => _hp = value < 0 ? 0 : value;
     }
     public List<SimpleCard> Hand { get; protected set; }
 
@@ -84,6 +78,7 @@ public class SimplePlayer : IPlayer
 
     public List<SimpleCard> CementeryZone => PlayerField.CementeryZone;
 
+    protected SimplePlayer? Enemy { get; private set; }
 
     /// <summary>
     /// Draw a given number of cards from the deck
@@ -123,10 +118,10 @@ public class SimplePlayer : IPlayer
     /// </summary>
     /// <param name="hero">Hero that will attack</param>
     /// <param name="target">Hero that will be attacked</param>
-    /// <param name="enemy">Enemy player</param>
-    public void AttackHero(HeroCard hero, HeroCard target, SimplePlayer enemy)
+    public void AttackHero(HeroCard hero, HeroCard target)
     {
         int diff = hero.Attack - target.Defense;
+
         if (diff < 0)
         {
             UpdateLife(diff);
@@ -135,12 +130,12 @@ public class SimplePlayer : IPlayer
         else if (diff == 0)
         {
             this.PlayerField.RemoveHero(hero);
-            enemy.PlayerField.RemoveHero(target);
+            Enemy?.PlayerField.RemoveHero(target);
         }
         else
         {
-            enemy.UpdateLife(-diff);
-            enemy.PlayerField.RemoveHero(target);
+            Enemy?.UpdateLife(-diff);
+            Enemy?.PlayerField.RemoveHero(target);
         }
     }
 
@@ -151,8 +146,162 @@ public class SimplePlayer : IPlayer
     /// <param name="value">Value to be added to the life</param>
     public void UpdateLife(int value)
     {
-        HP = HP + value;
+        Hp = Hp + value;
     }
+    public virtual void Play(bool canAttack)
+    {
+        if (Enemy == null)
+            throw new Exception("Enemy player must be set before start to play");
+
+        var userInput = ConsoleKey.Z;
+
+        HeroCard? selectedHero = null;
+        ItemCard? selectedItem = null;
+
+        while (userInput != ConsoleKey.E)
+        {
+            userInput = Console.ReadKey(false).Key;
+
+            switch (userInput)
+            {
+                case ConsoleKey.A:
+                    {
+                        if (selectedHero != null)
+                        {
+                            if (Enemy.HeroZone.Count == 0)
+                            {
+                                DirectAttack(selectedHero);
+                            }
+                            else
+                            {
+                                if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out var idx) && idx is >= 0 and <= 4)
+                                {
+                                    var enemyHero = Enemy.PlayerField.GetHeroCard(idx);
+                                    AttackHero(selectedHero, enemyHero);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                case ConsoleKey.D:
+                    {
+                        var mod = Console.ReadKey(false).Key;
+
+                        switch (mod)
+                        {
+                            case ConsoleKey.H:
+                                selectedHero = null;
+                                break;
+                            case ConsoleKey.I:
+                                selectedItem = null;
+                                break;
+                        }
+                        break;
+                    }
+                case ConsoleKey.C:
+                    {
+                        var mod = Console.ReadKey(false).Key;
+
+                        switch (mod)
+                        {
+                            case ConsoleKey.H:
+                            {
+                                if (selectedHero is not null && selectedHero.Effect.CanActivate(this, Enemy))
+                                {
+                                    selectedHero.Effect.Activate(this, Enemy);
+                                }
+
+                                break;
+                            }
+                            case ConsoleKey.I:
+                            {
+                                if (selectedItem is not null && selectedItem.Effect.CanActivate(this, Enemy))
+                                {
+                                    selectedItem.Effect.Activate(this, Enemy);
+                                }
+
+                                break;
+                            }
+                        }
+                        break;
+                    }
+
+                // case ConsoleKey.Q: break;
+
+                case ConsoleKey.S:
+                    {
+                        var mod = Console.ReadKey(false).Key;
+
+                        switch (mod)
+                        {
+                            case ConsoleKey.H:
+                            {
+                                if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out int idx) && idx is <= 4 and >= 0)
+                                {
+                                    if (PlayerField.IsHeroAt(idx))
+                                        selectedHero = PlayerField.GetHeroCard(idx);
+                                }
+
+                                break;
+                            }
+                            case ConsoleKey.I:
+                            {
+                                if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out int idx) && idx is <= 4 and >= 0)
+                                {
+                                    if (PlayerField.IsItemAt(idx))
+                                        selectedItem = PlayerField.GetItemCard(idx);
+
+                                }
+
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                case ConsoleKey.V:
+                {
+                    var mod = Console.ReadKey(false).Key;
+
+                    switch (mod)
+                    {
+                        case ConsoleKey.H:
+                        {
+                            if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out int idx) && idx is <= 4 and >= 0)
+                            {
+                                if (PlayerField.IsHeroAt(idx))
+                                    Printer.ViewCardInfo(PlayerField.GetHeroCard(idx));
+                            }
+
+                            break;
+                        }
+                        case ConsoleKey.I:
+                        {
+                            if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out int idx) && idx is <= 4 and >= 0)
+                            {
+                                if (PlayerField.IsItemAt(idx))
+                                    Printer.ViewCardInfo(PlayerField.GetItemCard(idx));
+
+                            }
+
+                            break;
+                        }
+                        case ConsoleKey.V:
+                            Printer.PrintHand(this);
+                            break;
+                    }
+                }
+                    break;
+                case ConsoleKey.H:
+                    {
+                        Printer.PrintHelp();
+                        break;
+                    }
+            }
+
+        }
+
+    }
+
 
     /// <summary>
     /// Creates a new Human Player
@@ -162,7 +311,6 @@ public class SimplePlayer : IPlayer
     /// <param name="maxHeroCards">Max number of Hero cards on the Field</param>
     /// <param name="maxItemCards">Max number of Item cards on the Field</param>
     /// <param name="deck">Deck of the player</param>
-    /// <param name="field">Field of the player</param>
     /// <exception cref="ArgumentNullException">Thrown when name or deck are null</exception>
     /// <exception cref="ArgumentException">Thrown when name is not alphanumeric</exception>
     public SimplePlayer(string name, int hp, int maxHeroCards, int maxItemCards, SimpleDeck deck)
@@ -172,10 +320,89 @@ public class SimplePlayer : IPlayer
         if (deck == null) throw new ArgumentNullException(nameof(deck));
 
         this.Name = name;
-        this.HP = hp;
+        this.Hp = hp;
         this.Deck = deck;
         this.Hand = new List<SimpleCard>();
         this.PlayerField = new SimpleField(maxHeroCards, maxItemCards);
+    }
+
+    /// <summary>
+    /// Sets the enemy of the Player
+    /// </summary>
+    /// <param name="enemy">Enemy of the Player</param>
+    /// <exception cref="ArgumentNullException"> Thrown when enemy player is null</exception>
+    public void SetEnemy(SimplePlayer enemy)
+    {
+        if (enemy is null)
+            throw new ArgumentNullException($"{nameof(enemy)} can't be null");
+        if (Enemy is not null)
+            throw new Exception("Enemy is already set");
+        Enemy = enemy;
+    }
+
+    /// <summary>
+    /// Attacks directly to the enemy
+    /// </summary>
+    /// <param name="hero">Hero that will attack</param>
+    protected void DirectAttack(HeroCard hero)
+    {
+        Enemy?.UpdateLife(-hero.Attack);
+    }
+
+    /// <summary>
+    /// Checks if there is a hero on the field
+    /// </summary>
+    ///<returns>True if there is a hero on the field, false otherwise</returns>
+    public bool HasHeroOnField()
+    {
+        return HeroZone.Count > 0;
+    }
+    /// <summary>
+    /// Checks if  a hero can be invoked
+    /// </summary>
+    /// <returns>True if a hero can be invoked, false otherwise</returns>
+    protected bool CanInvokeHero()
+    {
+        return (HasHeroOnHand() && PlayerField.CanInvokeHero());
+    }
+
+    /// <summary>
+    /// Checks if there is a hero on the hand
+    /// </summary>
+    /// <returns>True if there is a hero on the hand, false otherwise</returns>
+    protected bool HasHeroOnHand()
+    {
+        return Find(Hand, x => x is HeroCard);
+    }
+
+    /// <summary>
+    /// Checks if there is an item on the hand
+    /// </summary>
+    /// <returns>True if there is an item on the hand, false otherwise</returns>
+    protected bool HasItemOnHand()
+    {
+        return Find(Hand, x => x is ItemCard);
+    }
+
+    /// <summary>
+    /// Checks if any element in the collection satisfies the condition
+    /// </summary>
+    /// <param name="collection">Collection to check</param>
+    /// <param name="match">Condition to check</param>
+    /// <returns>True if any element in the collection satisfies the condition, false otherwise</returns>
+    public bool Find(List<SimpleCard> collection, Predicate<SimpleCard> match)
+    {
+        return collection.Exists(match);
+    }
+
+
+    /// <summary>
+    /// Checks if an item can be equipped
+    /// </summary>
+    /// <returns>True if an item can be equipped, false otherwise</returns>
+    public bool CanEquipItem()
+    {
+        return (HasItemOnHand() && HasHeroOnField() && PlayerField.CanEquipItem());
     }
 }
 
@@ -183,10 +410,8 @@ public class SimplePlayer : IPlayer
 /// <summary>
 /// Class that represents an AI Player
 /// </summary>
-public class AIPlayer : SimplePlayer
+public class AiPlayer : SimplePlayer
 {
-
-    AIPlayer? _enemy { get; set; }
 
     /// <summary>
     /// Creates a new AI Player
@@ -196,31 +421,18 @@ public class AIPlayer : SimplePlayer
     /// <param name="maxHeroCards">Max number of Hero cards on the Field</param>
     /// <param name="maxItemCards">Max number of Item cards on the Field</param>
     /// <param name="deck">Deck of the player</param>
-    /// <returns>A new AI Player</returns>
-    public AIPlayer(string name, int hp, int maxHeroCards, int maxItemCards, SimpleDeck deck) : base(name, hp, maxHeroCards, maxItemCards, deck)
+    public AiPlayer(string name, int hp, int maxHeroCards, int maxItemCards, SimpleDeck deck) : base(name, hp, maxHeroCards, maxItemCards, deck)
     {
 
-    }
-
-    /// <summary>
-    /// Sets the enemy of the AI Player
-    /// </summary>
-    /// <param name="enemy">Enemy of the AI Player</param>
-    public void SetEnemy(AIPlayer enemy)
-    {
-        _enemy = enemy;
     }
 
     /// <summary>
     /// Plays the AI Player using a greedy strategy
     /// </summary>
     /// <exception cref="Exception">Thrown when the enemy is not set</exception>
-    public void Play(bool canAttack)
+    public override void Play(bool canAttack)
     {
-        if (_enemy == null)
-        {
-            throw new Exception("Enemy not set");
-        }
+        if (Enemy == null) throw new Exception("Enemy not set");
 
         if (CanInvokeHero())
         {
@@ -236,22 +448,22 @@ public class AIPlayer : SimplePlayer
             HeroCard strongestHero = GetHeroWithHigherAttack(PlayerField.HeroZone);
 
             //Atack the enemy hero with the lowest defense
-            if (_enemy.HasHeroOnField())
+            if (Enemy.HasHeroOnField())
             {
                 //Enemy weakest hero
-                HeroCard enemyHero = GetHeroWithLowestDefense(_enemy.PlayerField.HeroZone);
+                HeroCard enemyHero = GetHeroWithLowestDefense(Enemy.PlayerField.HeroZone);
 
                 if (strongestHero.Attack >= enemyHero.Defense)
-                    AttackHero(strongestHero, enemyHero, _enemy);
+                    AttackHero(strongestHero, enemyHero);
             }
             else
             {
-                DirectAttack(strongestHero, _enemy);
+                DirectAttack(strongestHero);
             }
         }
 
 
-        ///Equip a random item to a random hero
+        //Equip a random item to a random hero
         if (CanEquipItem())
         {
             HeroCard hero = GetRandomInvokedHero();
@@ -267,8 +479,8 @@ public class AIPlayer : SimplePlayer
 
         foreach (SimpleCard card in cards)
         {
-            if (card.Effect.CanActivate<SimplePlayer>(this, _enemy))
-                card.Effect.Activate<SimplePlayer>(this, _enemy);
+            if (card.Effect.CanActivate(this, Enemy))
+                card.Effect.Activate(this, Enemy);
 
         }
     }
@@ -297,78 +509,11 @@ public class AIPlayer : SimplePlayer
         //Get a random hero
         Random rnd = new Random();
 
-        List<HeroCard> heros = HeroZone.Where(c => c is HeroCard).Cast<HeroCard>().ToList();
-
-        return heros[rnd.Next(heros.Count)];
+        return HeroZone[rnd.Next(HeroZone.Count)];
     }
+
 
     /// <summary>
-    /// Attacks directly to the enemy
-    /// </summary>
-    /// <param name="hero">Hero that will attack</param>
-    /// <param name="enemy">Enemy player</param>
-    private void DirectAttack(HeroCard hero, AIPlayer enemy)
-    {
-        enemy.UpdateLife(-hero.Attack);
-    }
-
-    /// <summary>
-    /// Checks if there is a hero on the field
-    /// </summary>
-    ///<returns>True if there is a hero on the field, false otherwise</returns>
-    public bool HasHeroOnField()
-    {
-        return HeroZone.Count > 0;
-    }
-
-    /// <summary>
-    /// Checks if there is a hero on the hand
-    /// </summary>
-    /// <returns>True if there is a hero on the hand, false otherwise</returns>
-    private bool HasHeroOnHand()
-    {
-        return Find(Hand, x => x is HeroCard);
-    }
-
-    /// <summary>
-    /// Checks if there is an item on the hand
-    /// </summary>
-    /// <returns>True if there is an item on the hand, false otherwise</returns>
-    private bool HasItemOnHand()
-    {
-        return Find(Hand, x => x is ItemCard);
-    }
-
-    /// <summary>
-    /// Checks if any element in the collection satisfies the condition
-    /// </summary>
-    /// <param name="collection">Collection to check</param>
-    /// <param name="match">Condition to check</param>
-    /// <returns>True if any element in the collection satisfies the condition, false otherwise</returns>
-    public bool Find(List<SimpleCard> collection, Predicate<SimpleCard> match)
-    {
-        return collection.Exists(match);
-    }
-
-    /// <summary>
-    /// Checks if  a hero can be invoked
-    /// </summary>
-    /// <returns>True if a hero can be invoked, false otherwise</returns>
-    public bool CanInvokeHero()
-    {
-        return (HasHeroOnHand() && PlayerField.CanInvokeHero());
-    }
-
-    /// <summary>
-    /// Checks if an item can be equipped
-    /// </summary>
-    /// <returns>True if an item can be equipped, false otherwise</returns>
-    public bool CanEquipItem()
-    {
-        return (HasItemOnHand() && HasHeroOnField() && PlayerField.CanEquipItem());
-    }
-
-    /// <summmary>
     /// Gets the hero with the higher attack given a certain collection
     /// </summary>
     /// <param name="collection">Collection to select hero from</param>
