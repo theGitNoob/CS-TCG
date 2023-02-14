@@ -203,14 +203,14 @@ public class SimpleField : IField
 
     public bool IsHeroAt(int position)
     {
-        if (position >= HeroZone.Count) return false;
+        if (position >= HeroZone.Count || position < 0) return false;
 
         return true;
     }
 
     public bool IsItemAt(int position)
     {
-        if (position >= ItemZone.Count) return false;
+        if (position >= ItemZone.Count || position < 0) return false;
 
         return true;
     }
