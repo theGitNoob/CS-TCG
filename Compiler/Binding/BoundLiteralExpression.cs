@@ -5,7 +5,7 @@ namespace Compiler.Binding
     /// <summary>
     /// The BoundLiteralExpression class represents a literal expression in the bound tree.
     /// </summary>
-    internal sealed class BoundLiteralExpression : BoundExpression
+    internal class BoundLiteralExpression : BoundExpression
     {
         public BoundLiteralExpression(object value)
         {
@@ -16,5 +16,10 @@ namespace Compiler.Binding
         public override Type Type => Value.GetType();
 
         public object Value { get; }
+
+        public override IEnumerable<BoundNode> GetChildren()
+        {
+            yield break;
+        }
     }
 }

@@ -132,6 +132,8 @@ namespace Compiler.Binding
         {
             switch (syntax.Kind)
             {
+                case SyntaxKind.MethodSyntaxExpression:
+                    return BindMethodSyntaxExpression((MethodSyntaxExpression)syntax);
                 case SyntaxKind.StringExpression:
                     return BindStringExpression((StringExpressionSyntax) syntax);
                 case SyntaxKind.LiteralExpression:
@@ -149,6 +151,12 @@ namespace Compiler.Binding
                 default:
                     throw new Exception($"Unexpected syntax {syntax.Kind}");
             }
+        }
+
+        private BoundExpression BindMethodSyntaxExpression(MethodSyntaxExpression syntax)
+        {
+            var aux = BindExpression(syntax.CantToken);
+            return new BoundMethodExpression(syntax.IdentifierToken,aux,syntax.Variable);
         }
 
         ///<summary>

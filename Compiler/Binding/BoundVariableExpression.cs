@@ -17,5 +17,10 @@ namespace Compiler.Binding
         public override Type Type => Variable.Type;
 
         public override BoundNodeKind Kind => BoundNodeKind.VariableExpression;
+
+        public override IEnumerable<BoundNode> GetChildren()
+        {
+            yield break;
+        }
     }
 }

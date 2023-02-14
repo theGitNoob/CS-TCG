@@ -15,6 +15,7 @@ namespace Compiler.Binding
         // Statements
         BlockStatement,
         ExpressionStatement,
-        IfStatement
+        IfStatement,
+        MethodExpression
     }
 }

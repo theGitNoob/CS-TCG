@@ -16,5 +16,9 @@ namespace Compiler.Binding
         public override Type Type => Op.ResultType; 
         public BoundUnaryOperator Op{get;}
         public BoundExpression Operand{get;}
+        public override IEnumerable<BoundNode> GetChildren()
+        {
+            yield return Operand;
+        }
     }
 }

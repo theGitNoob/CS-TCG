@@ -55,6 +55,12 @@ namespace Compiler.Syntax
         {
             switch (text)
             {
+                case "Life":
+                    return SyntaxKind.MethodKeyword;
+                case "Attack":
+                    return SyntaxKind.MethodKeyword;
+                case "Defense":
+                    return SyntaxKind.MethodKeyword;
                 case "if":
                     return SyntaxKind.IfKeyword;
                 case "else":

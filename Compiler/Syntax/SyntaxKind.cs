@@ -13,6 +13,7 @@ namespace Compiler.Syntax
         UnaryExpression,
         NameExpression,
         AssignmentExpression,
+        MethodSyntaxExpression,
 
         //Statement
         ExpressionStatement,
@@ -42,6 +43,7 @@ namespace Compiler.Syntax
         TrueKeyword,
         IfKeyword,
         ElseKeyword,
+        MethodKeyword,
 
         //OtherToken
         IndentifierToken,
@@ -60,6 +62,6 @@ namespace Compiler.Syntax
         DotToken,
         QuestionToken,
         CommaToken,
-        SemicolonToken
+        SemicolonToken,
     }
 }

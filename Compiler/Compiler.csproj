@@ -1,5 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+ <ItemGroup>
+    <ProjectReference Include="..\Logic\Game\Game.csproj" />
+    <ProjectReference Include="..\Logic\Cards\Cards.csproj" />
+    <ProjectReference Include="..\Logic\Effect\Effect.csproj" />
+    <ProjectReference Include="..\Logic\Player\Player.csproj" />
+    <ProjectReference Include="..\Logic\Deck\Deck.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

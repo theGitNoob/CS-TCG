@@ -13,5 +13,11 @@ namespace Compiler.Binding
         public IEnumerable<BoundStatement> Statements { get; }
 
         public override BoundNodeKind Kind => BoundNodeKind.BlockStatement;
+
+        public override IEnumerable<BoundNode> GetChildren()
+        {
+            foreach (var statement in Statements)
+                yield return statement;
+        }
     }
 }

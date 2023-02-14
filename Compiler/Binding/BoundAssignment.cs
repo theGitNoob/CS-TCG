@@ -19,5 +19,10 @@ namespace Compiler.Binding
         public override BoundNodeKind Kind => BoundNodeKind.AssignmentExpression;
 
         public override Type Type => Expression.Type;
+
+        public override IEnumerable<BoundNode> GetChildren()
+        {
+            yield return Expression;
+        }
     }
 }

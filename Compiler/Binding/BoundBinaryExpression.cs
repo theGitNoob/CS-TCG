@@ -22,5 +22,11 @@ namespace Compiler.Binding
         public override BoundNodeKind Kind => BoundNodeKind.UnaryExpression;
 
         public override Type Type => Op.ResultType;
+
+        public override IEnumerable<BoundNode> GetChildren()
+        {
+            yield return Left;
+            yield return Right;
+        }
     }
 }

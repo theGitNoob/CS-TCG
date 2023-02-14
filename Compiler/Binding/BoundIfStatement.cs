@@ -17,5 +17,12 @@ namespace Compiler.Binding
         public BoundStatement ElseStatement { get; }
 
         public override BoundNodeKind Kind => BoundNodeKind.IfStatement;
+
+        public override IEnumerable<BoundNode> GetChildren()
+        {
+            yield return Condition;
+            yield return IfStatement;
+            yield return ElseStatement;
+        }
     }
 }
