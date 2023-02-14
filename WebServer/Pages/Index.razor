@@ -201,11 +201,7 @@
 
             SimplePlayer player;
 
-            @* if (_playerType == "AI")
-                player = new AIPlayer(nickName, hpPoints, 5, 5, deck);
-
-            else *@
-                player = new SimplePlayer(_nickName, _hpPoints, 5, 5, deck);
+            player = _playerType == "AI" ? new AiPlayer(_nickName, _hpPoints, 5, 5, deck) : new SimplePlayer(_nickName, _hpPoints, 5, 5, deck);
         _players.Add(player);
         }
         catch (Exception err)

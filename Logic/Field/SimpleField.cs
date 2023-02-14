@@ -12,10 +12,10 @@ public class SimpleField : IField
     public List<SimpleCard> CementeryZone { private set; get; }
 
     //Max number of Hero cards on the Field
-    public int maxHeroCards { private set; get; }
+    public int MaxHeroCards { private set; get; }
 
     //Max number of Item cards on the Field
-    public int maxItemCards { private set; get; }
+    public int MaxItemCards { private set; get; }
 
 
     /// <summary>
@@ -26,8 +26,8 @@ public class SimpleField : IField
     /// <returns>A new Field</returns>
     public SimpleField(int maxHeroCards, int maxItemCards)
     {
-        this.maxHeroCards = maxHeroCards;
-        this.maxItemCards = maxItemCards;
+        this.MaxHeroCards = maxHeroCards;
+        this.MaxItemCards = maxItemCards;
 
         HeroZone = new List<HeroCard>();
         ItemZone = new List<ItemCard>();
@@ -125,7 +125,7 @@ public class SimpleField : IField
     /// <returns>True if a hero can be placed, false otherwise</returns>
     public bool CanInvokeHero()
     {
-        return HeroZone.Count < maxHeroCards;
+        return HeroZone.Count < MaxHeroCards;
     }
 
     /// <summary>
@@ -134,7 +134,7 @@ public class SimpleField : IField
     /// <returns>True if an item can be placed, false otherwise</returns>
     public bool CanEquipItem()
     {
-        return ItemZone.Count < maxItemCards;
+        return ItemZone.Count < MaxItemCards;
     }
 
     /// <summary>

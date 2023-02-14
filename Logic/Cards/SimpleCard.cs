@@ -18,7 +18,7 @@ public class SimpleCard : ICard
     /// <summary>
     /// The name of the card
     /// </summary>
-    public string Name { set; get; }
+    public string Name { get; }
 
     /// <summary>
     /// The description of the card
