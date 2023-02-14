@@ -226,21 +226,24 @@ public static class Printer
         if (_helpMenu == "")
         {
             _helpMenu = @"
-            -----------------------HELP--------------------------
-            | h      : Toggle help menu                          |
-            | sh[0-4]: Select Hero at the Position               |
-            | si[0-4]: Select Item at the Position               |
-            | vh[0-4]: View the Hero at the Position             |
-            | vi[0-4]: View the Item at the Position             |
-            | vv     : View Player's Hand                        |
-            | a      : Attacks with the selected Hero            |
-            | dh     : Unsets the current selected Hero          |
-            | di     : Unsets the current selected item          |
-            | ch     : Activates the Effect of the Selected Hero |
-            | ci     : Activates the Effect of the Selected Item |
-            | e      : Ends the Turn                             |
-            | q      : Surrender and quits the Game              |
-            -----------------------HELP--------------------------
+            -----------------------HELP----------------------------
+            | a[0-4] : Attacks with the selected Hero              |
+            | ch     : Activates the Effect of the Selected Hero   |
+            | ci     : Activates the Effect of the Selected Item   |
+            | dh     : Unsets the current selected Hero            |
+            | di     : Unsets the current selected item            |
+            | e      : Ends the Turn                               |
+            | h      : Toggle help menu                            |
+            | i      : Invoke selected Card in Hand if it's a Hero |
+            | i[0-4] : Equip selected Item in Hand if it's a Item  |
+            | sc#⏎   : Select the card at Position in Hand         |
+            | sh[0-4]: Select Hero at the Position in HeroZone     |
+            | si[0-4]: Select Item at the Position in ItemZone     |
+            | vc     : View the Selected card in Hand              |
+            | vh     : View the Selected Hero                      |
+            | vi     : View the Selected Item                      |
+            | vv     : View Player's Hand                          |
+            -----------------------HELP----------------------------
             ";
         }
 
