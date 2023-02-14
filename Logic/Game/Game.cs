@@ -1,8 +1,5 @@
 ﻿using Cards;
-using Deck;
 using Player;
-using Habilitie;
-
 using System.Text.Json;
 
 namespace Game;
@@ -20,47 +17,42 @@ public static class GameController
     /// <summary>
     /// The path to the items.json file
     /// </summary>
-    static string itemsFilePath = "../Content/items.json";
+    private const string ItemsFilePath = "../Content/items.json";
 
     /// <summary>
-    /// The path to the heros.json file
+    /// The path to the heroes.json file
     /// </summary>
-    static string heroesFilePath = "../Content/heroes.json";
+    private const string HeroesFilePath = "../Content/heroes.json";
 
     /// <summary>
     /// The path to the cards directory
     /// </summary>
-    static string cardsDir = "../Content/";
-
-    /// <summary>
-    /// The Initial HP points of each player
-    /// </summary>
-    static int _hpPoints { get; set; } = 4000;
+    private const string CardsDir = "../Content/";
 
     /// <summary>
     /// The Initial Cards of each player
     /// </summary>
-    static int _initialCards { get; set; } = 5;
+    static int InitialCards { get; set; } = 5;
 
     /// <summary>
     /// The number of cards each player can draw per turn
     /// </summary>
-    static int _cardsPerTurn { get; set; } = 1;
+    static int CardsPerTurn { get; set; } = 1;
 
     /// <summary>
     /// The minimum number of cards a valid Deck should have
     /// </summary>
-    static int _minDeckCards { get; set; } = 1;
+    static int MinDeckCards { get; set; } = 1;
 
     /// <summary>
     /// The maximum number of cards a valid Deck should have
     /// </summary>
-    static int _maxDeckCards { get; set; } = 1;
+    static int MaxDeckCards { get; set; } = 1;
 
     /// <summary>
     /// The number of players in the game
     /// </summary>
-    static int _playersCnt { get; set; } = 2;
+    static int PlayersCnt { get; set; } = 2;
 
 
     /// <summary>
@@ -78,11 +70,11 @@ public static class GameController
     /// <param name="condition">The condition for the effect</param>
     /// <param name="action">The action for the effect</param>
     /// <returns>A new `Effect`</returns>
-    static Effect CreateEffect(string condition, string action)
+    static Effect.Effect CreateEffect(string condition, string action)
     {
-        Effect.CheckIsCorrect<SimplePlayer>(condition, action, "Player");
+        Effect.Effect.CheckIsCorrect<SimplePlayer>(condition, action, "Player");
 
-        Effect effect = new Effect(condition, action, "Player");
+        Effect.Effect effect = new Effect.Effect(condition, action, "Player");
 
         return effect;
     }
@@ -98,7 +90,6 @@ public static class GameController
     /// <param name="action">The action for the effect</param>
     /// <exception cref="ArgumentNullException">Thrown when the name, description, condition or action is null</exception>
     /// <exception cref="Exception">Thrown when there is already another card with the same name</exception>
-    /// <exception cref="CompilationErrorException">Thrown when the condition or action are not correct</exception>
     public static void CreateHeroCard(string? name, int attack, int defense, string? description, string? condition, string? action)
     {
         if (name == null) throw new ArgumentNullException(nameof(name));
@@ -106,7 +97,7 @@ public static class GameController
         if (condition == null) throw new ArgumentNullException(nameof(condition));
         if (action == null) throw new ArgumentNullException(nameof(action));
 
-        Effect effect = CreateEffect(condition, action);
+        Effect.Effect effect = CreateEffect(condition, action);
 
         HeroCard card = new HeroCard(name, attack, defense, description, effect);
 
@@ -119,7 +110,7 @@ public static class GameController
 
         else
         {
-            throw new Exception($"There is alrady another card with the specified name {name}");
+            throw new Exception($"There is already another card with the specified name {name}");
         }
     }
 
@@ -128,7 +119,7 @@ public static class GameController
     /// Checks if there exists another card with the same name
     /// </summary>
     /// <param name="newCard">The card to check if already exists</param>
-    /// <returns>True if the card doensn't currently exists, false otherwise</returns>
+    /// <returns>True if the card doesn't currently exists, false otherwise</returns>
     static bool IsUnique(SimpleCard newCard)
     {
         return !Cards.Exists(card => card.Name == newCard.Name);
@@ -152,7 +143,7 @@ public static class GameController
         if (action == null) throw new ArgumentNullException(nameof(action));
 
 
-        Effect effect = CreateEffect(condition, action);
+        Effect.Effect effect = CreateEffect(condition, action);
 
         ItemCard card = new ItemCard(name, description, effect);
 
@@ -165,7 +156,7 @@ public static class GameController
 
         else
         {
-            throw new Exception($"There is alrady another card with the specified name {name}");
+            throw new Exception($"There is already another card with the specified name {name}");
         }
     }
 
@@ -183,11 +174,11 @@ public static class GameController
     }
 
     /// <summary>
-    /// Deserializes a `List<HeroCard>` from a string formated as json
+    /// Deserializes a List of Hero Cards from a string formatted as json
     /// </summary>
     /// <param name = "jsonFile"> The string to deserialize</param>
-    /// <returns>A string formated as json</returns>
-    static List<HeroCard> DeserializeHeros(string jsonFile)
+    /// <returns>A string formatted as json</returns>
+    static List<HeroCard> DeserializeHeroes(string jsonFile)
     {
         List<HeroCard> heroes = JsonSerializer.Deserialize<List<HeroCard>>(jsonFile)!;
         return heroes;
@@ -195,7 +186,7 @@ public static class GameController
 
 
     /// <summary>
-    /// Serializes a `List<ItemCard>` into a string formatted as json
+    /// Serializes a List of Item Cards into a string formatted as json
     /// </summary>
     /// <returns>A string formatted as json</returns>
     static string SerializeHeroes()
@@ -204,13 +195,13 @@ public static class GameController
 
         if (heroes.Count == 0) return "";
 
-        string jsonFile = JsonSerializer.Serialize<List<HeroCard>>(heroes);
+        string jsonFile = JsonSerializer.Serialize(heroes);
 
         return jsonFile;
     }
 
     /// <summary>
-    /// Serializes a `List<ItemCard>` into a string formatted as json
+    /// Serializes a List of Item Cards into a string formatted as json
     /// </summary>
     /// <returns>A string formatted as json</returns>
     static string SerializeItems()
@@ -219,7 +210,7 @@ public static class GameController
 
         if (items.Count == 0) return "";
 
-        string jsonFile = JsonSerializer.Serialize<List<ItemCard>>(items);
+        string jsonFile = JsonSerializer.Serialize(items);
 
         return jsonFile;
     }
@@ -230,30 +221,30 @@ public static class GameController
     /// </summary>
     static void LoadCards()
     {
-        if (!Directory.Exists(cardsDir))
+        if (!Directory.Exists(CardsDir))
         {
-            Directory.CreateDirectory(cardsDir);
+            Directory.CreateDirectory(CardsDir);
         }
 
-        if (!File.Exists(itemsFilePath))
+        if (!File.Exists(ItemsFilePath))
         {
-            File.Create(itemsFilePath).Dispose();
+            File.Create(ItemsFilePath).Dispose();
         }
 
-        if (!File.Exists(heroesFilePath))
+        if (!File.Exists(HeroesFilePath))
         {
-            File.Create(heroesFilePath).Dispose();
+            File.Create(HeroesFilePath).Dispose();
         }
 
-        string heroesFile = File.ReadAllText(heroesFilePath);
+        string heroesFile = File.ReadAllText(HeroesFilePath);
 
         if (heroesFile != "")
         {
-            var aux = DeserializeHeros(heroesFile);
+            var aux = DeserializeHeroes(heroesFile);
             Cards.AddRange(aux);
         }
 
-        string itemsFile = File.ReadAllText(itemsFilePath);
+        string itemsFile = File.ReadAllText(ItemsFilePath);
 
         if (itemsFile != "")
         {
@@ -270,11 +261,11 @@ public static class GameController
     {
         string itemsJsonFile = SerializeItems();
 
-        File.WriteAllText(itemsFilePath, itemsJsonFile);
+        File.WriteAllText(ItemsFilePath, itemsJsonFile);
 
         string heroesJsonFile = SerializeHeroes();
 
-        File.WriteAllText(heroesFilePath, heroesJsonFile);
+        File.WriteAllText(HeroesFilePath, heroesJsonFile);
     }
 
 
@@ -287,7 +278,7 @@ public static class GameController
         if (p2 == null) throw new ArgumentNullException($"{nameof(p2)} can't be null");
 
 
-        GameLoop.StartGame(_initialCards, _cardsPerTurn, p1, p2);
+        GameLoop.StartGame(InitialCards, CardsPerTurn, p1, p2);
     }
 
     public static void ChangeDefaults(int hpPoints, int initialCards, int cardsPerTurn, int minDeckCards, int maxDeckCards, int playersCnt)
@@ -300,12 +291,11 @@ public static class GameController
         if (minDeckCards > maxDeckCards) throw new ArgumentException($"{nameof(minDeckCards)} should be less or equal than {nameof(maxDeckCards)}");
         if (playersCnt < 2) throw new ArgumentOutOfRangeException(nameof(playersCnt), "The players count must be greater than 1");
 
-        _hpPoints = hpPoints;
-        _initialCards = initialCards;
-        _cardsPerTurn = cardsPerTurn;
-        _minDeckCards = minDeckCards;
-        _maxDeckCards = maxDeckCards;
-        _playersCnt = playersCnt;
+        InitialCards = initialCards;
+        CardsPerTurn = cardsPerTurn;
+        MinDeckCards = minDeckCards;
+        MaxDeckCards = maxDeckCards;
+        PlayersCnt = playersCnt;
 
     }
 
