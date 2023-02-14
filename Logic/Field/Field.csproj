@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Cards\Cards.csproj" />
-    <ProjectReference Include="..\Deck\Deck.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

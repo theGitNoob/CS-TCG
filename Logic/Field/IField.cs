@@ -1,4 +1,7 @@
 using Cards;
+
+namespace Field;
+
 public interface IField
 {
     int maxHeroCards { get; }
