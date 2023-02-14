@@ -316,12 +316,11 @@ public class SimplePlayer : IPlayer
     public SimplePlayer(string name, int hp, int maxHeroCards, int maxItemCards, SimpleDeck deck)
     {
         if (name == "") throw new ArgumentNullException(nameof(name));
-        if (!name.All(c => char.IsLetterOrDigit(c))) throw new ArgumentException("Player name must be alphanumeric", nameof(name));
-        if (deck == null) throw new ArgumentNullException(nameof(deck));
+        if (!name.All(char.IsLetterOrDigit)) throw new ArgumentException("Player name must be alphanumeric", nameof(name));
 
         this.Name = name;
         this.Hp = hp;
-        this.Deck = deck;
+        this.Deck = deck ?? throw new ArgumentNullException(nameof(deck));
         this.Hand = new List<SimpleCard>();
         this.PlayerField = new SimpleField(maxHeroCards, maxItemCards);
     }
@@ -333,11 +332,9 @@ public class SimplePlayer : IPlayer
     /// <exception cref="ArgumentNullException"> Thrown when enemy player is null</exception>
     public void SetEnemy(SimplePlayer enemy)
     {
-        if (enemy is null)
-            throw new ArgumentNullException($"{nameof(enemy)} can't be null");
         if (Enemy is not null)
             throw new Exception("Enemy is already set");
-        Enemy = enemy;
+        Enemy = enemy ?? throw new ArgumentNullException($"{nameof(enemy)} can't be null");
     }
 
     /// <summary>
@@ -447,7 +444,7 @@ public class AiPlayer : SimplePlayer
             //AI strongest Hero
             HeroCard strongestHero = GetHeroWithHigherAttack(PlayerField.HeroZone);
 
-            //Atack the enemy hero with the lowest defense
+            //Attack the enemy hero with the lowest defense
             if (Enemy.HasHeroOnField())
             {
                 //Enemy weakest hero
@@ -475,7 +472,7 @@ public class AiPlayer : SimplePlayer
 
 
         //Activates all possibly effects
-        List<SimpleCard> cards = Enumerable.Concat<SimpleCard>(HeroZone, ItemZone).ToList();
+        List<SimpleCard> cards = HeroZone.Concat<SimpleCard>(ItemZone).ToList();
 
         foreach (SimpleCard card in cards)
         {
@@ -521,9 +518,9 @@ public class AiPlayer : SimplePlayer
     private static HeroCard GetHeroWithHigherAttack(IEnumerable<ICard> collection)
     {
         //Filter the hand to get only the heroes
-        IEnumerable<HeroCard> heros = collection.OfType<HeroCard>();
+        IEnumerable<HeroCard> heroes = collection.OfType<HeroCard>();
 
-        return heros.MaxBy(x => x.Attack)!;
+        return heroes.MaxBy(x => x.Attack)!;
     }
 
     /// <summary>
@@ -534,9 +531,9 @@ public class AiPlayer : SimplePlayer
     private static HeroCard GetHeroWithLowestDefense(IEnumerable<ICard> collection)
     {
         //Filter the enemy field to get only the heroes
-        IEnumerable<HeroCard> heros = collection.OfType<HeroCard>();
+        IEnumerable<HeroCard> heroes = collection.OfType<HeroCard>();
 
-        return heros.MinBy(x => x.Defense)!;
+        return heroes.MinBy(x => x.Defense)!;
     }
 
 }
