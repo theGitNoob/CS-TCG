@@ -44,9 +44,7 @@ public interface IPlayer
     /// </summary>
     List<ItemCard> ItemZone { get; }
 
-    // void Play(bool canAttack);
-
-
+    void Play(bool canAttack);
 }
 
 /// <summary>
@@ -66,6 +64,7 @@ public class SimplePlayer : IPlayer
         get => _hp;
         set => _hp = value < 0 ? 0 : value;
     }
+
     public List<SimpleCard> Hand { get; protected set; }
 
     public SimpleDeck Deck { get; protected set; }
@@ -148,15 +147,22 @@ public class SimplePlayer : IPlayer
     {
         Hp = Hp + value;
     }
+
+    /// <summary>
+    ///  Plays according to user input
+    /// </summary>
+    /// <param name="canAttack"></param>
+    /// <exception cref="NullReferenceException">Thrown when `Play` is invoked without having set the Enemy</exception>
     public virtual void Play(bool canAttack)
     {
         if (Enemy == null)
-            throw new Exception("Enemy player must be set before start to play");
+            throw new NullReferenceException("Enemy player must be set before start to play");
 
         var userInput = ConsoleKey.Z;
 
         HeroCard? selectedHero = null;
         ItemCard? selectedItem = null;
+        SimpleCard? selectedHandCard = null;
 
         while (userInput != ConsoleKey.E)
         {
@@ -165,100 +171,28 @@ public class SimplePlayer : IPlayer
             switch (userInput)
             {
                 case ConsoleKey.A:
+                {
+                    if (selectedHero != null)
                     {
-                        if (selectedHero != null)
+                        if (!Enemy.HasHeroOnField())
                         {
-                            if (Enemy.HeroZone.Count == 0)
+                            DirectAttack(selectedHero);
+                        }
+                        else
+                        {
+                            if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out var idx) &&
+                                Enemy.PlayerField.IsHeroAt(idx))
                             {
-                                DirectAttack(selectedHero);
-                            }
-                            else
-                            {
-                                if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out var idx) && idx is >= 0 and <= 4)
-                                {
-                                    var enemyHero = Enemy.PlayerField.GetHeroCard(idx);
-                                    AttackHero(selectedHero, enemyHero);
-                                }
+                                var enemyHero = Enemy.PlayerField.GetHeroCard(idx);
+                                AttackHero(selectedHero, enemyHero);
                             }
                         }
-                        break;
                     }
-                case ConsoleKey.D:
-                    {
-                        var mod = Console.ReadKey(false).Key;
 
-                        switch (mod)
-                        {
-                            case ConsoleKey.H:
-                                selectedHero = null;
-                                break;
-                            case ConsoleKey.I:
-                                selectedItem = null;
-                                break;
-                        }
-                        break;
-                    }
+                    break;
+                }
+
                 case ConsoleKey.C:
-                    {
-                        var mod = Console.ReadKey(false).Key;
-
-                        switch (mod)
-                        {
-                            case ConsoleKey.H:
-                            {
-                                if (selectedHero is not null && selectedHero.Effect.CanActivate(this, Enemy))
-                                {
-                                    selectedHero.Effect.Activate(this, Enemy);
-                                }
-
-                                break;
-                            }
-                            case ConsoleKey.I:
-                            {
-                                if (selectedItem is not null && selectedItem.Effect.CanActivate(this, Enemy))
-                                {
-                                    selectedItem.Effect.Activate(this, Enemy);
-                                }
-
-                                break;
-                            }
-                        }
-                        break;
-                    }
-
-                // case ConsoleKey.Q: break;
-
-                case ConsoleKey.S:
-                    {
-                        var mod = Console.ReadKey(false).Key;
-
-                        switch (mod)
-                        {
-                            case ConsoleKey.H:
-                            {
-                                if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out int idx) && idx is <= 4 and >= 0)
-                                {
-                                    if (PlayerField.IsHeroAt(idx))
-                                        selectedHero = PlayerField.GetHeroCard(idx);
-                                }
-
-                                break;
-                            }
-                            case ConsoleKey.I:
-                            {
-                                if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out int idx) && idx is <= 4 and >= 0)
-                                {
-                                    if (PlayerField.IsItemAt(idx))
-                                        selectedItem = PlayerField.GetItemCard(idx);
-
-                                }
-
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                case ConsoleKey.V:
                 {
                     var mod = Console.ReadKey(false).Key;
 
@@ -266,23 +200,132 @@ public class SimplePlayer : IPlayer
                     {
                         case ConsoleKey.H:
                         {
-                            if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out int idx) && idx is <= 4 and >= 0)
+                            if (selectedHero is not null && selectedHero.Effect.CanActivate(this, Enemy))
                             {
-                                if (PlayerField.IsHeroAt(idx))
-                                    Printer.ViewCardInfo(PlayerField.GetHeroCard(idx));
+                                selectedHero.Effect.Activate(this, Enemy);
                             }
 
                             break;
                         }
                         case ConsoleKey.I:
                         {
-                            if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out int idx) && idx is <= 4 and >= 0)
+                            if (selectedItem is not null && selectedItem.Effect.CanActivate(this, Enemy))
                             {
-                                if (PlayerField.IsItemAt(idx))
-                                    Printer.ViewCardInfo(PlayerField.GetItemCard(idx));
-
+                                selectedItem.Effect.Activate(this, Enemy);
                             }
 
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+                case ConsoleKey.D:
+                {
+                    var mod = Console.ReadKey(false).Key;
+
+                    switch (mod)
+                    {
+                        case ConsoleKey.H:
+                            selectedHero = null;
+                            break;
+                        case ConsoleKey.I:
+                            selectedItem = null;
+                            break;
+                    }
+
+                    break;
+                }
+                case ConsoleKey.H:
+                {
+                    Printer.PrintHelp();
+                    break;
+                }
+
+                case ConsoleKey.I:
+                {
+                    if (selectedHandCard is HeroCard hero && PlayerField.CanInvokeHero())
+                    {
+                        InvokeHero(hero);
+                    }
+                    else if (selectedHandCard is ItemCard item && PlayerField.CanEquipItem())
+                    {
+                        var mod = Console.ReadKey(false).ToString();
+                        if (int.TryParse(mod, out var idx) && PlayerField.IsHeroAt(idx))
+                            EquipItem(PlayerField.GetHeroCard(idx), item);
+                    }
+
+                    break;
+                }
+
+                case ConsoleKey.S:
+                {
+                    var mod = Console.ReadKey(false).Key;
+
+                    switch (mod)
+                    {
+                        case ConsoleKey.H:
+                        {
+                            if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out var idx) &&
+                                PlayerField.IsHeroAt(idx))
+                            {
+                                selectedHero = PlayerField.GetHeroCard(idx);
+                            }
+
+                            break;
+                        }
+                        case ConsoleKey.I:
+                        {
+                            if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out var idx) &&
+                                PlayerField.IsItemAt(idx))
+                            {
+                                selectedItem = PlayerField.GetItemCard(idx);
+                            }
+
+                            break;
+                        }
+                        case ConsoleKey.C:
+                        {
+                            var number = "";
+                            ConsoleKey pressed;
+                            do
+                            {
+                                pressed = Console.ReadKey(false).Key;
+
+                                if (pressed != ConsoleKey.Enter)
+                                    number += pressed.ToString();
+                            } while (pressed != ConsoleKey.Enter);
+
+                            if (int.TryParse(number, out var idx) && idx >= 0 && idx < Hand.Count)
+                                selectedHandCard = Hand[idx];
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+                case ConsoleKey.V:
+                {
+                    var mod = Console.ReadKey(false).Key;
+
+                    switch (mod)
+                    {
+                        case ConsoleKey.C:
+                        {
+                            if(selectedHandCard != null)
+                                Printer.ViewCardInfo(selectedHandCard);
+                            break;
+                        }
+                        case ConsoleKey.H:
+                        {
+                            if (selectedHero != null)
+                                Printer.ViewCardInfo(selectedHero);
+                            break;
+                        }
+                        case ConsoleKey.I:
+                        {
+                            if (selectedItem != null)
+                                Printer.ViewCardInfo(selectedItem);
                             break;
                         }
                         case ConsoleKey.V:
@@ -291,15 +334,8 @@ public class SimplePlayer : IPlayer
                     }
                 }
                     break;
-                case ConsoleKey.H:
-                    {
-                        Printer.PrintHelp();
-                        break;
-                    }
             }
-
         }
-
     }
 
 
@@ -316,7 +352,8 @@ public class SimplePlayer : IPlayer
     public SimplePlayer(string name, int hp, int maxHeroCards, int maxItemCards, SimpleDeck deck)
     {
         if (name == "") throw new ArgumentNullException(nameof(name));
-        if (!name.All(char.IsLetterOrDigit)) throw new ArgumentException("Player name must be alphanumeric", nameof(name));
+        if (!name.All(char.IsLetterOrDigit))
+            throw new ArgumentException("Player name must be alphanumeric", nameof(name));
 
         this.Name = name;
         this.Hp = hp;
@@ -354,6 +391,7 @@ public class SimplePlayer : IPlayer
     {
         return HeroZone.Count > 0;
     }
+
     /// <summary>
     /// Checks if  a hero can be invoked
     /// </summary>
@@ -403,13 +441,11 @@ public class SimplePlayer : IPlayer
     }
 }
 
-
 /// <summary>
 /// Class that represents an AI Player
 /// </summary>
 public class AiPlayer : SimplePlayer
 {
-
     /// <summary>
     /// Creates a new AI Player
     /// </summary>
@@ -418,9 +454,9 @@ public class AiPlayer : SimplePlayer
     /// <param name="maxHeroCards">Max number of Hero cards on the Field</param>
     /// <param name="maxItemCards">Max number of Item cards on the Field</param>
     /// <param name="deck">Deck of the player</param>
-    public AiPlayer(string name, int hp, int maxHeroCards, int maxItemCards, SimpleDeck deck) : base(name, hp, maxHeroCards, maxItemCards, deck)
+    public AiPlayer(string name, int hp, int maxHeroCards, int maxItemCards, SimpleDeck deck) : base(name, hp,
+        maxHeroCards, maxItemCards, deck)
     {
-
     }
 
     /// <summary>
@@ -478,7 +514,6 @@ public class AiPlayer : SimplePlayer
         {
             if (card.Effect.CanActivate(this, Enemy))
                 card.Effect.Activate(this, Enemy);
-
         }
     }
 
@@ -493,8 +528,6 @@ public class AiPlayer : SimplePlayer
         List<ItemCard> items = Hand.Where(c => c is ItemCard).Cast<ItemCard>().ToList();
 
         return items[rnd.Next(items.Count)];
-
-
     }
 
     /// <summary>
@@ -535,5 +568,4 @@ public class AiPlayer : SimplePlayer
 
         return heroes.MinBy(x => x.Defense)!;
     }
-
 }
