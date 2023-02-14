@@ -1,7 +1,8 @@
 ﻿using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using System.Text.Json.Serialization;
-namespace Habilitie;
+
+namespace Effect;
 
 ///<summary>
 ///Represents an effect
@@ -29,18 +30,16 @@ public class Effect
     ///</summary>
     ///<param name="conditionString">The condition for the effect</param>
     ///<param name="actionString">The action for the effect</param>
+    /// <param name="imports">Imports of ScriptRunner</param>
     ///<exception cref="ArgumentNullException">Thrown when the condition or action is null</exception>
     ///<returns>A new effect</returns>
     [JsonConstructor]
     public Effect(string conditionString, string actionString, params string[] imports)
     {
-        if (conditionString == null) throw new ArgumentNullException(nameof(conditionString));
-        if (actionString == null) throw new ArgumentNullException(nameof(actionString));
+        ConditionString = conditionString ?? throw new ArgumentNullException(nameof(conditionString));
+        ActionString = actionString ?? throw new ArgumentNullException(nameof(actionString));
 
-        this.ConditionString = conditionString;
-        this.ActionString = actionString;
-
-        this.Imports = imports;
+        Imports = imports;
     }
 
     ///<summary>
@@ -91,7 +90,7 @@ public class Effect
 }
 
 ///<summary>
-///Represents an contion for an `Effect`
+///Represents a condition for an `Effect`
 ///</summary>
 public static class Condition
 {
@@ -138,7 +137,11 @@ public static class Condition
 
         scriptRunner.Wait();
 
-        return scriptRunner.Result.Invoke(p1, p2);
+        bool result = scriptRunner.Result.Invoke(p1, p2);
+
+        scriptRunner.Dispose();
+
+        return result;
 
     }
 
@@ -170,6 +173,8 @@ public static class Action
         scriptRunner.Wait();
 
         scriptRunner.Result.Invoke(p1, p2);
+
+        scriptRunner.Dispose();
     }
 
     ///<summary>

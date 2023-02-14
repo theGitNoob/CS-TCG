@@ -1,6 +1,4 @@
-﻿using Habilitie;
-
-namespace Cards;
+﻿namespace Cards;
 public interface ICard
 {
     CardType Type { get; }
@@ -13,7 +11,7 @@ public interface ICard
 
     String Description { get; }
 
-    Effect Effect { get; }
+    Effect.Effect Effect { get; }
 
 
 }
@@ -34,7 +32,7 @@ public class SimpleCard : ICard
     /// <summary>
     /// The type of the card
     /// </summary>
-    public CardType Type { get; init; }
+    public CardType Type { get; protected init; }
 
     /// <summary>
     /// The id of the card
@@ -54,7 +52,7 @@ public class SimpleCard : ICard
     /// <summary>
     /// The effect of the card
     /// </summary>
-    public Effect Effect { get; init; }
+    public Effect.Effect Effect { get; init; }
 
     /// <summary>
     /// Creates a new card
@@ -64,17 +62,13 @@ public class SimpleCard : ICard
     /// <param name="effect">The effect of the card</param>
     /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
     /// <returns>A new card</returns>
-    public SimpleCard(string name, string description, Effect effect)
+    public SimpleCard(string name, string description, Effect.Effect effect)
     {
-        if (name == null) throw new ArgumentNullException(nameof(name));
-        if (description == null) throw new ArgumentNullException(nameof(description));
-        if (effect == null) throw new ArgumentNullException(nameof(effect));
+        Name = name ?? throw new ArgumentNullException(nameof(name));
 
-        Name = name;
+        Description = description ?? throw new ArgumentNullException(nameof(description));
 
-        Description = description;
-
-        Effect = effect;
+        Effect = effect ?? throw new ArgumentNullException(nameof(effect));
 
         Id = GenRandId();
     }
@@ -104,7 +98,7 @@ public class ItemCard : SimpleCard
     /// <param name="effect">The effect of the item</param>
     /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
     /// <returns>A new item</returns>
-    public ItemCard(string name, string description, Effect effect) : base(name, description, effect)
+    public ItemCard(string name, string description, Effect.Effect effect) : base(name, description, effect)
     {
         Type = CardType.Item;
 
@@ -115,7 +109,7 @@ public class ItemCard : SimpleCard
     /// Equips the item to a hero
     /// </summary>
     /// <param name="hero">The hero to equip the item</param>
-    /// <exception cref="Exception">Thrown when the item is already equiped to a hero</exception>
+    /// <exception cref="Exception">Thrown when the item is already equipped to a hero</exception>
     public void EquipToHero(HeroCard hero)
     {
         if (Hero != null)
@@ -131,12 +125,12 @@ public class ItemCard : SimpleCard
     /// <summary>
     /// Removes the item from the hero
     /// </summary>
-    /// <exception cref="Exception">Thrown when the item is not equiped to a hero</exception>
+    /// <exception cref="Exception">Thrown when the item is not equipped to a hero</exception>
     public void RemoveFromHero()
     {
         if (Hero == null)
         {
-            throw new Exception("Can't remove the item from a hero if not equiped");
+            throw new Exception("Can't remove the item from a hero if not equipped");
         }
 
         Hero = null;
@@ -163,7 +157,7 @@ public class ItemCard : SimpleCard
 public class HeroCard : SimpleCard
 {
     /// <summary>
-    /// The items that the hero has equiped
+    /// The items that the hero has equipped
     /// </summary>
     public List<ItemCard> Items { get; }
 
@@ -174,12 +168,14 @@ public class HeroCard : SimpleCard
     /// <summary>
     /// The attack of the hero
     /// </summary>
-    public int Attack { get => this._attack; set { if (value <= 0) this._attack = 0; else this._attack = value; } }
+    public int Attack { get => this._attack; set => this._attack = value <= 0 ? 0 : value;
+    }
 
     /// <summary>
     /// The defense of the hero
     /// </summary>
-    public int Defense { get => this._defense; set { if (value <= 0) this._defense = 0; else this._defense = value; } }
+    public int Defense { get => this._defense; set => this._defense = value <= 0 ? 0 : value;
+    }
 
     /// <summary>
     /// Creates a new hero
@@ -191,7 +187,7 @@ public class HeroCard : SimpleCard
     /// <param name="effect">The effect of the hero</param>
     /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
     /// <returns>A new hero</returns>
-    public HeroCard(string name, int attack, int defense, string description, Effect effect) : base(name, description, effect)
+    public HeroCard(string name, int attack, int defense, string description, Effect.Effect effect) : base(name, description, effect)
     {
         Type = CardType.Hero;
 
@@ -216,11 +212,11 @@ public class HeroCard : SimpleCard
     /// Removes the given item from the hero
     /// </summary>
     /// <param name="item">The item to remove</param>
-    /// <exception cref="Exception">Thrown when the item is not equiped to the hero</exception>
+    /// <exception cref="Exception">Thrown when the item is not equipped to the hero</exception>
     public void RemoveItem(ItemCard item)
     {
         if (Items.Remove(item) == false)
-            throw new Exception($"The item {item.Name} is not equiped to the hero {Name}");
+            throw new Exception($"The item {item.Name} is not equipped to the hero {Name}");
     }
 
     /// <summary>
@@ -272,11 +268,11 @@ public class HeroCard : SimpleCard
     }
 
     /// <summary>
-    /// Reimplementing the gethashcode method
+    /// Reimplementing the `GetHashCode` method
     /// </summary>
     /// <returns>The hashcode of the object</returns>
     public override int GetHashCode()
     {
-        return this.Name.GetHashCode();
+        return Name.GetHashCode();
     }
 }
