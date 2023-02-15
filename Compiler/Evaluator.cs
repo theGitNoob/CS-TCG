@@ -98,6 +98,8 @@ namespace Compiler
             {
                 var m = (BoundMethodExpression)node;
                 var cant = EvaluateExpression(m.CantToken);
+                if(!(cant.GetType() == typeof(int)))
+                    throw new Exception("The type should be int");
                 var name = m.Variable.Text;
                 var identifier = m.IdentifierToken.Text;
                 switch (identifier)
