@@ -6,7 +6,7 @@
     <ProjectReference Include="..\Logic\Effect\Effect.csproj" />
     <ProjectReference Include="..\Logic\Player\Player.csproj" />
     <ProjectReference Include="..\Logic\Deck\Deck.csproj" />
-    <ProjectReference Include="..\Logic\Field\Field.csproj">
+    <ProjectReference Include="..\Logic\Field\Field.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
