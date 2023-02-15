@@ -244,14 +244,14 @@ public class SimplePlayer : IPlayer
                         case ConsoleKey.C:
                         {
                             var number = "";
-                            ConsoleKey pressed;
+                            ConsoleKeyInfo pressed;
                             do
                             {
-                                pressed = Console.ReadKey(false).Key;
+                                pressed = Console.ReadKey(false);
 
-                                if (pressed != ConsoleKey.Enter)
-                                    number += pressed.ToString();
-                            } while (pressed != ConsoleKey.Enter);
+                                if (pressed.Key != ConsoleKey.Enter)
+                                    number += pressed.KeyChar;
+                            } while (pressed.Key != ConsoleKey.Enter);
 
                             if (int.TryParse(number, out var idx) && idx >= 0 && idx < Hand.Count)
                                 selectedHandCard = Hand[idx];

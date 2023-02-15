@@ -16,6 +16,7 @@ public static class Printer
     static bool _viewInfo;
 
 
+
     public static void Print(SimplePlayer p1, SimplePlayer p2)
     {
         Console.Clear();
@@ -29,15 +30,15 @@ public static class Printer
 
         Console.Title = "Game";
 
-        PrintPlayer(blockWidth, tabSeparation, p1.Name, $"❤️  {p1.Hp}  ❤️");
-        PrintDeckAndCementery(blockWidth, blockHeight, tabSeparation, p1);
-        PrintItems(blockWidth, 3, tabSeparation, p1);
-        PrintHeroes(blockWidth, blockHeight, tabSeparation, p1);
-
-        PrintHeroes(blockWidth, blockHeight, tabSeparation, p2);
-        PrintItems(blockWidth, 3, tabSeparation, p2);
-        PrintDeckAndCementery(blockWidth, blockHeight, tabSeparation, p2, true);
         PrintPlayer(blockWidth, tabSeparation, $"❤️  {p2.Hp}  ❤️", p2.Name);
+        PrintDeckAndCementery(blockWidth, blockHeight, tabSeparation, p2);
+        PrintItems(blockWidth, 3, tabSeparation, p2);
+        PrintHeroes(blockWidth, blockHeight, tabSeparation, p2);
+
+        PrintHeroes(blockWidth, blockHeight, tabSeparation, p1);
+        PrintItems(blockWidth, 3, tabSeparation, p1);
+        PrintDeckAndCementery(blockWidth, blockHeight, tabSeparation, p1, true);
+        PrintPlayer(blockWidth, tabSeparation, p1.Name, $"❤️  {p1.Hp}  ❤️");
 
         Console.Write(Screen);
     }
@@ -295,9 +296,25 @@ public static class Printer
 
     }
 
-
     public static void PrintHand(SimplePlayer player)
     {
+        _viewInfo = !_viewInfo;
+        PrintHand(player, _viewInfo);
+    }
+
+
+    public static void PrintHand(SimplePlayer player, bool display)
+    {
+        if (!display)
+        {
+            Console.Clear();
+            Console.Write(Screen);
+
+            return;
+
+        }
+
+
         const int tabSeparation = 5;
 
         var blockWidth = (Console.LargestWindowWidth - tabSeparation * 4) / 5;
@@ -326,7 +343,7 @@ public static class Printer
 
                     for (int col = 1; col <= blockWidth; col++)
                     {
-                        if (rowCount*5+block > handSize)
+                        if (rowCount * 5 + block > handSize)
                         {
                             hand.Append(" ");
                             continue;
