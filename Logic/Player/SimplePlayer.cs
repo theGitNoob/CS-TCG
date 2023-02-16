@@ -34,7 +34,7 @@ public class SimplePlayer : IPlayer
 
     public List<SimpleCard> CementeryZone => PlayerField.CementeryZone;
 
-    protected SimplePlayer? Enemy { get; private set; }
+    public SimplePlayer? Enemy { get; private set; }
 
     /// <summary>
     /// Draw a given number of cards from the deck
@@ -146,6 +146,8 @@ public class SimplePlayer : IPlayer
                         }
                     }
 
+                    Printer.Print(this, Enemy);
+
                     break;
                 }
 
@@ -174,6 +176,8 @@ public class SimplePlayer : IPlayer
                             break;
                         }
                     }
+
+                    Printer.Print(this, Enemy);
 
                     break;
                 }
@@ -211,6 +215,8 @@ public class SimplePlayer : IPlayer
                         if (int.TryParse(mod, out var idx) && PlayerField.IsHeroAt(idx))
                             EquipItem(PlayerField.GetHeroCard(idx), item);
                     }
+
+                    Printer.Print(this, Enemy);
 
                     break;
                 }
@@ -269,7 +275,7 @@ public class SimplePlayer : IPlayer
                     {
                         case ConsoleKey.C:
                         {
-                            if(selectedHandCard != null)
+                            if (selectedHandCard != null)
                                 Printer.ViewCardInfo(selectedHandCard);
                             break;
                         }
