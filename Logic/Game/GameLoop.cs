@@ -73,7 +73,7 @@ public static class GameLoop
 
 
     /// <summary>
-    /// Checks whether a player has lost because of his HP or his hand
+    /// Checks whether a player has lost because of his Hp or his hand
     /// </summary>
     /// <param name="player">The player to check</param>
     /// <returns>True if the player has lost, false otherwise</returns>
