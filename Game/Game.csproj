@@ -1,10 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Cards\Cards.csproj" />
-    <ProjectReference Include="..\Deck\Deck.csproj" />
-    <ProjectReference Include="..\Player\Player.csproj" />
-    <ProjectReference Include="..\Effect\Effect.csproj" />
+    <Reference Include="Microsoft.CodeAnalysis">
+      <HintPath>..\..\..\..\..\.nuget\packages\microsoft.codeanalysis.common\4.4.0\lib\netcoreapp3.1\Microsoft.CodeAnalysis.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp.Scripting">
+      <HintPath>..\..\..\..\..\.nuget\packages\microsoft.codeanalysis.csharp.scripting\4.4.0\lib\netcoreapp3.1\Microsoft.CodeAnalysis.CSharp.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Scripting">
+      <HintPath>..\..\..\..\..\.nuget\packages\microsoft.codeanalysis.scripting.common\4.4.0\lib\netcoreapp3.1\Microsoft.CodeAnalysis.Scripting.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 
@@ -12,6 +17,8 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Configurations>Debug;Release;Production</Configurations>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
 
 </Project>
