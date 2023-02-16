@@ -2,6 +2,6 @@ build:
 	dotnet build
 
 run:
-	ENV=prod dotnet run --project WebServer
+	dotnet run --environment Production --project WebServer
 dev:
-	ENV=dev dotnet watch run --project WebServer
+	dotnet watch run --project WebServer
