@@ -100,9 +100,14 @@ namespace Compiler
                 var identifier = m.IdentifierToken.Text;
 
                 SimplePlayer used;
+                
                 if (name == "self") used = _player;
+                
                 else if (name == "enemy") used = _player.Enemy;
-                else throw new Exception($"{name} not recognized, should be `self` or `this`");
+                else throw new Exception($"{name} not recognized, should be `self` or `enemy`");
+                
+                if (_player == null) return "Compilation Correct";
+                
                 switch (identifier)
                 {
                     case "Attack":

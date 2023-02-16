@@ -58,5 +58,11 @@ namespace Compiler
             var value = evaluator.Evaluate();
             return new EvaluationResult(Array.Empty<Diagnostic>(),value);
         }
+
+        public EvaluationResult Evaluate(Dictionary<VariableSymbol, object> variables)
+        {
+            return Evaluate(variables, null);
+        }
+
     }
 }
