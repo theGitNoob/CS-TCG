@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Game\Game.csproj" />
-    <ProjectReference Include="..\Compiler\Compiler.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebServer", "WebServer\WebServer.csproj", "{4BA9CEC0-81B4-44F5-AA84-8967C96E685A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compiler", "Compiler\Compiler.csproj", "{2F18A6E1-B016-47EC-820C-1DCF3D92FE6D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game", "Game\Game.csproj", "{98E2BC46-0C35-4360-BB4B-0283F4D59DB4}"
 EndProject
 Global
@@ -27,14 +25,6 @@ Global
 		{4BA9CEC0-81B4-44F5-AA84-8967C96E685A}.Production|Any CPU.ActiveCfg = Production|Any CPU
 		{4BA9CEC0-81B4-44F5-AA84-8967C96E685A}.Production|Any CPU.Build.0 = Production|Any CPU
 		{4BA9CEC0-81B4-44F5-AA84-8967C96E685A}.Production|Any CPU.Deploy.0 = Production|Any CPU
-		{2F18A6E1-B016-47EC-820C-1DCF3D92FE6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F18A6E1-B016-47EC-820C-1DCF3D92FE6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F18A6E1-B016-47EC-820C-1DCF3D92FE6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F18A6E1-B016-47EC-820C-1DCF3D92FE6D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2F18A6E1-B016-47EC-820C-1DCF3D92FE6D}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{2F18A6E1-B016-47EC-820C-1DCF3D92FE6D}.Production|Any CPU.ActiveCfg = Production|Any CPU
-		{2F18A6E1-B016-47EC-820C-1DCF3D92FE6D}.Production|Any CPU.Build.0 = Production|Any CPU
-		{2F18A6E1-B016-47EC-820C-1DCF3D92FE6D}.Production|Any CPU.Deploy.0 = Production|Any CPU
 		{98E2BC46-0C35-4360-BB4B-0283F4D59DB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{98E2BC46-0C35-4360-BB4B-0283F4D59DB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98E2BC46-0C35-4360-BB4B-0283F4D59DB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
