@@ -1,11 +1,18 @@
-@page "/compiler"
 @using Compiler
 @using Compiler.Syntax
 @inject IJSRuntime jsRuntime
+
+@page "/compiler"
+
+<PageTitle>Compiler</PageTitle>
+
+<div class="alert alert-danger d-none" role="alert"></div>
+<div class="alert alert-success d-none" role="alert"></div>
+
 <div>
-    <span style="font-size: xx-large;">Compiler</span><br />
-    <textarea style="font-size: x-large; height:400px" width="100%" @bind="@Text"> >Your code here</textarea><br />
-    <br />
+    <span style="font-size: xx-large;">Compiler</span><br/>
+    <textarea style="font-size: x-large; height:400px" width="100%" @bind="@Text" placeholder="Your code here"> </textarea><br/>
+    <br/>
     <div>
         @if (Success)
         {
@@ -25,7 +32,7 @@
                     {
                         <h2 style="color: brown;">@diagnostic</h2>
 
-                        <br />
+                        <br/>
                         @if (diagnostic.Span.Start == Text.Length)
                         {
                             continue;
@@ -33,7 +40,9 @@
                         else
                         {
                             DiagnosticProccess(diagnostic);
-                            <span style="font-size: 28px;">@prefix <span style="color: brown;">@error</span> @subfix</span>
+                            <span style="font-size: 28px;">
+                                @prefix <span style="color: brown;">@error</span> @subfix
+                            </span>
                         }
                     }
                 }
@@ -41,44 +50,73 @@
         }
     </div>
     <input type="button" style="font-size: x-large" value="Compiler" class="btn btn-success"
-        @onclick="OnClickBtnMethod" />
+           @onclick="OnClickBtnMethod"/>
 </div>
+
 @code
 {
     [Parameter]
     public bool Success { get; set; }
+
     [Parameter]
     public string? Text { get; set; }
+
     public Dictionary<VariableSymbol, object> variables = new Dictionary<VariableSymbol, object>();
     public SyntaxTree? syntaxTree { get; set; }
     public Compilation? compilation { get; set; }
+
     [Parameter]
     public EvaluationResult? result { get; set; }
+
     [Parameter]
     public IEnumerable<Diagnostic>? diagnostics { get; set; }
+
     [Parameter]
     public string? prefix { get; set; }
+
     [Parameter]
     public string? error { get; set; }
+
     [Parameter]
     public string? subfix { get; set; }
-    public void OnClickBtnMethod()
+
+    SimplePlayer p1;
+
+    SimplePlayer p2;
+
+
+    public async void OnClickBtnMethod()
     {
-        if(string.IsNullOrEmpty(Text)) return;
-        syntaxTree = SyntaxTree.Parse(Text!);
-        compilation = new Compilation(syntaxTree);
-        result = compilation.Evaluate(variables);
-        diagnostics = result.Diagnostics;
-        if (!Success)
-            Success = true;
-        else
-            Success = false;
+        if (string.IsNullOrEmpty(Text)) return;
+        try
+        {
+            syntaxTree = SyntaxTree.Parse(Text!);
+            compilation = new Compilation(syntaxTree);
+            result = compilation.Evaluate(variables, p1);
+            diagnostics = result.Diagnostics;
+            Console.WriteLine(p1.Hp);
+            Console.WriteLine(p2.Hp);
+            if (!Success)
+                Success = true;
+        }
+        catch (Exception e)
+        {
+            await jsRuntime.InvokeVoidAsync("ShowError", e.Message);
+        }
     }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        SimpleDeck d1 = new SimpleDeck(GameController.Cards);
+        SimpleDeck d2 = new SimpleDeck(GameController.Cards);
+        p1 = new SimplePlayer("Rafa", 5000, 5, 5, d1);
+        p2 = new SimplePlayer("Eisler", 5000, 5, 5, d2);
         Success = false;
+        p1.SetEnemy(p2);
+        p2.SetEnemy(p1);
     }
+
     public async void DiagnosticProccess(Diagnostic diagnostic)
     {
         try
