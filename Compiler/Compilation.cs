@@ -1,7 +1,7 @@
-using System;
-using System.Collections.Generic;
 using Compiler.Syntax;
 using Compiler.Binding;
+using Player;
+
 namespace Compiler
 {
     /// <summary>
@@ -49,12 +49,12 @@ namespace Compiler
         /// <summary>
         /// Evaluates the compilation.
         /// </summary>
-        public EvaluationResult Evaluate(Dictionary<VariableSymbol,object> variables)
+        public EvaluationResult Evaluate(Dictionary<VariableSymbol,object> variables,SimplePlayer player)
         {
             var diagnostics = Syntax.Diagnostics.Concat(GlobalScope.Diagnostics).ToArray();
             if(diagnostics.Any())
                 return new EvaluationResult(diagnostics,null);
-            var evaluator = new Evaluator(GlobalScope.Statement,variables);
+            var evaluator = new Evaluator(GlobalScope.Statement,variables, player);
             var value = evaluator.Evaluate();
             return new EvaluationResult(Array.Empty<Diagnostic>(),value);
         }

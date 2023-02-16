@@ -1,8 +1,5 @@
-using System.IO;
-using System;
-using System.Collections.Generic;
-using Compiler.Syntax;
 using Compiler.Binding;
+using Player;
 
 namespace Compiler
 {
@@ -11,22 +8,21 @@ namespace Compiler
     /// </summary>
     internal sealed class Evaluator
     {
-        private Player.SimplePlayer player;
+        private readonly SimplePlayer _player;
         private readonly BoundStatement _root;
         private readonly Dictionary<VariableSymbol, object> _variables;
         private object _lastValue;
 
-        public Evaluator(BoundStatement root, Dictionary<VariableSymbol, object> variables)
+        public Evaluator(BoundStatement root, Dictionary<VariableSymbol, object> variables,SimplePlayer player)
         {
             this._root = root;
             _variables = variables;
-            player = new Player.SimplePlayer("Eisler", 5000, 5, 6, new Deck.SimpleDeck(new List<Cards.SimpleCard>()));
+            _player = player;
         }
 
 
         public object Evaluate()
         {
-            player.HeroZone.Add(new Cards.HeroCard("Axe", 1000, 50, "", new Habilitie.Effect("", "", new string[4])));
             EvaluateStatement(_root);
             return _lastValue;
         }
@@ -49,13 +45,13 @@ namespace Compiler
         }
 
 
-        private void AttackHero(int cantidad, string name)
+        private void AttackHero(int cnt, string name)
         {
-            foreach (var hero in player.HeroZone)
+            foreach (var hero in _player.HeroZone)
             {
                 if (name == hero.Name)
                 {
-                    hero.Attack += cantidad;
+                    hero.Attack += cnt;
                 }
             }
         }
@@ -98,16 +94,21 @@ namespace Compiler
             {
                 var m = (BoundMethodExpression)node;
                 var cant = EvaluateExpression(m.CantToken);
-                if(!(cant.GetType() == typeof(int)))
+                if (!(cant.GetType() == typeof(int)))
                     throw new Exception("The type should be int");
                 var name = m.Variable.Text;
                 var identifier = m.IdentifierToken.Text;
+
+                SimplePlayer used;
+                if (name == "this") used = _player;
+                else if (name == "enemy") used = _player.Enemy;
+                else throw new Exception($"{name} not recognized, should be `enemy` or `this`");
                 switch (identifier)
                 {
                     case "Attack":
                     case "Defense":
                         {
-                            foreach (var hero in player.HeroZone)
+                            foreach (var hero in used.HeroZone)
                             {
                                 if (name == hero.Name)
                                 {
@@ -122,11 +123,11 @@ namespace Compiler
                         };
                     case "Life":
                         {
-                            player.HP += (int)cant;
+                            used.Hp += (int)cant;
                         }
-                    break;
+                        break;
                 }
-                return "Compilacion Correcta";
+                return "Compilation Correct";
             }
             if (node is BoundLiteralExpression n)
                 return n.Value;
