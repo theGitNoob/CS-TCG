@@ -6,14 +6,15 @@
 
 <PageTitle>Compiler</PageTitle>
 
-<div class="alert alert-danger d-none" role="alert"></div>
-<div class="alert alert-success d-none" role="alert"></div>
+<div style="display: grid">
 
-<div>
-    <span style="font-size: xx-large;">Compiler</span><br/>
+    <div class="alert alert-danger d-none" role="alert"></div>
+    <div class="alert alert-success d-none" role="alert"></div>
+
+    <span style="font-size: xx-large;justify-self: center">Compiler</span><br/>
     <pre>
         <code>
-            <textarea style="font-size: x-large; height:400px" width="100%" @bind="@CodeString" placeholder="Your code here"> </textarea>
+            <textarea style="margin-top:20px;font-size: x-large; height: 350px;width:100%" @bind="@CodeString" placeholder="Your code here"> </textarea>
         </code>
     </pre>
     <input type="button" style="font-size: x-large" value="Compiler" class="btn btn-success"

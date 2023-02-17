@@ -4,115 +4,126 @@
 @page "/"
 
 <PageTitle>New Game</PageTitle>
+@if (_cards.Count > 0)
+{
+    <div class="alert alert-danger d-none" role="alert"></div>
+    <div class="alert alert-success d-none" role="alert"></div>
 
-<div class="alert alert-danger d-none" role="alert"></div>
-<div class="alert alert-success d-none" role="alert"></div>
+    <div class="container text-center" id="config">
+        <h1>Rules Configuration</h1>
 
-<div class="container text-center" id="config">
-    <h1>Rules Configuration</h1>
-
-    <div class="row mb-1">
-        <div class="col">
-            <label class="form-label mb-2" for="min-deck-cards">Cantidad Mínima de cartas en el Deck</label>
-            <input type="number" id="min-deck-cards" class="form-control" placeholder="" min="1" max=@_cards.Count
+        <div class="row mb-1">
+            <div class="col">
+                <label class="form-label mb-2" for="min-deck-cards">Cantidad Mínima de cartas en el Deck</label>
+                <input type="number" id="min-deck-cards" class="form-control" placeholder="" min="1" max=@_cards.Count
                 @bind=@_minDeckCards>
-        </div>
-
-        <div class="col">
-            <label for="max-deck-cards" class="form-label mb-2">Cantidad Máxima de cartas en el Deck</label>
-            <input id="max-deck-cards" type="number" class="form-control" min="1" max=@_cards.Count @bind=@_maxDeckCards>
-        </div>
-
-        <div class="col">
-            <label for="hp-points" class="form-label mb-2"> Puntos de Vida</label>
-            <input type="number" id="hp-points" class="form-control" min="1" @bind=@_hpPoints>
-        </div>
-    </div>
-    <div class="row mb-1">
-
-        <div class="col">
-            <label for="initial-cards" class="form-label mb-2">Cartas a robar en el Primer Turno</label>
-            <input type="number" id="initial-cards" class="form-control" min="1" @bind=@_initialCards>
-        </div>
-
-        <div class="col"></div>
-
-        <div class="col">
-            <label for="cards-per-turn" class="form-label mb-2">Cartas por Turno</label>
-            <input type="number" id="cards-per-turn" class="form-control" placeholder="Cartas por turno" min="1"
-                @bind=@_cardsPerTurn>
-        </div>
-
-    </div>
-
-    <div class="col-12 mt-3">
-        <button class="btn btn-primary" @onclick=@SaveRules>Save Rules</button>
-    </div>
-
-</div>
-
-@* New Player Section *@
-<div class="container text-center d-none" id="new-player">
-    <div class="row">
-        <div class="col">
-            <label class="form-check-label mb-1" for="player-type">
-                <h2>Player Type</h2>
-            </label>
-            <div class="row">
-                <div class="col"></div>
-                <div class="col">
-                    <select id="player-type" class="form-select mb-2" aria-label="Default select example"
-                        @onchange="PlayerTypeChanged">
-                        <option value="Human">Human</option>
-                        <option value="AI" selected>AI</option>
-                    </select>
-                </div>
-                <div class="col"></div>
             </div>
-            <nav>
-                <h2>@_cards[_idx].Name</h2>
-                <img src="@GetSrc()" class="img-fluid" alt="">
+
+            <div class="col">
+                <label for="max-deck-cards" class="form-label mb-2">Cantidad Máxima de cartas en el Deck</label>
+                <input id="max-deck-cards" type="number" class="form-control" min="1" max=@_cards.Count @bind=@_maxDeckCards>
+            </div>
+
+            <div class="col">
+                <label for="hp-points" class="form-label mb-2"> Puntos de Vida</label>
+                <input type="number" id="hp-points" class="form-control" min="1" @bind=@_hpPoints>
+            </div>
+        </div>
+        <div class="row mb-1">
+
+            <div class="col">
+                <label for="initial-cards" class="form-label mb-2">Cartas a robar en el Primer Turno</label>
+                <input type="number" id="initial-cards" class="form-control" min="1" @bind=@_initialCards>
+            </div>
+
+            <div class="col"></div>
+
+            <div class="col">
+                <label for="cards-per-turn" class="form-label mb-2">Cartas por Turno</label>
+                <input type="number" id="cards-per-turn" class="form-control" placeholder="Cartas por turno" min="1"
+                       @bind=@_cardsPerTurn>
+            </div>
+
+        </div>
+
+        <div class="col-12 mt-3">
+            <button class="btn btn-primary" @onclick=@SaveRules>Save Rules</button>
+        </div>
+
+    </div>
+
+    @* New Player Section *@
+    <div class="container text-center d-none" id="new-player">
+        <div class="row">
+            <div class="col">
+                <label class="form-check-label mb-1" for="player-type">
+                    <h2>Player Type</h2>
+                </label>
                 <div class="row">
+                    <div class="col"></div>
                     <div class="col">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked"
-                            @bind=@_selected[_idx]>
-                        <label class="form-check-label" for="flexCheckChecked">
-                            Select Card
-                        </label>
+                        <select id="player-type" class="form-select mb-2" aria-label="Default select example"
+                                @onchange="PlayerTypeChanged">
+                            <option value="Human">Human</option>
+                            <option value="AI" selected>AI</option>
+                        </select>
+                    </div>
+                    <div class="col"></div>
+                </div>
+                <nav>
+                    <h2>@_cards[_idx].Name</h2>
+                    <img src="@GetSrc()" class="img-fluid" alt="">
+                    <div class="row">
+                        <div class="col">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked"
+                                   @bind=@_selected[_idx]>
+                            <label class="form-check-label" for="flexCheckChecked">
+                                Select Card
+                            </label>
+                        </div>
+
+                        <ul class="pagination container justify-content-center">
+                            <div class="flex-column-xs">
+                                <li class="page-item mt-1" @onclick="@Prev">
+                                    <a class="page-link" href="#">Previous</a>
+                                </li>
+                            </div>
+                            <div class="col-xs">
+                                <li class="page-item mt-1" @onclick="@Next">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            </div>
+                        </ul>
                     </div>
 
-                    <ul class="pagination container justify-content-center">
-                        <div class="flex-column-xs">
-                            <li class="page-item mt-1" @onclick="@Prev"><a class="page-link" href="#">Previous</a></li>
-                        </div>
-                        <div class="col-xs">
-                            <li class="page-item mt-1" @onclick="@Next"><a class="page-link" href="#">Next</a></li>
-                        </div>
-                    </ul>
+                </nav>
+                <div class="row">
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Nickname" required @bind=@_nickName>
+                        <button class="btn btn-success mt-2" @onclick=@AddPlayer>Add Player</button>
+                    </div>
                 </div>
 
-            </nav>
-            <div class="row">
-                <div class="col">
-                    <input type="text" class="form-control" placeholder="Nickname" required @bind=@_nickName>
-                    <button class="btn btn-success mt-2" @onclick=@AddPlayer>Add Player</button>
-                </div>
             </div>
-
-        </div>
-        <div class="col">
-            <h3>Description</h3>
-            <textarea class="form-control w-100 h-50" readonly>@_cards[_idx].Description</textarea>
-            <h3 class="mt-2">Condition</h3>
-            <textarea class="form-control w-100 h-auto" readonly>@_cards[_idx].Effect.ConditionString</textarea>
-            <h3 class="mt-2">Action</h3>
-            <textarea class="form-control w-100 h-auto" readonly>@_cards[_idx].Effect.ActionString</textarea>
+            <div class="col">
+                <h3>Description</h3>
+                <textarea class="form-control w-100 h-50" readonly>@_cards[_idx].Description</textarea>
+                <h3 class="mt-2">Condition</h3>
+                <textarea class="form-control w-100 h-auto" readonly>@_cards[_idx].Effect.EffectString</textarea>
+            </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">You should create some cards first
+        <a href="newhero" class="nav-link"></a>
+        <a href="newitem" class="nav-link"></a>
+    </div>
+}
 
 @code {
-    private int _idx ;
+    private int _idx;
 
 
     string _playerType = "AI";
@@ -156,7 +167,7 @@
     private int _cardsPerTurn = 1;
     private int _minDeckCards = 1;
     private int _maxDeckCards = 1;
-    private  const int PlayersCnt = 2;
+        private const int PlayersCnt = 2;
 
     private string _nickName = "";
 
@@ -171,10 +182,8 @@
         }
         catch (Exception err)
         {
-
             await Js.InvokeVoidAsync("ShowError", err.Message);
         }
-
     }
 
     private List<SimpleCard> GetSelectedCards()
@@ -196,35 +205,30 @@
 
         try
         {
-
             SimpleDeck deck = new SimpleDeck(GetSelectedCards());
 
-            SimplePlayer player;
-
-            player = _playerType == "AI" ? new AiPlayer(_nickName, _hpPoints, 5, 5, deck) : new SimplePlayer(_nickName, _hpPoints, 5, 5, deck);
-        _players.Add(player);
+            var player = _playerType == "AI" ? new AiPlayer(_nickName, _hpPoints, 5, 5, deck) : new SimplePlayer(_nickName, _hpPoints, 5, 5, deck);
+            _players.Add(player);
         }
         catch (Exception err)
         {
             await Js.InvokeVoidAsync("ShowError", err.Message);
         }
-         
+
         ClearSelections();
-         
-         
+
+
         if (_players.Count == PlayersCnt)
         {
             await Js.InvokeVoidAsync("ShowSuccess", "Game Started, Open your Terminal");
             await Js.InvokeVoidAsync("HideAll");
             GameController.NewGame(_players[0], _players[1]);
             ReloadPage();
-         
         }
         else
         {
             await Js.InvokeVoidAsync("ShowSuccess", "Player added successfully");
         }
-
     }
 
     private void PlayerTypeChanged(ChangeEventArgs ev)
@@ -253,4 +257,5 @@
     {
         UriHelper.NavigateTo(UriHelper.Uri, forceLoad: true);
     }
+
 }
