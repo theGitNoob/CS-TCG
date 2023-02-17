@@ -1,5 +1,5 @@
 @page "/newhero"
-@inject IJSRuntime JS
+@inject IJSRuntime Js
 
 <div style="display: grid;">
   <div class="alert alert-danger d-none" role="alert"></div>
@@ -7,67 +7,57 @@
 
   <span style="font-size: xx-large;justify-self:center;">New Hero</span><br />
 
-  <input type="text" placeholder="Hero Name" style="justify-self:center;" @bind="@HeroName">
+  <input type="text" placeholder="Hero Name" style="justify-self:center;" @bind="@_heroName">
 
-  <input type="number" placeholder="Defense" style="margin-top:20px;justify-self:center;" @bind="@Defense">
+  <input type="number" placeholder="Defense" style="margin-top:20px;justify-self:center;" @bind="@_defense">
 
-  <input type="number" placeholder="Attack" style="margin-top: 20px;justify-self:center;" @bind="@Attack">
-
-  <pre>
-    <code style="width: 100%;">
-      <textarea style="margin-top:20px;font-size: x-large; height: 100px;width:100%;" @bind="@Condition"
-      placeholder="Code of the condition"></textarea>
-    </code>
-  </pre>
+  <input type="number" placeholder="Attack" style="margin-top: 20px;justify-self:center;" @bind="@_attack">
 
   <pre>
     <code style="width: 100%;">
-      <textarea style="margin-top:20px;font-size: x-large; height: 100px;width:100%" @bind="@Action"
-      placeholder="Code of the action"></textarea>
+      <textarea style="margin-top:20px;font-size: x-large; height: 100px;width:100%" @bind="@_codeString"
+      placeholder="Code of the Effect"></textarea>
     </code>
   </pre>
 
-  <textarea placeholder="Description" style="margin-top: 20px;" @bind=@HeroDescription></textarea>
+  <textarea placeholder="Description" style="margin-top: 20px;" @bind=@_heroDescription></textarea>
 
   <input type="button" style="font-size: x-large;margin-top:20px" value="Create New Hero" class="btn btn-success"
     @onclick="@OnClickBtnMethod" />
 </div>
 
 @code {
-  public string? Action;
+  private string? _codeString;
 
-  public string? Condition;
+  private string? _heroName;
 
-  public string? HeroName;
+  private string? _heroDescription;
 
-  public string? HeroDescription;
+  private int _attack;
 
-  public int Attack;
+  private int _defense;
 
-  public int Defense;
-
-  public async void OnClickBtnMethod()
+  private async void OnClickBtnMethod()
   {
     try
     {
-      Game.GameController.CreateHeroCard(HeroName, Attack, Defense, HeroDescription, Condition, Action);
-      Action = "";
-      Condition = "";
-      HeroName = "";
-      HeroDescription = "";
-      Attack = 0;
-      Defense = 0;
-      await JS.InvokeVoidAsync("ShowSuccess", "Hero added successfully");
+      GameController.CreateHeroCard(_heroName, _attack, _defense, _heroDescription,  _codeString);
+      _codeString = "";
+      _heroName = "";
+      _heroDescription = "";
+      _attack = 0;
+      _defense = 0;
+      await Js.InvokeVoidAsync("ShowSuccess", "Hero added successfully");
     }
-    catch (System.Exception e)
+    catch (Exception exception)
     {
-      if (e is CompilationErrorException || e is ArgumentNullException)
+      if (exception is CompilationErrorException || exception is ArgumentNullException)
       {
-        await JS.InvokeVoidAsync("ShowError", e.Message);
+        await Js.InvokeVoidAsync("ShowError", exception.Message);
       }
       else
       {
-        throw e;
+        Console.WriteLine(exception);
       }
     }
 

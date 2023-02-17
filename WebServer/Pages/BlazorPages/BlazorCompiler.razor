@@ -1,0 +1,93 @@
+@using Compiler
+@using Compiler.Syntax
+@inject IJSRuntime JsRuntime
+
+@page "/compiler"
+
+<PageTitle>Compiler</PageTitle>
+
+<div style="display: grid">
+
+    <div class="alert alert-danger d-none" role="alert"></div>
+    <div class="alert alert-success d-none" role="alert"></div>
+
+    <span style="font-size: xx-large;justify-self: center">Compiler</span><br/>
+    <pre>
+        <code>
+            <textarea style="margin-top:20px;font-size: x-large; height: 350px;width:100%" @bind="@CodeString" placeholder="Your code here"> </textarea>
+        </code>
+    </pre>
+    <input type="button" style="font-size: x-large" value="Compiler" class="btn btn-success"
+           @onclick="OnClickBtnMethod"/>
+</div>
+
+@code
+{
+    [Parameter]
+    public bool Success { get; set; }
+
+    [Parameter]
+    public string? CodeString { get; set; }
+
+    private readonly Dictionary<VariableSymbol, object> _variables = new Dictionary<VariableSymbol, object>();
+    private SyntaxTree? SyntaxTree { get; set; }
+    private Compilation? Compilation { get; set; }
+
+    [Parameter]
+    public EvaluationResult? Result { get; set; }
+
+    [Parameter]
+    public IEnumerable<Diagnostic>? Diagnostics { get; set; }
+
+    [Parameter]
+    public string? Prefix { get; set; }
+
+    [Parameter]
+    public string? Error { get; set; }
+
+    SimplePlayer? _p1;
+
+    SimplePlayer? _p2;
+
+
+    private async void OnClickBtnMethod()
+    {
+        if (string.IsNullOrEmpty(CodeString)) return;
+        try
+        {
+            SyntaxTree = SyntaxTree.Parse(CodeString!);
+            Compilation = new Compilation(SyntaxTree);
+            Result = Compilation.Evaluate(_variables);
+    // result = compilation.Evaluate(variables, p1);
+            Diagnostics = Result.Diagnostics;
+
+
+            foreach (var diagnostic in Diagnostics)
+            {
+                throw new Exception(diagnostic.Message);
+            }
+
+            await JsRuntime.InvokeVoidAsync("ShowSuccess", Result.Value);
+    // Console.WriteLine(p1.Hp);
+    // Console.WriteLine(p2.Hp);
+    // if (!Success)
+    // Success = true;
+        }
+        catch (Exception e)
+        {
+            await JsRuntime.InvokeVoidAsync("ShowError", e.Message);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        SimpleDeck d1 = new SimpleDeck(GameController.Cards);
+        SimpleDeck d2 = new SimpleDeck(GameController.Cards);
+        _p1 = new SimplePlayer("Rafa", 5000, 5, 5, d1);
+        _p2 = new SimplePlayer("Ai", 5000, 5, 5, d2);
+        Success = false;
+        _p1.SetEnemy(_p2);
+        _p2.SetEnemy(_p1);
+    }
+}
