@@ -19,9 +19,6 @@ public static class GameLoop
         p1.SetEnemy(p2);
         p2.SetEnemy(p1);
 
-        // System.Console.WriteLine(p1.GetType());
-        // System.Console.WriteLine(p2.GetType());
-
         p1.Deck.Shuffle();
         p2.Deck.Shuffle();
 
@@ -42,7 +39,7 @@ public static class GameLoop
 
             Task.Delay(500).Wait();
 
-            Printer.Print(p1, p2);
+            Printer.Print(p2,p1);
 
             canAttack = true;
 
