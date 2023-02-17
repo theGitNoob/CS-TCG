@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Cards;
 
 /// <summary>
@@ -8,6 +10,7 @@ public class ItemCard : SimpleCard
     /// <summary>
     /// The hero that has this item
     /// </summary>
+    [JsonIgnore]
     public HeroCard? Hero { get; private set; }
 
     /// <summary>
@@ -15,10 +18,19 @@ public class ItemCard : SimpleCard
     /// </summary>
     /// <param name="name">The name of the item</param>
     /// <param name="description">The description of the item</param>
-    /// <param name="effect">The effect of the item</param>
+    /// <param name="effectString">The effect of the item</param>
     /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
     /// <returns>A new item</returns>
-    public ItemCard(string name, string description, string effect) : base(name, description, effect)
+    public ItemCard(string name, string description, string effectString) : base(name, description, effectString)
+    {
+        Type = CardType.Item;
+
+        Hero = null;
+    }
+
+    
+    [JsonConstructor]
+    public ItemCard(string name, string description, Effect.Effect effect) : base(name, description, effect)
     {
         Type = CardType.Item;
 

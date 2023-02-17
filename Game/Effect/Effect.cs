@@ -10,10 +10,13 @@ namespace Effect;
 ///</summary>
 public class Effect
 {
+    [JsonIgnore]
     private SyntaxTree _syntaxTree { get; init; }
     
+    [JsonIgnore]
     private Compilation _compilation { get; init; }
     
+    [JsonIgnore]
     private Dictionary<VariableSymbol, object> _variables { get; set; }
 
     /// <summary>
@@ -21,6 +24,7 @@ public class Effect
     /// </summary>
     /// <param name="effectString"></param>
     /// <exception cref="ArgumentNullException"></exception>
+    [JsonConstructor]
     public Effect(string effectString)
     {
         if (string.IsNullOrEmpty(effectString))

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Cards;
 
 /// <summary>
@@ -8,22 +10,29 @@ public class HeroCard : SimpleCard
     /// <summary>
     /// The items that the hero has equipped
     /// </summary>
+    [JsonIgnore]
     public List<ItemCard> Items { get; }
 
-    int _attack;
+    [JsonIgnore] int _attack;
 
-    int _defense;
+    [JsonIgnore] int _defense;
 
     /// <summary>
     /// The attack of the hero
     /// </summary>
-    public int Attack { get => this._attack; set => this._attack = value <= 0 ? 0 : value;
+    public int Attack
+    {
+        get => this._attack;
+        set => this._attack = value <= 0 ? 0 : value;
     }
 
     /// <summary>
     /// The defense of the hero
     /// </summary>
-    public int Defense { get => this._defense; set => this._defense = value <= 0 ? 0 : value;
+    public int Defense
+    {
+        get => this._defense;
+        set => this._defense = value <= 0 ? 0 : value;
     }
 
     /// <summary>
@@ -33,10 +42,24 @@ public class HeroCard : SimpleCard
     /// <param name="attack">The attack of the hero</param>
     /// <param name="defense">The defense of the hero</param>
     /// <param name="description">The description of the hero</param>
-    /// <param name="effect">The effect of the hero</param>
+    /// <param name="effectString">The effect of the hero</param>
     /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
     /// <returns>A new hero</returns>
-    public HeroCard(string name, int attack, int defense, string description, string effect) : base(name, description, effect)
+    public HeroCard(string name, int attack, int defense, string description, string effectString) : base(name,
+        description, effectString)
+    {
+        Type = CardType.Hero;
+
+        Attack = attack;
+
+        Defense = defense;
+
+        Items = new List<ItemCard>();
+    }
+
+    [JsonConstructor]
+    public HeroCard(string name, int attack, int defense, string description, Effect.Effect effect) : base(name,
+        description, effect)
     {
         Type = CardType.Hero;
 
