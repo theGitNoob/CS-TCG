@@ -13,7 +13,7 @@ namespace Compiler
         private readonly Dictionary<VariableSymbol, object> _variables;
         private object _lastValue;
 
-        public Evaluator(BoundStatement root, Dictionary<VariableSymbol, object> variables,SimplePlayer player)
+        public Evaluator(BoundStatement root, Dictionary<VariableSymbol, object> variables, SimplePlayer player)
         {
             this._root = root;
             _variables = variables;
@@ -26,6 +26,7 @@ namespace Compiler
             EvaluateStatement(_root);
             return _lastValue;
         }
+
         private void EvaluateStatement(BoundStatement node)
         {
             switch (node.Kind)
@@ -64,10 +65,13 @@ namespace Compiler
                 {
                     return (int)((BoundLiteralExpression)item).Value;
                 }
+
                 GetValue(item);
             }
+
             return 0;
         }
+
         private void EvaluateIfStatement(BoundIfStatement node)
         {
             var condition = (bool)EvaluateExpression(node.Condition);
@@ -99,41 +103,49 @@ namespace Compiler
                 var name = m.Variable.Text;
                 var identifier = m.IdentifierToken.Text;
 
-                SimplePlayer used;
-                
-                if (name == "self") used = _player;
-                
-                else if (name == "enemy") used = _player.Enemy;
-                else throw new Exception($"{name} not recognized, should be `self` or `enemy`");
-                
+                SimplePlayer used = _player;
+
                 if (_player == null) return "Compilation Correct";
-                
+
+                if (identifier == "Life")
+                {
+                    if (name == "self") used = _player;
+
+                    else if (name == "enemy") used = _player.Enemy;
+                    else throw new Exception($"{name} not recognized, should be `self` or `enemy`");
+                }
+
+
                 switch (identifier)
                 {
                     case "Attack":
                     case "Defense":
+                    {
+                        foreach (var hero in used.HeroZone)
                         {
-                            foreach (var hero in used.HeroZone)
+                            if (name == hero.Name)
                             {
-                                if (name == hero.Name)
-                                {
-                                    hero.Attack += (int)cant;
-                                }
-                                else
-                                {
-                                    hero.Defense += (int)cant;
-                                }
+                                hero.Attack += (int)cant;
                             }
-                            break;
-                        };
-                    case "Life":
-                        {
-                            used.Hp += (int)cant;
+                            else
+                            {
+                                hero.Defense += (int)cant;
+                            }
                         }
+
+                        break;
+                    }
+                        ;
+                    case "Life":
+                    {
+                        used.Hp += (int)cant;
+                    }
                         break;
                 }
+
                 return "Compilation Correct";
             }
+
             if (node is BoundLiteralExpression n)
                 return n.Value;
             if (node is BoundVariableExpression v)
@@ -162,6 +174,7 @@ namespace Compiler
                         throw new Exception($"Unexpected unary operator {u.Op}");
                 }
             }
+
             if (node is BoundBinaryExpression b)
             {
                 var left = EvaluateExpression(b.Left);
@@ -169,11 +182,11 @@ namespace Compiler
                 switch (b.Op.Kind)
                 {
                     case BoundBinaryOperatorKind.Addition:
-                        {
-                            if (left.GetType() == typeof(string) && right.GetType() == typeof(string))
-                                return (string)left + (string)right;
-                            return (int)left + (int)right;
-                        }
+                    {
+                        if (left.GetType() == typeof(string) && right.GetType() == typeof(string))
+                            return (string)left + (string)right;
+                        return (int)left + (int)right;
+                    }
                     case BoundBinaryOperatorKind.Subtraction:
                         return (int)left - (int)right;
                     case BoundBinaryOperatorKind.Multiplication:
