@@ -74,8 +74,7 @@ public class AiPlayer : SimplePlayer
 
         foreach (SimpleCard card in cards)
         {
-            if (card.Effect.CanActivate(this, Enemy))
-                card.Effect.Activate(this, Enemy);
+            card.Effect.Activate(this);
         }
     }
 

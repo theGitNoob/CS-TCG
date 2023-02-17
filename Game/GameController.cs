@@ -63,22 +63,6 @@ public static class GameController
         LoadCards();
     }
 
-
-    /// <summary>
-    /// Creates a new `Effect` if is correct
-    /// </summary>
-    /// <param name="condition">The condition for the effect</param>
-    /// <param name="action">The action for the effect</param>
-    /// <returns>A new `Effect`</returns>
-    static Effect.Effect CreateEffect(string condition, string action)
-    {
-        Effect.Effect.CheckIsCorrect<SimplePlayer>(condition, action, "Player");
-
-        Effect.Effect effect = new Effect.Effect(condition, action, "Player");
-
-        return effect;
-    }
-
     /// <summary>
     /// Creates a new `HeroCard`
     /// </summary>
@@ -86,18 +70,14 @@ public static class GameController
     /// <param name="attack">The attack of the `HeroCard`</param>
     /// <param name="defense">The defense of the `HeroCard`</param>
     /// <param name="description">The description of the card</param>
-    /// <param name="condition">The condition for the effect</param>
-    /// <param name="action">The action for the effect</param>
-    /// <exception cref="ArgumentNullException">Thrown when the name, description, condition or action is null</exception>
+    /// <param name="effect">The Effect of the Hero</param>
+    /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
     /// <exception cref="Exception">Thrown when there is already another card with the same name</exception>
-    public static void CreateHeroCard(string? name, int attack, int defense, string? description, string? condition, string? action)
+    public static void CreateHeroCard(string? name, int attack, int defense, string? description, string? effect)
     {
         if (name == null) throw new ArgumentNullException(nameof(name));
         if (description == null) throw new ArgumentNullException(nameof(description));
-        if (condition == null) throw new ArgumentNullException(nameof(condition));
-        if (action == null) throw new ArgumentNullException(nameof(action));
-
-        Effect.Effect effect = CreateEffect(condition, action);
+        if (effect == null) throw new ArgumentNullException(nameof(effect));
 
         HeroCard card = new HeroCard(name, attack, defense, description, effect);
 
@@ -123,7 +103,6 @@ public static class GameController
     static bool IsUnique(SimpleCard newCard)
     {
         return !Cards.Exists(card => card.Name == newCard.Name);
-
     }
 
     /// <summary>
@@ -131,19 +110,14 @@ public static class GameController
     /// </summary>
     /// <param name="name">The name of the `ItemCard`</param>
     /// <param name="description">The description of the card</param>
-    /// <param name="condition">The condition for the effect</param>
-    /// <param name="action">The action for the effect</param>
-    /// <exception cref="ArgumentNullException">Thrown when the name, description, condition or action is null</exception>
+    /// <param name="effect">The Effect of the Item</param>
+    /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
     /// <exception cref="Exception">Thrown when there is already another card with the same name</exception>
-    public static void CreateItemCard(string? name, string? description, string? condition, string? action)
+    public static void CreateItemCard(string? name, string? description, string? effect)
     {
         if (name == null) throw new ArgumentNullException(nameof(name));
         if (description == null) throw new ArgumentNullException(nameof(description));
-        if (condition == null) throw new ArgumentNullException(nameof(condition));
-        if (action == null) throw new ArgumentNullException(nameof(action));
-
-
-        Effect.Effect effect = CreateEffect(condition, action);
+        if (effect == null) throw new ArgumentNullException(nameof(effect));
 
         ItemCard card = new ItemCard(name, description, effect);
 
@@ -251,7 +225,6 @@ public static class GameController
             var aux = DeserializeItem(itemsFile);
             Cards.AddRange(aux);
         }
-
     }
 
     /// <summary>
@@ -281,22 +254,31 @@ public static class GameController
         GameLoop.StartGame(InitialCards, CardsPerTurn, p1, p2);
     }
 
-    public static void ChangeDefaults(int hpPoints, int initialCards, int cardsPerTurn, int minDeckCards, int maxDeckCards, int playersCnt)
+    public static void ChangeDefaults(int hpPoints, int initialCards, int cardsPerTurn, int minDeckCards,
+        int maxDeckCards, int playersCnt)
     {
-        if (hpPoints < 1) throw new ArgumentOutOfRangeException(nameof(hpPoints), "The hp points must be greater than 0");
-        if (initialCards < 1) throw new ArgumentOutOfRangeException(nameof(initialCards), "The initial cards must be greater than 0");
-        if (cardsPerTurn < 1) throw new ArgumentOutOfRangeException(nameof(cardsPerTurn), "The cards per turn must be greater than 0");
-        if (minDeckCards < 1) throw new ArgumentOutOfRangeException(nameof(minDeckCards), "The minimum deck cards must be greater than 0");
-        if (maxDeckCards < 1) throw new ArgumentOutOfRangeException(nameof(maxDeckCards), "The maximum deck cards must be greater than 0");
-        if (minDeckCards > maxDeckCards) throw new ArgumentException($"{nameof(minDeckCards)} should be less or equal than {nameof(maxDeckCards)}");
-        if (playersCnt < 2) throw new ArgumentOutOfRangeException(nameof(playersCnt), "The players count must be greater than 1");
+        if (hpPoints < 1)
+            throw new ArgumentOutOfRangeException(nameof(hpPoints), "The hp points must be greater than 0");
+        if (initialCards < 1)
+            throw new ArgumentOutOfRangeException(nameof(initialCards), "The initial cards must be greater than 0");
+        if (cardsPerTurn < 1)
+            throw new ArgumentOutOfRangeException(nameof(cardsPerTurn), "The cards per turn must be greater than 0");
+        if (minDeckCards < 1)
+            throw new ArgumentOutOfRangeException(nameof(minDeckCards),
+                "The minimum deck cards must be greater than 0");
+        if (maxDeckCards < 1)
+            throw new ArgumentOutOfRangeException(nameof(maxDeckCards),
+                "The maximum deck cards must be greater than 0");
+        if (minDeckCards > maxDeckCards)
+            throw new ArgumentException($"{nameof(minDeckCards)} should be less or equal than {nameof(maxDeckCards)}");
+        if (playersCnt < 2)
+            throw new ArgumentOutOfRangeException(nameof(playersCnt), "The players count must be greater than 1");
 
         InitialCards = initialCards;
         CardsPerTurn = cardsPerTurn;
         MinDeckCards = minDeckCards;
         MaxDeckCards = maxDeckCards;
         PlayersCnt = playersCnt;
-
     }
 
     /// <summary>

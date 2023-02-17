@@ -1,4 +1,7 @@
 ﻿using System.Text.Json.Serialization;
+using Compiler;
+using Compiler.Syntax;
+using Player;
 
 namespace Effect;
 
@@ -7,82 +10,50 @@ namespace Effect;
 ///</summary>
 public class Effect
 {
-    ///<summary>
-    ///The condition of the effect as a string
-    ///</summary>
-    public string ConditionString { get; protected init; }
+    private SyntaxTree _syntaxTree { get; init; }
+    
+    private Compilation _compilation { get; init; }
+    
+    private Dictionary<VariableSymbol, object> _variables { get; set; }
 
-    ///<summary>
-    ///The action for the effect as a string
-    ///</summary>
-    public string ActionString { get; protected init; }
-
-    ///<summary>
-    ///The imports for the condition and action used by `CSharpScript`
-    ///</summary>
-    public string[] Imports { get; protected set; }
-
-
-    ///<summary>
-    ///Creates a new Effect
-    ///</summary>
-    ///<param name="conditionString">The condition for the effect</param>
-    ///<param name="actionString">The action for the effect</param>
-    /// <param name="imports">Imports of ScriptRunner</param>
-    ///<exception cref="ArgumentNullException">Thrown when the condition or action is null</exception>
-    ///<returns>A new effect</returns>
-    [JsonConstructor]
-    public Effect(string conditionString, string actionString, params string[] imports)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="effectString"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    public Effect(string effectString)
     {
-        ConditionString = conditionString ?? throw new ArgumentNullException(nameof(conditionString));
-        ActionString = actionString ?? throw new ArgumentNullException(nameof(actionString));
+        if (string.IsNullOrEmpty(effectString))
+            throw new ArgumentNullException($"{nameof(effectString)} should'nt be null or empty");
 
-        Imports = imports;
+        _variables = new Dictionary<VariableSymbol, object>();
+        EffectString = effectString;
+
+        _syntaxTree = SyntaxTree.Parse(effectString);
+        _compilation = new Compilation(_syntaxTree);
+
+        EvaluationResult result = _compilation.Evaluate(_variables);
+        var diagnostics = result.Diagnostics;
+
+        foreach (var diagnostic in diagnostics)
+        {
+            throw new Exception(diagnostic.Message);
+        }
     }
 
-    ///<summary>
-    ///Checks if the condition and action are correct
-    ///</summary>
-    ///<param name="conditionString">The condition for the effect</param>
-    ///<param name="actionString">The action for the effect</param>
-    ///<param name="imports">The imports for the condition and action used by `CSharpScript`</param>
-    ///<exception cref="ArgumentNullException">Thrown when the condition or action is null</exception>
-    ///<returns>True if the condition and action are correct</returns> 
-    public static bool CheckIsCorrect<T>(string conditionString, string actionString, params string[] imports)
+    public void Activate(SimplePlayer player)
     {
-        if (conditionString == null) throw new ArgumentNullException(nameof(conditionString));
-        if (actionString == null) throw new ArgumentNullException(nameof(actionString));
+        EvaluationResult result = _compilation.Evaluate(_variables, player);
+        var diagnostics = result.Diagnostics;
 
-        return Condition.CheckIsCorrect<T>(conditionString, imports) && Action.CheckIsCorrect<T>(actionString, imports);
+        foreach (var diagnostic in diagnostics)
+        {
+            throw new Exception(diagnostic.Message);
+        }
     }
 
-    ///<summary>
-    ///Checks if the effect can be activated
-    ///</summary>
-    ///<param name="p1">The first parameter</param>
-    ///<param name="p2">The second parameter</param>
-    ///<exception cref="ArgumentNullException">Thrown when the parameters are null</exception>
-    ///<returns>True if the effect can be activated</returns>
-    public bool CanActivate<T>(T p1, T p2)
-    {
-        if (p1 == null) throw new ArgumentNullException(nameof(p1));
-        if (p2 == null) throw new ArgumentNullException(nameof(p2));
-
-        return Condition.Evaluate<T>(this.ConditionString, p1, p2, this.Imports);
-    }
-
-    ///<summary>
-    ///Activates the effect
-    ///</summary>
-    ///<param name="p1">The first parameter</param>
-    ///<param name="p2">The second parameter</param>
-    ///<exception cref="ArgumentNullException">Thrown when the parameters are null</exception>
-    public void Activate<T>(T p1, T p2)
-    {
-        if (p1 == null) throw new ArgumentNullException(nameof(p1));
-        if (p2 == null) throw new ArgumentNullException(nameof(p2));
-
-        Action.Execute<T>(this.ActionString, p1, p2, this.Imports);
-    }
-
+    /// <summary>
+    /// Holds the Effect as a string to be compiled an executed later
+    /// </summary>
+    public string EffectString { get; set; }
 }

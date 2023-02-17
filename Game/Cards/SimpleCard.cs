@@ -38,13 +38,15 @@ public class SimpleCard : ICard
     /// <param name="effect">The effect of the card</param>
     /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
     /// <returns>A new card</returns>
-    public SimpleCard(string name, string description, Effect.Effect effect)
+    public SimpleCard(string name, string description, string effect)
     {
+        if (string.IsNullOrEmpty(effect)) throw new ArgumentNullException(effect);
+
         Name = name ?? throw new ArgumentNullException(nameof(name));
 
         Description = description ?? throw new ArgumentNullException(nameof(description));
 
-        Effect = effect ?? throw new ArgumentNullException(nameof(effect));
+        Effect = new Effect.Effect(effect);
 
         Id = GenRandId();
     }

@@ -1,62 +1,55 @@
 @page "/newitem"
-@inject IJSRuntime JS
+@inject IJSRuntime Js
 
 <div style="display: grid;">
-	<div class="alert alert-danger d-none" role="alert"></div>
-	<div class="alert alert-success d-none" role="alert"></div>
+    <div class="alert alert-danger d-none" role="alert"></div>
+    <div class="alert alert-success d-none" role="alert"></div>
 
-	<span style="font-size: xx-large;justify-self:center">New Item</span><br />
+    <span style="font-size: xx-large;justify-self:center">New Item</span><br/>
 
-	<input type="text" placeholder="Item Name" style="justify-self:center;" @bind="@ItemName">
+    <input type="text" placeholder="Item Name" style="justify-self:center;" @bind="@_itemName">
 
-	<textarea placeholder="Description" style="margin-top:20px" @bind="@ItemDescription"></textarea>
+    <textarea placeholder="Description" style="margin-top:20px" @bind="@_itemDescription"></textarea>
 
-	<pre>
+    <pre>
 		<code style="width: 100%;">
-			<textarea style="margin-top:20px;font-size: x-large; height: 100px;width:100%;" @bind="@ConditionCode"
-			placeholder="Code of the condition"></textarea>
+			<textarea style="margin-top:20px;font-size: x-large; height: 100px;width:100%" @bind="@_codeString"
+			placeholder="Code of the Effect"></textarea>
 		</code>
 	</pre>
 
-	<pre>
-		<code style="width: 100%;">
-			<textarea style="margin-top:20px;font-size: x-large; height: 100px;width:100%" @bind="@ActionCode"
-			placeholder="Code of the action"></textarea>
-		</code>
-	</pre>
-
-	<input type="button" style="font-size: x-large;margin-top:20px" value="Create New Item" class="btn btn-success"
-		@onclick="OnClickBtnMethod" />
+    <input type="button" style="font-size: x-large;margin-top:20px" value="Create New Item" class="btn btn-success"
+           @onclick="OnClickBtnMethod"/>
 </div>
+
 @code {
-	public string? ConditionCode;
+    private string? _codeString;
 
-	public string? ActionCode;
+    private string? _itemName;
 
-	public string? ItemName;
+    private string? _itemDescription;
 
-	public string? ItemDescription;
-	public async void OnClickBtnMethod()
-	{
-		try
-		{
-			Game.GameController.CreateItemCard(ItemName, ItemDescription, ConditionCode, ActionCode);
-			ActionCode = "";
-			ConditionCode = "";
-			ItemName = "";
-			ItemDescription = "";
-			await JS.InvokeVoidAsync("ShowSuccess", "Item added successfully");
-		}
-		catch (System.Exception err)
-		{
-			if (err is CompilationErrorException || err is ArgumentNullException)
-			{
-				await JS.InvokeVoidAsync("ShowError", err.Message);
-			}
-			else
-			{
-				throw err;
-			}
-		}
-	}
+    private async void OnClickBtnMethod()
+    {
+        try
+        {
+            GameController.CreateItemCard(_itemName, _itemDescription, _codeString);
+            _codeString = "";
+            _itemName = "";
+            _itemDescription = "";
+            await Js.InvokeVoidAsync("ShowSuccess", "Item added successfully");
+        }
+        catch (Exception err)
+        {
+            if (err is CompilationErrorException || err is ArgumentNullException)
+            {
+                await Js.InvokeVoidAsync("ShowError", err.Message);
+            }
+            else
+            {
+                Console.WriteLine(err);
+            }
+        }
+    }
+
 }

@@ -36,13 +36,13 @@ public class HeroCard : SimpleCard
     /// <param name="effect">The effect of the hero</param>
     /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
     /// <returns>A new hero</returns>
-    public HeroCard(string name, int attack, int defense, string description, Effect.Effect effect) : base(name, description, effect)
+    public HeroCard(string name, int attack, int defense, string description, string effect) : base(name, description, effect)
     {
         Type = CardType.Hero;
 
-        this.Attack = attack;
+        Attack = attack;
 
-        this.Defense = defense;
+        Defense = defense;
 
         Items = new List<ItemCard>();
     }
@@ -109,11 +109,9 @@ public class HeroCard : SimpleCard
     /// <returns>True if the objects are equal, false otherwise</returns>
     public override bool Equals(object? obj)
     {
-        if (!(obj is HeroCard)) return false;
+        if (!(obj is HeroCard hero)) return false;
 
-        var hero = obj as HeroCard;
-
-        return hero!.Id == Id;
+        return hero.Id == Id;
     }
 
     /// <summary>

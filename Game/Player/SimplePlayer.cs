@@ -159,18 +159,18 @@ public class SimplePlayer : IPlayer
                     {
                         case ConsoleKey.H:
                         {
-                            if (selectedHero is not null && selectedHero.Effect.CanActivate(this, Enemy))
+                            if (selectedHero is not null)
                             {
-                                selectedHero.Effect.Activate(this, Enemy);
+                                selectedHero.Effect.Activate(this);
                             }
 
                             break;
                         }
                         case ConsoleKey.I:
                         {
-                            if (selectedItem is not null && selectedItem.Effect.CanActivate(this, Enemy))
+                            if (selectedItem is not null )
                             {
-                                selectedItem.Effect.Activate(this, Enemy);
+                                selectedItem.Effect.Activate(this);
                             }
 
                             break;

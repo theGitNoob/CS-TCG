@@ -18,7 +18,7 @@ public class ItemCard : SimpleCard
     /// <param name="effect">The effect of the item</param>
     /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
     /// <returns>A new item</returns>
-    public ItemCard(string name, string description, Effect.Effect effect) : base(name, description, effect)
+    public ItemCard(string name, string description, string effect) : base(name, description, effect)
     {
         Type = CardType.Item;
 

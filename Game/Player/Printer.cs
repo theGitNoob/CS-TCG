@@ -272,11 +272,8 @@ public static class Printer
             Console.WriteLine($"            {card.Name}            ");
             Console.WriteLine("\n\n          Description            ");
             Console.WriteLine(card.Description);
-            Console.WriteLine("\n\n            Condition                ");
-            Console.WriteLine(card.Effect.ConditionString);
-
-            Console.WriteLine("\n\n            Action              ");
-            Console.WriteLine(card.Effect.ActionString);
+            Console.WriteLine("\n\n            Effect                ");
+            Console.WriteLine(card.Effect.EffectString);
 
             if (card is HeroCard hero)
             {
@@ -303,7 +300,7 @@ public static class Printer
     }
 
 
-    public static void PrintHand(SimplePlayer player, bool display)
+    private static void PrintHand(SimplePlayer player, bool display)
     {
         if (!display)
         {
