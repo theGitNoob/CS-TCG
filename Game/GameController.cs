@@ -250,6 +250,13 @@ public static class GameController
         if (p1 == null) throw new ArgumentNullException($"{nameof(p1)} can't be null");
         if (p2 == null) throw new ArgumentNullException($"{nameof(p2)} can't be null");
 
+        if (p1.Deck.CardsLeft > MaxDeckCards || p1.Deck.CardsLeft < MinDeckCards)
+            throw new ArgumentOutOfRangeException(
+                $"Player {p1.Name} deck cards should be less than {MaxDeckCards} and greather than {MinDeckCards}");
+
+        if (p2.Deck.CardsLeft > MaxDeckCards || p2.Deck.CardsLeft < MinDeckCards)
+            throw new ArgumentOutOfRangeException(
+                $"Player {p2.Name} deck cards should be less than {MaxDeckCards} and greather than {MinDeckCards}");
 
         GameLoop.StartGame(InitialCards, CardsPerTurn, p1, p2);
     }
