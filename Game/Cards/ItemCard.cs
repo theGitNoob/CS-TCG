@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Cards;
+namespace Game.Cards;
 
 /// <summary>
 /// Represents a hero card

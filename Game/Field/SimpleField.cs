@@ -1,5 +1,7 @@
-﻿namespace Field;
-using Cards;
+﻿using Game.Cards;
+
+namespace Field;
+
 public class SimpleField : IField
 {
     //Holds the HeroZone Cards

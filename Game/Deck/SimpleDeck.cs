@@ -1,5 +1,6 @@
-﻿namespace Deck;
-using Cards;
+﻿using Game.Cards;
+
+namespace Deck;
 
 /// <summary>
 /// Represents a deck of cards

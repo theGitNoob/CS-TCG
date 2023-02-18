@@ -1,4 +1,4 @@
-using Cards;
+using Game.Cards;
 
 namespace Deck;
 

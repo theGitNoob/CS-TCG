@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Cards;
+namespace Game.Cards;
 
 /// <summary>
 /// Represents a card
@@ -32,9 +32,7 @@ public class SimpleCard : ICard
     /// </summary>
     // [JsonIgnore]
     public Effect.Effect Effect { get; set; }
-    // [JsonIgnore]
 
-    // public string EffectString { get; set; }
 
     /// <summary>
     /// Creates a new card

@@ -1,19 +1,20 @@
-using Cards;
 using System.Text;
+using Game.Cards;
+using Player;
 
-namespace Player;
+namespace Game.Player;
 
 public static class Printer
 {
-    static readonly StringBuilder Screen = new StringBuilder();
+    private static readonly StringBuilder Screen = new StringBuilder();
 
-    static string _helpMenu = "";
-
-
-    static bool _helpActive;
+    private static string _helpMenu = "";
 
 
-    static bool _viewInfo;
+    private static bool _helpActive;
+
+
+    private static bool _viewInfo;
 
 
 
@@ -22,11 +23,11 @@ public static class Printer
         Console.Clear();
         Screen.Clear();
 
-        int tabSeparation = 5;
+        const int tabSeparation = 5;
 
         int blockWidth = (Console.LargestWindowWidth - tabSeparation * 4) / 5;
 
-        int blockHeight = 5;
+        const int blockHeight = 5;
 
         Console.Title = "Game";
 
@@ -43,7 +44,7 @@ public static class Printer
         Console.Write(Screen);
     }
 
-    static void PrintPlayer(int blockWidth, int tabSeparation, string buff1, string buff2)
+    private static void PrintPlayer(int blockWidth, int tabSeparation, string buff1, string buff2)
     {
         Screen.Append(buff1);
 
@@ -122,16 +123,16 @@ public static class Printer
                     }
                 }
 
-                if (block != 5)
-                    for (int i = 1; i <= tabSeparation; i++)
-                        Screen.Append(" ");
+                if (block == 5) continue;
+                for (int i = 1; i <= tabSeparation; i++)
+                    Screen.Append(" ");
             }
 
             Screen.AppendLine();
         }
     }
 
-    static void PrintHeroes(int blockWidth, int blockHeight, int tabSeparation, SimplePlayer player)
+    private static void PrintHeroes(int blockWidth, int blockHeight, int tabSeparation, SimplePlayer player)
     {
         for (int row = 1; row <= blockHeight; row++)
         {
@@ -161,7 +162,7 @@ public static class Printer
                 {
                     if (row == 1 || row == blockHeight)
                         Screen.Append("-");
-                    else if ((col == 1 || col == blockWidth))
+                    else if (col == 1 || col == blockWidth)
                         Screen.Append("|");
                     else if (row == 2 && col >= (blockWidth - heroName.Length + 1) / 2 && nameIdx < heroName.Length)
                         Screen.Append(heroName[nameIdx++]);
@@ -180,7 +181,7 @@ public static class Printer
         }
     }
 
-    static void PrintItems(int blockWidth, int blockHeight, int tabSeparation, SimplePlayer player)
+    private static void PrintItems(int blockWidth, int blockHeight, int tabSeparation, SimplePlayer player)
     {
         for (int row = 1; row <= blockHeight; row++)
         {
@@ -201,18 +202,18 @@ public static class Printer
                 {
                     if (row == 1 || row == blockHeight)
                         Screen.Append("-");
-                    else if ((col == 1 || col == blockWidth))
+                    else if (col == 1 || col == blockWidth)
                         Screen.Append("|");
-                    else if ((row == (blockHeight + 1) / 2) && col >= (blockWidth - itemName.Length + 1) / 2 &&
+                    else if (row == (blockHeight + 1) / 2 && col >= (blockWidth - itemName.Length + 1) / 2 &&
                              nameIdx < itemName.Length)
                         Screen.Append(itemName[nameIdx++]);
                     else
                         Screen.Append(" ");
                 }
 
-                if (block != 5)
-                    for (int i = 1; i <= tabSeparation; i++)
-                        Screen.Append(" ");
+                if (block == 5) continue;
+                for (int i = 1; i <= tabSeparation; i++)
+                    Screen.Append(" ");
             }
 
             Screen.AppendLine();
@@ -316,7 +317,7 @@ public static class Printer
 
         var blockWidth = (Console.LargestWindowWidth - tabSeparation * 4) / 5;
 
-        int blockHeight = 6;
+        const int blockHeight = 6;
 
         int handSize = player.Hand.Count;
 
@@ -347,9 +348,9 @@ public static class Printer
                         }
                         if (row == 1 || row == blockHeight)
                             hand.Append("-");
-                        else if ((col == 1 || col == blockWidth))
+                        else if (col == 1 || col == blockWidth)
                             hand.Append("|");
-                        else if ((row == 2) && col >= (blockWidth - cardName.Length + 1) / 2 &&
+                        else if (row == 2 && col >= (blockWidth - cardName.Length + 1) / 2 &&
                                  nameIdx < cardName.Length)
                         {
                             hand.Append(cardName[nameIdx++]);
@@ -360,9 +361,9 @@ public static class Printer
                             hand.Append(" ");
                     }
 
-                    if (block != 5)
-                        for (int i = 1; i <= tabSeparation; i++)
-                            hand.Append(" ");
+                    if (block == 5) continue;
+                    for (int i = 1; i <= tabSeparation; i++)
+                        hand.Append(" ");
                 }
 
                 hand.AppendLine();

@@ -1,4 +1,4 @@
-namespace Cards;
+namespace Game.Cards;
 
 /// <summary>
 /// Represents a card type

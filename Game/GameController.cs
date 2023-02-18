@@ -1,6 +1,6 @@
-﻿using Cards;
-using Player;
+﻿using Player;
 using System.Text.Json;
+using Game.Cards;
 
 namespace Game;
 
@@ -12,7 +12,7 @@ public static class GameController
     /// <summary>
     /// The cards in the game
     /// </summary>
-    public static List<SimpleCard> Cards { get; private set; } = new List<SimpleCard>();
+    public static List<SimpleCard> Cards { get; private set; } = new();
 
     /// <summary>
     /// The path to the items.json file
@@ -32,12 +32,12 @@ public static class GameController
     /// <summary>
     /// The Initial Cards of each player
     /// </summary>
-    static int InitialCards { get; set; } = 5;
+    private static int InitialCards { get; set; } = 5;
 
     /// <summary>
     /// The number of cards each player can draw per turn
     /// </summary>
-    static int CardsPerTurn { get; set; } = 1;
+    private static int CardsPerTurn { get; set; } = 1;
 
     /// <summary>
     /// The minimum number of cards a valid Deck should have
@@ -47,13 +47,7 @@ public static class GameController
     /// <summary>
     /// The maximum number of cards a valid Deck should have
     /// </summary>
-    static int MaxDeckCards { get; set; } = 1;
-
-    /// <summary>
-    /// The number of players in the game
-    /// </summary>
-    static int PlayersCnt { get; set; } = 2;
-
+    private static int MaxDeckCards { get; set; } = 1;
 
     /// <summary>
     /// Starts the game
@@ -100,7 +94,7 @@ public static class GameController
     /// </summary>
     /// <param name="newCard">The card to check if already exists</param>
     /// <returns>True if the card doesn't currently exists, false otherwise</returns>
-    static bool IsUnique(SimpleCard newCard)
+    private static bool IsUnique(SimpleCard newCard)
     {
         return !Cards.Exists(card => card.Name == newCard.Name);
     }
@@ -141,7 +135,7 @@ public static class GameController
     /// </summary>
     /// <param name = "jsonFile"> The string to deserialize</param>
     /// <returns>A string formatted as json</returns>
-    static List<ItemCard> DeserializeItem(string jsonFile)
+    private static IEnumerable<ItemCard> DeserializeItem(string jsonFile)
     {
         List<ItemCard> items = JsonSerializer.Deserialize<List<ItemCard>>(jsonFile)!;
         return items;
@@ -152,7 +146,7 @@ public static class GameController
     /// </summary>
     /// <param name = "jsonFile"> The string to deserialize</param>
     /// <returns>A string formatted as json</returns>
-    static List<HeroCard> DeserializeHeroes(string jsonFile)
+    private static IEnumerable<HeroCard> DeserializeHeroes(string jsonFile)
     {
         List<HeroCard> heroes = JsonSerializer.Deserialize<List<HeroCard>>(jsonFile)!;
         return heroes;
@@ -163,7 +157,7 @@ public static class GameController
     /// Serializes a List of Item Cards into a string formatted as json
     /// </summary>
     /// <returns>A string formatted as json</returns>
-    static string SerializeHeroes()
+    private static string SerializeHeroes()
     {
         List<HeroCard> heroes = Cards.OfType<HeroCard>().ToList();
 
@@ -178,7 +172,7 @@ public static class GameController
     /// Serializes a List of Item Cards into a string formatted as json
     /// </summary>
     /// <returns>A string formatted as json</returns>
-    static string SerializeItems()
+    private static string SerializeItems()
     {
         List<ItemCard> items = Cards.OfType<ItemCard>().ToList();
 
@@ -193,7 +187,7 @@ public static class GameController
     /// <summary>
     /// Loads cards from disk on json format
     /// </summary>
-    static void LoadCards()
+    private static void LoadCards()
     {
         if (!Directory.Exists(CardsDir))
         {
@@ -230,7 +224,7 @@ public static class GameController
     /// <summary>
     /// Saves cards to disk on json format
     /// </summary>
-    static void SaveCards()
+    private static void SaveCards()
     {
         string itemsJsonFile = SerializeItems();
 
@@ -285,7 +279,6 @@ public static class GameController
         CardsPerTurn = cardsPerTurn;
         MinDeckCards = minDeckCards;
         MaxDeckCards = maxDeckCards;
-        PlayersCnt = playersCnt;
     }
 
     /// <summary>

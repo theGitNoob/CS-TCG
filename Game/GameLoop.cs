@@ -1,4 +1,5 @@
-﻿using Player;
+﻿using Game.Player;
+using Player;
 
 namespace Game;
 
@@ -61,7 +62,7 @@ public static class GameLoop
     /// <summary>
     /// Ends the game and prints the winning player
     /// </summary>
-    static void EndGame(SimplePlayer looser, SimplePlayer winner)
+    private static void EndGame(SimplePlayer looser, SimplePlayer winner)
     {
         Console.WriteLine($"{looser.Name} has lost");
         Console.WriteLine($"{winner.Name} has won");
@@ -74,11 +75,8 @@ public static class GameLoop
     /// </summary>
     /// <param name="player">The player to check</param>
     /// <returns>True if the player has lost, false otherwise</returns>
-    static bool CheckPlayerHasLost(SimplePlayer player)
+    private static bool CheckPlayerHasLost(SimplePlayer player)
     {
-        if (player.Hp == 0 || player.Deck.IsEmpty())
-            return true;
-
-        return false;
+        return player.Hp == 0 || player.Deck.IsEmpty();
     }
 }

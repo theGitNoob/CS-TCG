@@ -1,4 +1,4 @@
-namespace Cards;
+namespace Game.Cards;
 
 public interface ICard
 {

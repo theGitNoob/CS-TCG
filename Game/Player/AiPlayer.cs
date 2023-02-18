@@ -1,7 +1,8 @@
-using Cards;
 using Deck;
+using Game.Cards;
+using Player;
 
-namespace Player;
+namespace Game.Player;
 
 /// <summary>
 /// Class that represents an AI Player

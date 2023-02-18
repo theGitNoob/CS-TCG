@@ -1,6 +1,8 @@
-﻿namespace Player;
+﻿using Game.Cards;
+using Game.Player;
 
-using Cards;
+namespace Player;
+
 using Field;
 using Deck;
 
@@ -85,7 +87,7 @@ public class SimplePlayer : IPlayer
         }
         else if (diff == 0)
         {
-            this.PlayerField.RemoveHero(hero);
+            PlayerField.RemoveHero(hero);
             Enemy?.PlayerField.RemoveHero(target);
         }
         else
@@ -102,7 +104,7 @@ public class SimplePlayer : IPlayer
     /// <param name="value">Value to be added to the life</param>
     public void UpdateLife(int value)
     {
-        Hp = Hp + value;
+        Hp += value;
     }
 
     /// <summary>
@@ -318,11 +320,11 @@ public class SimplePlayer : IPlayer
         if (!name.All(char.IsLetterOrDigit))
             throw new ArgumentException("Player name must be alphanumeric", nameof(name));
 
-        this.Name = name;
-        this.Hp = hp;
-        this.Deck = deck ?? throw new ArgumentNullException(nameof(deck));
-        this.Hand = new List<SimpleCard>();
-        this.PlayerField = new SimpleField(maxHeroCards, maxItemCards);
+        Name = name;
+        Hp = hp;
+        Deck = deck ?? throw new ArgumentNullException(nameof(deck));
+        Hand = new List<SimpleCard>();
+        PlayerField = new SimpleField(maxHeroCards, maxItemCards);
     }
 
     /// <summary>
@@ -361,7 +363,7 @@ public class SimplePlayer : IPlayer
     /// <returns>True if a hero can be invoked, false otherwise</returns>
     protected bool CanInvokeHero()
     {
-        return (HasHeroOnHand() && PlayerField.CanInvokeHero());
+        return HasHeroOnHand() && PlayerField.CanInvokeHero();
     }
 
     /// <summary>
@@ -400,6 +402,6 @@ public class SimplePlayer : IPlayer
     /// <returns>True if an item can be equipped, false otherwise</returns>
     public bool CanEquipItem()
     {
-        return (HasItemOnHand() && HasHeroOnField() && PlayerField.CanEquipItem());
+        return HasItemOnHand() && HasHeroOnField() && PlayerField.CanEquipItem();
     }
 }
