@@ -211,7 +211,7 @@ public class SimplePlayer : IPlayer
                     }
                     else if (selectedHandCard is ItemCard item && PlayerField.CanEquipItem())
                     {
-                        var mod = Console.ReadKey(false).ToString();
+                        var mod = Console.ReadKey(false).KeyChar.ToString();
                         if (int.TryParse(mod, out var idx) && PlayerField.IsHeroAt(idx))
                             EquipItem(PlayerField.GetHeroCard(idx), item);
                     }
