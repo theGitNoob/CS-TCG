@@ -22,8 +22,8 @@ public class HeroCard : SimpleCard
     /// </summary>
     public int Attack
     {
-        get => this._attack;
-        set => this._attack = value <= 0 ? 0 : value;
+        get => _attack;
+        set => _attack = value <= 0 ? 0 : value;
     }
 
     /// <summary>
@@ -31,8 +31,8 @@ public class HeroCard : SimpleCard
     /// </summary>
     public int Defense
     {
-        get => this._defense;
-        set => this._defense = value <= 0 ? 0 : value;
+        get => _defense;
+        set => _defense = value <= 0 ? 0 : value;
     }
 
     /// <summary>
@@ -43,8 +43,6 @@ public class HeroCard : SimpleCard
     /// <param name="defense">The defense of the hero</param>
     /// <param name="description">The description of the hero</param>
     /// <param name="effectString">The effect of the hero</param>
-    /// <exception cref="ArgumentNullException">Thrown when the name, description or effect is null</exception>
-    /// <returns>A new hero</returns>
     public HeroCard(string name, int attack, int defense, string description, string effectString) : base(name,
         description, effectString)
     {
@@ -57,6 +55,14 @@ public class HeroCard : SimpleCard
         Items = new List<ItemCard>();
     }
 
+    /// <summary>
+    /// Creates a new hero
+    /// </summary>
+    /// <param name="name">The name of the hero</param>
+    /// <param name="attack">The attack of the hero</param>
+    /// <param name="defense">The defense of the hero</param>
+    /// <param name="description">The description of the hero</param>
+    /// <param name="effect">The effect of the hero</param>
     [JsonConstructor]
     public HeroCard(string name, int attack, int defense, string description, Effect.Effect effect) : base(name,
         description, effect)
@@ -69,7 +75,6 @@ public class HeroCard : SimpleCard
 
         Items = new List<ItemCard>();
     }
-
 
     /// <summary>
     /// Equips the given item to the hero
@@ -100,39 +105,13 @@ public class HeroCard : SimpleCard
     }
 
     /// <summary>
-    /// Sets the hero attack
-    /// </summary>
-    /// <param name="attack">The attack of the hero</param>
-    /// <exception cref="ArgumentException">Thrown when the attack is not between 0 and 100</exception>
-    public void UpdateAttack(int attack)
-    {
-        if (attack < 0 || attack > 100)
-            throw new ArgumentException("Attack must be a value between 0 and 100");
-        Attack = attack;
-    }
-
-
-    /// <summary>
-    /// Sets the hero defense
-    /// </summary>
-    /// <param name="defense">The defense of the hero</param>
-    /// <exception cref="ArgumentException">Thrown when the defense is not between 0 and 100</exception>
-    public void UpdateDefense(int defense)
-    {
-        if (defense < 0 || defense > 100)
-            throw new ArgumentException("Defense must be between 0 and 100");
-
-        this.Defense = defense;
-    }
-
-    /// <summary>
     /// Reimplementing the equals method
     /// </summary>
     /// <param name="obj">The object to compare</param>
     /// <returns>True if the objects are equal, false otherwise</returns>
     public override bool Equals(object? obj)
     {
-        if (!(obj is HeroCard hero)) return false;
+        if (obj is not HeroCard hero) return false;
 
         return hero.Id == Id;
     }
