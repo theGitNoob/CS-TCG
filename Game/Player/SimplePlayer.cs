@@ -305,6 +305,11 @@ public class SimplePlayer : IPlayer
                                 selectedHandCard = Hand[idx];
                             break;
                         }
+                        default:
+                        {
+                            selectedHandCard = null;
+                            break;
+                        }
                     }
 
                     break;
