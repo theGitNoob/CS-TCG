@@ -9,7 +9,7 @@ public class SimpleDeck : IDeck
 
     public List<SimpleCard> Cards { private set; get; }
 
-    public int CardsLeft { get => Cards.Count(); }
+    public int CardsLeft => Cards.Count();
 
 
     /// <summary>
@@ -54,12 +54,9 @@ public class SimpleDeck : IDeck
     /// </summary>
     /// <param name="i">Index of the first card</param>
     /// <param name="j">Index of the second card</param>
-    public void Swap(int i, int j)
+    private void Swap(int i, int j)
     {
-        SimpleCard temp = Cards[i];
-
-        Cards[i] = Cards[j];
-        Cards[j] = temp;
+        (Cards[i], Cards[j]) = (Cards[j], Cards[i]);
     }
 
     /// <summary>
