@@ -11,6 +11,16 @@ using Deck;
 /// </summary>
 public class SimplePlayer : IPlayer
 {
+    /// <summary>
+    /// Holds whether a Hero has attacked 
+    /// </summary>
+    private HashSet<HeroCard> _hasAttacked = new();
+
+    /// <summary>
+    /// Holds whether a Card has activated its effect
+    /// </summary>
+    private HashSet<SimpleCard> _hasActivatedEffect = new();
+
     public string Name { get; set; }
 
     /// <summary>
@@ -108,12 +118,35 @@ public class SimplePlayer : IPlayer
     }
 
     /// <summary>
+    /// Checks if a given hero has already attacked
+    /// </summary>
+    /// <param name="hero">The Hero to check if it has attacked</param>
+    /// <returns>True if Hero has attacked, false otherwise</returns>
+    private bool CheckHeroHasAttacked(HeroCard hero)
+    {
+        return _hasAttacked.Contains(hero);
+    }
+
+    /// <summary>
+    /// Checks if a given card has activated its effect
+    /// </summary>
+    /// <param name="card">The card to check if it has activated its effect</param>
+    /// <returns>True if card already has activated its effect, False otherwise</returns>
+    private bool CheckHasActivatedEffect(SimpleCard card)
+    {
+        return _hasActivatedEffect.Contains(card);
+    }
+
+    /// <summary>
     ///  Plays according to user input
     /// </summary>
     /// <param name="canAttack"></param>
     /// <exception cref="NullReferenceException">Thrown when `Play` is invoked without having set the Enemy</exception>
     public virtual void Play(bool canAttack)
     {
+        _hasAttacked = new();
+        _hasActivatedEffect = new();
+
         if (Enemy == null)
             throw new NullReferenceException("Enemy player must be set before start to play");
 
@@ -133,17 +166,22 @@ public class SimplePlayer : IPlayer
                 {
                     if (selectedHero != null)
                     {
-                        if (!Enemy.HasHeroOnField())
+                        if (!CheckHeroHasAttacked(selectedHero))
                         {
-                            DirectAttack(selectedHero);
-                        }
-                        else
-                        {
-                            if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out var idx) &&
-                                Enemy.PlayerField.IsHeroAt(idx))
+                            if (!Enemy.HasHeroOnField())
                             {
-                                var enemyHero = Enemy.PlayerField.GetHeroCard(idx);
-                                AttackHero(selectedHero, enemyHero);
+                                DirectAttack(selectedHero);
+                                _hasAttacked.Add(selectedHero);
+                            }
+                            else
+                            {
+                                if (int.TryParse(Console.ReadKey(false).KeyChar.ToString(), out var idx) &&
+                                    Enemy.PlayerField.IsHeroAt(idx))
+                                {
+                                    var enemyHero = Enemy.PlayerField.GetHeroCard(idx);
+                                    AttackHero(selectedHero, enemyHero);
+                                    _hasAttacked.Add(selectedHero);
+                                }
                             }
                         }
                     }
@@ -161,18 +199,20 @@ public class SimplePlayer : IPlayer
                     {
                         case ConsoleKey.H:
                         {
-                            if (selectedHero is not null)
+                            if (selectedHero is not null && !CheckHasActivatedEffect(selectedHero))
                             {
                                 selectedHero.Effect.Activate(this);
+                                _hasActivatedEffect.Add(selectedHero);
                             }
 
                             break;
                         }
                         case ConsoleKey.I:
                         {
-                            if (selectedItem is not null )
+                            if (selectedItem is not null && !CheckHasActivatedEffect(selectedItem))
                             {
                                 selectedItem.Effect.Activate(this);
+                                _hasActivatedEffect.Add(selectedItem);
                             }
 
                             break;
