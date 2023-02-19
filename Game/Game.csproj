@@ -1,18 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <Reference Include="Microsoft.CodeAnalysis">
-      <HintPath>..\..\..\..\..\.nuget\packages\microsoft.codeanalysis.common\4.4.0\lib\netcoreapp3.1\Microsoft.CodeAnalysis.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.CSharp.Scripting">
-      <HintPath>..\..\..\..\..\.nuget\packages\microsoft.codeanalysis.csharp.scripting\4.4.0\lib\netcoreapp3.1\Microsoft.CodeAnalysis.CSharp.Scripting.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.Scripting">
-      <HintPath>..\..\..\..\..\.nuget\packages\microsoft.codeanalysis.scripting.common\4.4.0\lib\netcoreapp3.1\Microsoft.CodeAnalysis.Scripting.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
